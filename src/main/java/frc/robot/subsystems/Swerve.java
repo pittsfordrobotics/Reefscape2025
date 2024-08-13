@@ -56,26 +56,13 @@ public class Swerve extends SubsystemBase {
   private boolean hadbadreading;
 
   /** Creates a new Swerve. */
-  public Swerve(File config_file) {
-    // Angle conversion factor is 360 / (GEAR RATIO * ENCODER RESOLUTION)
-        // In this case the gear ratio is 12.8 motor revolutions per wheel rotation.
-        // The encoder resolution per motor revolution is 1 per motor revolution.
-        double angleConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(12.8);
-        // Motor conversion factor is (PI * WHEEL DIAMETER IN METERS) / (GEAR RATIO *
-        // ENCODER RESOLUTION).
-        // NOTE: The gear ratio of the drive motors is 4.71:1 and 3 inch wheel diameter. This is crucial for getting autos to work right.
-        // The encoder resolution per motor revolution is 1 per motor revolution.
-        double driveConversionFactor = SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(3), 4.710);
-        System.out.println("\"conversionFactor\": {");
-        System.out.println("\t\"angle\": " + angleConversionFactor + ",");
-        System.out.println("\t\"drive\": " + driveConversionFactor);
-        System.out.println("}");
+  public Swerve(File config_dir) {
 
         // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary
         // objects being created.
         SwerveDriveTelemetry.verbosity = Robot.isReal() ? TelemetryVerbosity.LOW : TelemetryVerbosity.HIGH;
         try {
-            swerveDrive = new SwerveParser(config_file).createSwerveDrive(maximumSpeed);
+            swerveDrive = new SwerveParser(config_dir).createSwerveDrive(maximumSpeed);
             // Alternative method if you don't want to supply the conversion factor via JSON
             // files.
             // swerveDrive = new SwerveParser(directory).createSwerveDrive(maximumSpeed,
@@ -297,7 +284,7 @@ public class Swerve extends SubsystemBase {
             hadbadreading = true;
             previousx = 0;
             previousy = 0;
-            System.out.println("Swerve Pose is NaN comeing in ");
+            System.out.println("Swerve Pose is NaN");
         }
 
         if (Double.isNaN(visionData.getVisionPose().getX()) || Double.isNaN(visionData.getVisionPose().getY())) {
@@ -306,18 +293,18 @@ public class Swerve extends SubsystemBase {
         }
 
         if (hadbadreading) {
-            swerveDrive.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d()));
-            return;
+            swerveDrive.resetOdometry(new Pose2d(0.0, 0.0, swerveDrive.getYaw()));
         }
 
-        swerveDrive.addVisionMeasurement(visionData.getVisionPose(), visionData.getTime(),
+        // Add Vision Measurement if it passes the checks, but without taking into account vision yaw.
+        swerveDrive.addVisionMeasurement(new Pose2d(visionData.getVisionPose().getTranslation(), swerveDrive.getOdometryHeading()), visionData.getTime(),
                 visionData.getVisionReliability());
         Pose2d newPose = swerveDrive.getPose();
         if (Double.isNaN(newPose.getX()) || Double.isNaN(newPose.getY())) {
             // hadbadreading = true;
             Pose2d pose = new Pose2d(previousx, previousy, previousTheta);
             swerveDrive.resetOdometry(pose);
-            System.out.println("SwerveDrive is nan after vision");
+            System.out.println("Vision pose was invalid and not caught");
         }
     }
 
@@ -418,8 +405,7 @@ public class Swerve extends SubsystemBase {
             encoders[i] = (AbsoluteEncoder) swerveDrive.getModules()[i].getAbsoluteEncoder().getAbsoluteEncoder();
             currentOffsets[i] = Rotation2d.fromDegrees(encoders[i].getZeroOffset());
             measuredPositions[i] = Rotation2d.fromDegrees(encoders[i].getPosition());
-            newOffsets[i] = currentOffsets[i].plus(measuredPositions[i])
-                    .plus(Rotation2d.fromDegrees(getAngleForModule(i)));
+            newOffsets[i] = currentOffsets[i].plus(measuredPositions[i]).plus(Rotation2d.fromDegrees(getAngleForModule(i)));
             encoders[i].setZeroOffset(MathUtil.inputModulus(newOffsets[i].getDegrees(), 0, 360));
             swerveDrive.getModules()[i].getAngleMotor().burnFlash();
         }

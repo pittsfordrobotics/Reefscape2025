@@ -4,27 +4,17 @@
 
 package frc.robot.Constants;
 
-import frc.robot.subsystems.Vision.VisionIO;
-import frc.robot.subsystems.Vision.VisionIOLimelight;
-
-/** Add your docs here. */
+/** Vision CONSTANTS! Do not create limelight or other VisionIO objects here, they need to be assigned in RobotContainer.java */
 public final class VisionConstants {
 
-    // the Limelight Name is the name of the network table i think this is what is should be
-    public final static VisionIO LIMELIGHT1;
+    //Setting up names of limelights
     public final static String LIMELIGHT1_NAME = "limelight-one";
-    
-    public final static VisionIO LIMELIGHT2;
     public final static String LIMELIGHT2_NAME = "limelight-two";
-    static {
-        LIMELIGHT1 = new VisionIOLimelight(LIMELIGHT1_NAME);
-        LIMELIGHT2 = new VisionIOLimelight(LIMELIGHT2_NAME);
-    }
 
     public static final double FIELD_BORDER_MARGIN = 0.5;
     public static final double Z_MARGIN = 0.75;
     public static final double XY_STD_DEV_COEF = 0.2;
-    //public static final double THETA_STD_DEV_COEF = 0.01;
-    public static final double THETA_STD_DEV_COEF = 9999999.9;
+    //Don't even bother using vision for heading measurement, Pigeon2 is good enough
+    public static final double THETA_STD_DEV_COEF = 1;
     public static final double TARGET_LOG_SECONDS = 0.1;
 }

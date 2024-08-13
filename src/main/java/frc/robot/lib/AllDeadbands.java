@@ -4,7 +4,7 @@
 
 package frc.robot.lib;
 
-/** Contains multiple different shaped deadbands for inputs, math, etc. */
+/** Contains multiple different shaped deadbands for inputs, math, etc. Any circular deadband can be used with infinitely many or few dimensions. */
 public class AllDeadbands {
     /** Applies a circular deadband to a double array
      * @param inputs the array of inputs to apply deadband to
