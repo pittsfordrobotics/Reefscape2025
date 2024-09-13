@@ -287,7 +287,7 @@ public class Swerve extends SubsystemBase {
             System.out.println("Swerve Pose is NaN");
         }
 
-        if (Double.isNaN(visionData.getVisionPose().getX()) || Double.isNaN(visionData.getVisionPose().getY())) {
+        if (Double.isNaN(visionData.visionPose().getX()) || Double.isNaN(visionData.visionPose().getY())) {
             System.out.println("Recived a bad vision pose");
             return;
         }
@@ -297,8 +297,8 @@ public class Swerve extends SubsystemBase {
         }
 
         // Add Vision Measurement if it passes the checks, but without taking into account vision yaw.
-        swerveDrive.addVisionMeasurement(new Pose2d(visionData.getVisionPose().getTranslation(), swerveDrive.getOdometryHeading()), visionData.getTime(),
-                visionData.getVisionReliability());
+        swerveDrive.addVisionMeasurement(new Pose2d(visionData.visionPose().getTranslation(), swerveDrive.getOdometryHeading()), visionData.time(),
+                visionData.visionReliability());
         Pose2d newPose = swerveDrive.getPose();
         if (Double.isNaN(newPose.getX()) || Double.isNaN(newPose.getY())) {
             // hadbadreading = true;
