@@ -6,10 +6,12 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Intake;
 
 import java.io.File;
 
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -22,7 +24,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Swerve swerve;
+  //private final Swerve swerve;
+  private final Intake intake;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -30,7 +33,10 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve/maxSwerve"));
+    //swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve/maxSwerve"));
+    intake = new Intake();
+
+    SmartDashboard.putNumber("speed", 0.25);
     // Configure the trigger bindings
     configureBindings();
   }
@@ -45,6 +51,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    m_driverController.b().whileTrue(intake.dynamicDriveIntake(() -> SmartDashboard.getNumber("speed", 0.25)));
   }
 
   /**
