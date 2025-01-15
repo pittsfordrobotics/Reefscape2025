@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Algae;
 import frc.robot.subsystems.Intake;
 
 import java.io.File;
@@ -26,6 +27,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //private final Swerve swerve;
   private final Intake intake;
+  private final Algae algae;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -35,6 +37,7 @@ public class RobotContainer {
   public RobotContainer() {
     //swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve/maxSwerve"));
     intake = new Intake();
+    algae = new Algae();
 
     SmartDashboard.putNumber("speed", 0.25);
     // Configure the trigger bindings
@@ -51,7 +54,22 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_driverController.b().whileTrue(intake.dynamicDriveIntake(() -> SmartDashboard.getNumber("speed", 0.25)));
+    //Drive Intake:
+    m_driverController.b().whileTrue(intake.dynamicDriveIntake(
+      () -> SmartDashboard.getNumber("Intake Speed", 0.25)));
+    
+    //Pivot Algae arm:
+    //Pos 1
+    m_driverController.rightTrigger().onTrue(algae.dynamicAlgaePivot(
+      () -> SmartDashboard.getNumber("Algae Angle 1", 0)));
+    //Pos 2
+    m_driverController.rightBumper().onTrue(algae.dynamicAlgaePivot(
+      () -> SmartDashboard.getNumber("Algae Angle 2", 0)));
+    
+    //Drive Algae pickup:
+    m_driverController.a().whileTrue(algae.dynamicAlgaePickup(() -> SmartDashboard.getNumber("Algae Speed", 0.25)));
+    //
+
   }
 
   /**
