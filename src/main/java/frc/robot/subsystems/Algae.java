@@ -42,7 +42,7 @@ public class Algae extends SubsystemBase {
     
     
     pivotConfig.closedLoop.pid(0.01, 0, 0.01);
-    algaePivotMotor.configure(algaeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    algaePivotMotor.configure(pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   @Override
