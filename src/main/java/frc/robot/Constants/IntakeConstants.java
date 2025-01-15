@@ -2,11 +2,8 @@ package frc.robot.Constants;
 
 public class IntakeConstants {
 
-    public static final int CAN_INTAKE_MOTOR = 1;
-    public static final int CAN_ALGAE_PICKUP_MOTOR = 2;
-    public static final int CAN_ALGAE_PIVOT_MOTOR = 3;
+    public static final int CAN_INTAKE_MOTOR = 11;
     
-
     // FF constants
     // See diagram its very usefull
     // deg -> rad = deg * .0175

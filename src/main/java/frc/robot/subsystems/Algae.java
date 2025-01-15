@@ -19,11 +19,12 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.AlgaeConstants;
 import frc.robot.Constants.IntakeConstants;
 
 public class Algae extends SubsystemBase {
-  private SparkMax algaePickupMotor = new SparkMax(IntakeConstants.CAN_ALGAE_PICKUP_MOTOR, MotorType.kBrushless);
-  private SparkMax algaePivotMotor = new SparkMax(IntakeConstants.CAN_ALGAE_PIVOT_MOTOR, MotorType.kBrushless);
+  private SparkMax algaePickupMotor = new SparkMax(AlgaeConstants.CAN_ALGAE_PICKUP_MOTOR, MotorType.kBrushless);
+  private SparkMax algaePivotMotor = new SparkMax(AlgaeConstants.CAN_ALGAE_PIVOT_MOTOR, MotorType.kBrushless);
 
   private SparkClosedLoopController algaePivotController = algaePivotMotor.getClosedLoopController();
   /** Creates a new Algae. */
