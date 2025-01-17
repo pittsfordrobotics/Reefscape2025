@@ -36,8 +36,8 @@ public class Algae extends SubsystemBase {
     algaeConfig.smartCurrentLimit(20, 20);
     pivotConfig.smartCurrentLimit(20,20);
 
-    algaeConfig.idleMode(IdleMode.kCoast);
-    pivotConfig.idleMode(IdleMode.kCoast);
+    algaeConfig.idleMode(IdleMode.kBrake);
+    pivotConfig.idleMode(IdleMode.kBrake);
 
     algaePickupMotor.configure(algaeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     
@@ -50,10 +50,6 @@ public class Algae extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  private void setAlgaePickupSpeed(double speed) {
-    algaePickupMotor.set(speed);
-  }
-
   private void setAlgaePivotPosition(double degrees) {
     algaePivotController.setReference(degrees, ControlType.kPosition);
   }
@@ -63,7 +59,7 @@ public class Algae extends SubsystemBase {
   }
 
   public Command dynamicAlgaePickup(DoubleSupplier speed){
-    return run(() -> setAlgaePickupSpeed(speed.getAsDouble()));
+    return run(() -> algaePickupMotor.set(speed.getAsDouble()));
   }
 
   public Command dynamicAlgaeSetPivot(Double degrees){
@@ -71,14 +67,14 @@ public class Algae extends SubsystemBase {
   }
 
   public Command dynamicAlgaeSpeedPivot(DoubleSupplier speed){
-    return run(() -> setAlgaePivotSpeed(speed.getAsDouble()));
+    return run(() -> algaePivotMotor.set(speed.getAsDouble()));
   }
 
   public Command stopAlgaePickup(){
-    return run(() -> setAlgaePickupSpeed(0));
+    return run(() -> algaePickupMotor.set(0));
   }
 
   public Command stopAlgaePivot(){
-    return run(() -> setAlgaePivotSpeed(0));
+    return run(() -> algaePivotMotor.set(0) );
   }
 }
