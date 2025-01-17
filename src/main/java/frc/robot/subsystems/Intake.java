@@ -23,8 +23,11 @@ public class Intake extends SubsystemBase {
   /** Creates a new IntakeSubsystem. */
   public Intake() {
     SparkMaxConfig intakeConfig = new SparkMaxConfig();
+
     intakeConfig.smartCurrentLimit(20, 20);
+
     intakeConfig.idleMode(IdleMode.kCoast);
+
     intakeMotor.configure(intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
@@ -41,5 +44,7 @@ public class Intake extends SubsystemBase {
     return run(() -> setIntake(speed.getAsDouble()));
   }
 
-  
+  public Command stopIntake(){
+    return run(() -> setIntake(0));
+  }
 }

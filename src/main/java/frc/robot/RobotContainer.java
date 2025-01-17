@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Swerve swerve;
+  //private final Swerve swerve;
   private final Intake intake;
   private final Algae algae;
 
@@ -35,11 +35,14 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve/maxSwerve"));
+    //swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve/maxSwerve"));
     intake = new Intake();
     algae = new Algae();
 
-    SmartDashboard.putNumber("speed", 0.25);
+    SmartDashboard.putNumber("Intake Speed", -0.25);
+    SmartDashboard.putNumber("Algae Speed", 0.25);
+    SmartDashboard.putNumber("Algae Pivot Speed", 0.25);
+
     // Configure the trigger bindings
     configureBindings();
   }
@@ -56,18 +59,43 @@ public class RobotContainer {
   private void configureBindings() {
     //Drive Intake:
     driverController.b().whileTrue(intake.dynamicDriveIntake(
-      () -> SmartDashboard.getNumber("Intake Speed", 0.25)));
+      () -> SmartDashboard.getNumber("Intake Speed", -0.25)))
+      .onFalse(intake.stopIntake());
+
+      driverController.y().whileTrue(intake.dynamicDriveIntake(
+        () -> -1 * SmartDashboard.getNumber("Intake Speed", -0.25)))
+        .onFalse(intake.stopIntake());
     
     //Pivot Algae arm:
     //Pos 1
-    driverController.rightTrigger().onTrue(algae.dynamicAlgaePivot(
+    /* driverController.rightTrigger().onTrue(algae.dynamicAlgaeSetPivot(
       () -> SmartDashboard.getNumber("Algae Angle 1", 0)));
     //Pos 2
-    driverController.rightBumper().onTrue(algae.dynamicAlgaePivot(
-      () -> SmartDashboard.getNumber("Algae Angle 2", 0)));
+    driverController.rightBumper().onTrue(algae.dynamicAlgaeSetPivot(
+      () -> SmartDashboard.getNumber("Algae Angle 2", 0))); */
     
+    //Rotate Algae arm:
+    driverController.rightTrigger().whileTrue(algae.dynamicAlgaeSpeedPivot(
+      () -> SmartDashboard.getNumber("Algae Pivot Speed", 0.25)))
+      .onFalse(algae.stopAlgaePivot());
+      
+    driverController.rightBumper().whileTrue(algae.dynamicAlgaeSpeedPivot(
+      () -> -1 * SmartDashboard.getNumber("Algae Pivot Speed", 0.25)))
+      .onFalse(algae.stopAlgaePivot());
+
     //Drive Algae pickup:
-    driverController.a().whileTrue(algae.dynamicAlgaePickup(() -> SmartDashboard.getNumber("Algae Speed", 0.25)));
+    driverController.a().whileTrue(algae.dynamicAlgaePickup(
+      () -> SmartDashboard.getNumber("Algae Speed", 0.25)))
+      .onFalse(algae.stopAlgaePickup());
+    
+    driverController.x().whileTrue(algae.dynamicAlgaePickup(
+      () -> -1 * SmartDashboard.getNumber("Algae Speed", 0.25)))
+      .onFalse(algae.stopAlgaePickup());
+
+    //Elevator Stuff:
+    //
+
+    //Climber Stuff:
     //
 
   }
@@ -79,6 +107,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
+
     return new Command() {};
   }
 }

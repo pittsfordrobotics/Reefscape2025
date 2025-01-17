@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 
+import java.security.PublicKey;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -40,8 +41,7 @@ public class Algae extends SubsystemBase {
 
     algaePickupMotor.configure(algaeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     
-    
-    pivotConfig.closedLoop.pid(0.01, 0, 0.01);
+    //pivotConfig.closedLoop.pid(0.01, 0, 0.01);
     algaePivotMotor.configure(pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
@@ -58,13 +58,27 @@ public class Algae extends SubsystemBase {
     algaePivotController.setReference(degrees, ControlType.kPosition);
   }
 
+  private void setAlgaePivotSpeed(double speed) {
+    algaePivotMotor.set(speed);
+  }
+
   public Command dynamicAlgaePickup(DoubleSupplier speed){
     return run(() -> setAlgaePickupSpeed(speed.getAsDouble()));
   }
 
-  public Command dynamicAlgaePivot(DoubleSupplier degrees){
-    return run(() -> setAlgaePivotPosition(degrees.getAsDouble()));
+  public Command dynamicAlgaeSetPivot(Double degrees){
+    return run(() -> setAlgaePivotPosition(degrees));
   }
 
+  public Command dynamicAlgaeSpeedPivot(DoubleSupplier speed){
+    return run(() -> setAlgaePivotSpeed(speed.getAsDouble()));
+  }
 
+  public Command stopAlgaePickup(){
+    return run(() -> setAlgaePickupSpeed(0));
+  }
+
+  public Command stopAlgaePivot(){
+    return run(() -> setAlgaePivotSpeed(0));
+  }
 }
