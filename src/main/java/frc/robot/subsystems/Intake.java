@@ -47,4 +47,5 @@ public class Intake extends SubsystemBase {
   public Command stopIntake(){
     return run(() -> setIntake(0));
   }
+  
 }
