@@ -127,7 +127,7 @@ public class Vision extends SubsystemBase {
 
         for (int i = 0; i < io.length; i++) {
             // update the inputs from the netwrork tables named camNames[i]
-            io[i].updateInputs(inputs[i], camNames[i], gyroangle.get().getDegrees());
+            io[i].updateInputs(inputs[i], gyroangle.get().getDegrees());
             // keeps the pipeline always the same
             io[i].setPipeline(pipeline, camNames[i]);
         }

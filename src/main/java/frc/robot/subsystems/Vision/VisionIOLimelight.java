@@ -16,18 +16,21 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class VisionIOLimelight implements VisionIO {
 
-    public VisionIOLimelight(String CamName) {
-        setLEDs(LED.OFF, CamName);
-        setPipeline(Pipelines.Test, CamName);
+    private final String cameraName;
+
+    public VisionIOLimelight(String cameraName) {
+        this.cameraName = cameraName;
+        setLEDs(LED.OFF, cameraName);
+        setPipeline(Pipelines.Test, cameraName);
     }
 
     // Uses limelight lib and network tables to get the values from the limelight
     // TODO: Use getBotPoseEstimate() from LimelightHelpers
     @Override
-    public void updateInputs(VisionIOInputs inputs, String limelightName, double gyroAngle) {
-        LimelightHelpers.SetRobotOrientation(limelightName, gyroAngle, 0, 0, 0, 0, 0 );
+    public void updateInputs(VisionIOInputs inputs, double gyroAngle) {
+        LimelightHelpers.SetRobotOrientation(cameraName, gyroAngle, 0, 0, 0, 0, 0 );
         // Gets the needed data from the networktables
-        PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
+        PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(cameraName);
 
         // Latency (Pipeline + Capture)
         double latency = botPoseEstimate.latency;
@@ -55,12 +58,12 @@ public class VisionIOLimelight implements VisionIO {
         inputs.tagDistances = tagDistances;
 
         // Direct access to the network tables for other values
-        final NetworkTable limelight = LimelightHelpers.getLimelightNTTable(limelightName);
+        final NetworkTable limelight = LimelightHelpers.getLimelightNTTable(cameraName);
         // connected if heartbeat value is not zero
         NetworkTableEntry heartbeatEntry = limelight.getEntry("hb");
         inputs.connected = heartbeatEntry.getDouble(0.0) > 0.0;
         // has target if true
-        inputs.hasTarget = LimelightHelpers.getTV(limelightName);
+        inputs.hasTarget = LimelightHelpers.getTV(cameraName);
     }
 
     @Override

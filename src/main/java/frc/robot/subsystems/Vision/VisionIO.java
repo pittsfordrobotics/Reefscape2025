@@ -65,7 +65,7 @@ public interface VisionIO {
     }
 
     /** Updates the set of loggable inputs. */
-    default void updateInputs(VisionIOInputs inputs, String CamName, double gyroAngle) {}
+    default void updateInputs(VisionIOInputs inputs, double gyroAngle) {}
 
     /** Enabled or disabled vision LEDs. */
     default void setCameraModes(CameraMode mode, String CamName) {}
