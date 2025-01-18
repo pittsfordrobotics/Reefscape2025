@@ -73,8 +73,8 @@ public class VisionIOLimelight implements VisionIO {
     }
 
     @Override
-    public void setCameraModes(CameraMode camera, String limelightName) {
-        final NetworkTable limelight = LimelightHelpers.getLimelightNTTable(limelightName);
+    public void setCameraModes(CameraMode camera) {
+        final NetworkTable limelight = LimelightHelpers.getLimelightNTTable(cameraName);
         limelight.getEntry("camMode").setDouble(camera.getNum());
     }
 
