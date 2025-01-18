@@ -68,9 +68,6 @@ public interface VisionIO {
     default void updateInputs(VisionIOInputs inputs, String CamName, double gyroAngle) {}
 
     /** Enabled or disabled vision LEDs. */
-    default void setLEDs(LED led, String CamName) {}
-
-    /** Enabled or disabled vision LEDs. */
     default void setCameraModes(CameraMode mode, String CamName) {}
 
     /** Sets the pipeline number. */
