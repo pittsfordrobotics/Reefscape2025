@@ -8,10 +8,7 @@ import java.io.File;
 import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
-import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -43,6 +40,7 @@ import swervelib.math.SwerveMath;
 import swervelib.motors.SwerveMotor;
 import swervelib.parser.SwerveControllerConfiguration;
 import swervelib.parser.SwerveDriveConfiguration;
+import swervelib.parser.SwerveModuleConfiguration;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
@@ -50,7 +48,8 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 public class Swerve extends SubsystemBase {
 
   private final SwerveDrive swerveDrive;
-  public double maximumSpeed = Units.feetToMeters(14.5);
+  public double maximumSpeed = SwerveConstants.SWERVE_MAXIMUM_VELOCITY;
+  public double maximumAngularSpeed = SwerveConstants.SWERVE_MAXIMUM_ANGULAR_VELOCITY;
   private Rotation2d currentTargetAngle = new Rotation2d();
   private Pose2d allianceRelPose = new Pose2d();
   private boolean hadbadreading;
@@ -77,13 +76,13 @@ public class Swerve extends SubsystemBase {
             // Lower the kS to reduce wobble?
             swerveDrive.getModules()[i].setFeedforward(new SimpleMotorFeedforward(SwerveConstants.MODULE_CONSTANTS[i].drive_kS * 0.1, SwerveConstants.MODULE_CONSTANTS[i].drive_kV, SwerveConstants.MODULE_CONSTANTS[i].drive_kA));
           }
-        setupPathPlanner();
+        // setupPathPlanner();
   }
 
         /**
      * Setup AutoBuilder for PathPlanner.
      */
-    public void setupPathPlanner() {
+/*    public void setupPathPlanner() {
       AutoBuilder.configureHolonomic(
               swerveDrive::getPose, // Robot pose supplier
               swerveDrive::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
@@ -117,6 +116,7 @@ public class Swerve extends SubsystemBase {
   
 
   }
+*/
 
   /** Gets the current alliance, defaulting to blue */
     public Alliance getAllianceDefaultBlue() {
@@ -171,7 +171,7 @@ public class Swerve extends SubsystemBase {
     public void driveAllianceRelative(double x, double y, double rotationRate, boolean headingDrive) {
         if (headingDrive) {
             swerveDrive.driveFieldOriented(swerveDrive.swerveController.getTargetSpeeds(getAllianceDefaultBlue() == Alliance.Blue ? x : -x, getAllianceDefaultBlue() == Alliance.Blue ? y : -y,
-                    currentTargetAngle.getRadians(), swerveDrive.getYaw().getRadians(), swerveDrive.getMaximumVelocity()));
+                    currentTargetAngle.getRadians(), swerveDrive.getYaw().getRadians(), maximumSpeed));
         } else {
             swerveDrive.drive(new Translation2d(getAllianceDefaultBlue() == Alliance.Blue ? x : -x, getAllianceDefaultBlue() == Alliance.Blue ? y : -y),
                     rotationRate, true, false);
@@ -245,16 +245,16 @@ public class Swerve extends SubsystemBase {
             }
             if (leftRotationInput != 0 && rightRotationInput == 0) {
                 swerveDrive.setHeadingCorrection(false);
-                double leftRotationOutput = Math.pow(leftRotationInput, 3) * swerveDrive.getMaximumAngularVelocity() * 2;
-                driveAllianceRelative(xInput * swerveDrive.getMaximumVelocity(), yInput * swerveDrive.getMaximumVelocity(), leftRotationOutput, false);
+                double leftRotationOutput = Math.pow(leftRotationInput, 3) * maximumAngularSpeed * 2;
+                driveAllianceRelative(xInput * maximumSpeed, yInput * maximumSpeed, leftRotationOutput, false);
             }
             // If right trigger pressed, rotate left at a rate proportional to the right
             // trigger input
             else if (rightRotationInput != 0 && leftRotationInput == 0) {
                 swerveDrive.setHeadingCorrection(false);
-                double rightRotationOutput = -Math.pow(rightRotationInput, 3) * swerveDrive.getMaximumAngularVelocity()
+                double rightRotationOutput = -Math.pow(rightRotationInput, 3) * maximumAngularSpeed
                         * 2;
-                driveAllianceRelative(xInput * swerveDrive.getMaximumVelocity(), yInput * swerveDrive.getMaximumVelocity(), rightRotationOutput, false);
+                driveAllianceRelative(xInput * maximumSpeed, yInput * maximumSpeed, rightRotationOutput, false);
                 currentTargetAngle = null;
             }
             // If no triggers are pressed or both are pressed, use the right stick for
@@ -268,7 +268,7 @@ public class Swerve extends SubsystemBase {
                     // Make the robot move
                     driveAllianceRelative(xInput, yInput, currentTargetAngle.getRadians(), true);
                 } else {
-                    driveAllianceRelative(xInput * swerveDrive.getMaximumVelocity(), yInput * swerveDrive.getMaximumVelocity(), 0, false);
+                    driveAllianceRelative(xInput * maximumSpeed, yInput * maximumSpeed, 0, false);
                 }
             }
         });
@@ -400,13 +400,18 @@ public class Swerve extends SubsystemBase {
         Rotation2d[] currentOffsets = new Rotation2d[4];
         Rotation2d[] newOffsets = new Rotation2d[4];
         Rotation2d[] measuredPositions = new Rotation2d[4];
-        AbsoluteEncoder[] encoders = new AbsoluteEncoder[4];
+        double[] angleOffsets = new double[4];
+        SparkAbsoluteEncoder[] encoders = new SparkAbsoluteEncoder[4];
+        SwerveModuleConfiguration[] moduleConfigs = new SwerveModuleConfiguration[4];
         for (int i = 0; i < 4; i++) {
-            encoders[i] = (AbsoluteEncoder) swerveDrive.getModules()[i].getAbsoluteEncoder().getAbsoluteEncoder();
-            currentOffsets[i] = Rotation2d.fromDegrees(encoders[i].getZeroOffset());
+            currentOffsets[i] = Rotation2d.fromDegrees(angleOffsets[i]);
+            moduleConfigs[i] = swerveDrive.getModules()[i].configuration;
+            angleOffsets[i] = moduleConfigs[i].angleOffset;
+            
+            encoders[i] = (SparkAbsoluteEncoder) swerveDrive.getModules()[i].getAbsoluteEncoder().getAbsoluteEncoder();
             measuredPositions[i] = Rotation2d.fromDegrees(encoders[i].getPosition());
             newOffsets[i] = currentOffsets[i].plus(measuredPositions[i]).plus(Rotation2d.fromDegrees(getAngleForModule(i)));
-            encoders[i].setZeroOffset(MathUtil.inputModulus(newOffsets[i].getDegrees(), 0, 360));
+            moduleConfigs[i].absoluteEncoder.setAbsoluteEncoderOffset(MathUtil.inputModulus(newOffsets[i].getDegrees(), 0, 360));
             swerveDrive.getModules()[i].getAngleMotor().burnFlash();
         }
     }
