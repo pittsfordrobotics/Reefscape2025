@@ -129,7 +129,7 @@ public class Vision extends SubsystemBase {
             // update the inputs from the netwrork tables named camNames[i]
             io[i].updateInputs(inputs[i], gyroangle.get().getDegrees());
             // keeps the pipeline always the same
-            io[i].setPipeline(pipeline, camNames[i]);
+            io[i].setPipeline(pipeline);
         }
         swervesGyro = gyroangle.get().getDegrees();
         List<Pose2d> allRobotPoses = new ArrayList<>();

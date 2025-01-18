@@ -21,7 +21,7 @@ public class VisionIOLimelight implements VisionIO {
     public VisionIOLimelight(String cameraName) {
         this.cameraName = cameraName;
         setLEDs(LED.OFF, cameraName);
-        setPipeline(Pipelines.Test, cameraName);
+        setPipeline(Pipelines.Test);
     }
 
     // Uses limelight lib and network tables to get the values from the limelight
@@ -67,8 +67,8 @@ public class VisionIOLimelight implements VisionIO {
     }
 
     @Override
-    public void setPipeline(Pipelines pipeline, String limelightName) {
-        NetworkTable limelight = LimelightHelpers.getLimelightNTTable(limelightName);
+    public void setPipeline(Pipelines pipeline) {
+        NetworkTable limelight = LimelightHelpers.getLimelightNTTable(cameraName);
         limelight.getEntry("pipeline").setDouble(pipeline.getNum());
     }
 

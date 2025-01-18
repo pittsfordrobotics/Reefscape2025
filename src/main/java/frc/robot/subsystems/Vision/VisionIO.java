@@ -71,6 +71,6 @@ public interface VisionIO {
     default void setCameraModes(CameraMode mode) {}
 
     /** Sets the pipeline number. */
-    default void setPipeline(Pipelines pipeline, String CamName) {}
+    default void setPipeline(Pipelines pipeline) {}
 
 }
