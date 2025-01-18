@@ -6,9 +6,9 @@ package frc.robot.subsystems.Vision;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.commands.DisabledInstantCommand;
 import frc.robot.lib.VisionData;
 import frc.robot.lib.util.AllianceFlipUtil;
 import frc.robot.lib.util.LimelightHelpers;
@@ -66,7 +66,7 @@ public class Vision extends SubsystemBase {
         FieldConstants.aprilTags.getTags().forEach((AprilTag tag) -> lastTagDetectionTimes.put(tag.ID, 0.0));
 
         Shuffleboard.getTab("Vision").addBoolean("Is Vison Being Used?", this::usingVision);
-        Shuffleboard.getTab("Vision").add("UseVisionToggle", new DisabledInstantCommand(this::useVisionToggle));
+        Shuffleboard.getTab("Vision").add("UseVisionToggle", Commands.runOnce(this::useVisionToggle).ignoringDisable(true));
 
         for (int i = 0; i < io.length; i++) {
             int number = i; // why are ints dumb
