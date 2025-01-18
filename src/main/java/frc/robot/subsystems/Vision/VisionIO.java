@@ -21,7 +21,6 @@ public interface VisionIO {
      * Mid: has slightly higher FPS, but allows for farther vision updates when halfway down the field
      * Close: has the highest FPS, but only has limited range
      */
-
     
     enum Pipelines {
         Test(0);
