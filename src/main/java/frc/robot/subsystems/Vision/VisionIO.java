@@ -21,7 +21,6 @@ public interface VisionIO {
      * Mid: has slightly higher FPS, but allows for farther vision updates when halfway down the field
      * Close: has the highest FPS, but only has limited range
      */
-
     
     enum Pipelines {
         Test(0);
@@ -65,15 +64,12 @@ public interface VisionIO {
     }
 
     /** Updates the set of loggable inputs. */
-    default void updateInputs(VisionIOInputs inputs, String CamName, double gyroAngle) {}
+    default void updateInputs(VisionIOInputs inputs, double gyroAngle) {}
 
     /** Enabled or disabled vision LEDs. */
-    default void setLEDs(LED led, String CamName) {}
-
-    /** Enabled or disabled vision LEDs. */
-    default void setCameraModes(CameraMode mode, String CamName) {}
+    default void setCameraModes(CameraMode mode) {}
 
     /** Sets the pipeline number. */
-    default void setPipeline(Pipelines pipeline, String CamName) {}
+    default void setPipeline(Pipelines pipeline) {}
 
 }

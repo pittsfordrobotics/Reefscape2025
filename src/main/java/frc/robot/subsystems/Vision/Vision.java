@@ -10,8 +10,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.lib.VisionData;
-import frc.robot.lib.util.AllianceFlipUtil;
-import frc.robot.lib.util.LimelightHelpers;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.Vision.VisionIO.Pipelines;
 
@@ -22,22 +20,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.apriltag.AprilTag;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
-import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Vision extends SubsystemBase {
 
@@ -47,7 +39,6 @@ public class Vision extends SubsystemBase {
     private Supplier<Rotation2d> gyroangle;
     private Supplier<Double> robotRotationalVelocity;
     private double xyStdDev = 200;
-    private boolean hasGreatSpeakerReading = false;
     private double swervesGyro = 12.2;
 
     private final VisionIO[] io;
@@ -83,13 +74,11 @@ public class Vision extends SubsystemBase {
                     () -> this.inputs[number].pose.getRotation().getDegrees());
         }
         Shuffleboard.getTab("Vision").addDouble("XY_std", this::getXYstdDev);
-        Shuffleboard.getTab("Vision").addBoolean("Has Great Speaker Reading", this::hasGreatSpeakerReading);
         Shuffleboard.getTab("Vision").addDouble("Swerves Gyro", this::getSwervesGyro);
     }
 
     private final VisionIO.VisionIOInputs[] inputs = new VisionIO.VisionIOInputs[] { new VisionIO.VisionIOInputs(),
             new VisionIO.VisionIOInputs() };
-    private final String[] camNames = new String[] { VisionConstants.LIMELIGHT1_NAME, VisionConstants.LIMELIGHT2_NAME };
 
     public void setUseVision(boolean usevision) {
         this.useVision = usevision;
@@ -111,10 +100,6 @@ public class Vision extends SubsystemBase {
         return xyStdDev;
     }
 
-    public boolean hasGreatSpeakerReading() {
-        return hasGreatSpeakerReading;
-    }
-
     public double getSwervesGyro() {
         return swervesGyro;
     }
@@ -127,14 +112,15 @@ public class Vision extends SubsystemBase {
 
         for (int i = 0; i < io.length; i++) {
             // update the inputs from the netwrork tables named camNames[i]
-            io[i].updateInputs(inputs[i], camNames[i], gyroangle.get().getDegrees());
+            io[i].updateInputs(inputs[i], gyroangle.get().getDegrees());
             // keeps the pipeline always the same
-            io[i].setPipeline(pipeline, camNames[i]);
+            // ** No idea why this needs to be set on every periodic.
+            //    The pipeline was already set in the VisionIOLimelight constructor.
+            io[i].setPipeline(pipeline);
         }
+
         swervesGyro = gyroangle.get().getDegrees();
         List<Pose2d> allRobotPoses = new ArrayList<>();
-
-        // exit if boolean
 
         // Pose estimation
         for (int i = 0; i < io.length; i++) {
@@ -184,6 +170,10 @@ public class Vision extends SubsystemBase {
             double avgDistance = inputs[i].avgTagDist;
             // TODO: Double check this can be over 2 lol
 
+            // ********
+            // The "speaker tag" code should be removed but is being left in for now as
+            // a good example of performing logic based on specific tags.
+            // ********
             // Check if the robot has both speaker tags for red or blue
             boolean hasBlueSpeakerTags = (Arrays.binarySearch(inputs[i].tagIDs, 7) >= 0)
                     && (Arrays.binarySearch(inputs[i].tagIDs, 8) >= 0);
@@ -191,7 +181,7 @@ public class Vision extends SubsystemBase {
                     && (Arrays.binarySearch(inputs[i].tagIDs, 4) >= 0);
 
             // Checks if has supergood reading at the speaker
-            hasGreatSpeakerReading = ((inputs[i].tagCount >= 2) && (avgDistance < 4.0)
+            boolean hasGreatSpeakerReading = ((inputs[i].tagCount >= 2) && (avgDistance < 4.0)
                     && (hasBlueSpeakerTags || hasRedSpeakerTags));
 
             // Exits when in auto if it doesnt have a great great reading
