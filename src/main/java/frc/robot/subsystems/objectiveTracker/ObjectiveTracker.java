@@ -26,7 +26,7 @@ public class ObjectiveTracker extends SubsystemBase {
   }
 
   public String getObjectiveString() {
-    String s = (selectorInputs.selectedIndex % 2 == 0) ? "R" : "L";
+    String s = (selectorInputs.selectedIndex % 2 == 0) ? "L" : "R";
     int level = 4 - (selectorInputs.selectedIndex / 2);
     
     return s + level;

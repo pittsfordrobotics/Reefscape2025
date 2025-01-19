@@ -15,6 +15,7 @@ import frc.robot.subsystems.Intake;
 import java.io.File;
 
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -49,6 +50,8 @@ public class RobotContainer {
     SmartDashboard.putNumber("speed", 0.25);
     // Configure the trigger bindings
     configureBindings();
+
+    Shuffleboard.getTab("Debug").addString("Selected Node", objectiveTracker::getObjectiveString);
   }
 
   /**
