@@ -6,6 +6,9 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.objectiveTracker.ObjectiveSelecterIONetworkTables;
+import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
+import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.MoveDirection;
 import frc.robot.subsystems.Algae;
 import frc.robot.subsystems.Intake;
 
@@ -28,6 +31,7 @@ public class RobotContainer {
   private final Swerve swerve;
   private final Intake intake;
   private final Algae algae;
+  private final ObjectiveTracker objectiveTracker;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
@@ -38,6 +42,9 @@ public class RobotContainer {
     swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve"));
     intake = new Intake();
     algae = new Algae();
+
+    ObjectiveSelecterIONetworkTables objectiveSelecterIOImpl = new ObjectiveSelecterIONetworkTables();
+    objectiveTracker = new ObjectiveTracker(objectiveSelecterIOImpl);
 
     SmartDashboard.putNumber("speed", 0.25);
     // Configure the trigger bindings
@@ -68,8 +75,11 @@ public class RobotContainer {
     
     //Drive Algae pickup:
     driverController.a().whileTrue(algae.dynamicAlgaePickup(() -> SmartDashboard.getNumber("Algae Speed", 0.25)));
-    //
-
+    
+    driverController.povUp().onTrue(objectiveTracker.moveIndex(MoveDirection.UP));
+    driverController.povDown().onTrue(objectiveTracker.moveIndex(MoveDirection.DOWN));
+    driverController.povRight().onTrue(objectiveTracker.moveIndex(MoveDirection.RIGHT));
+    driverController.povLeft().onTrue(objectiveTracker.moveIndex(MoveDirection.LEFT));
   }
 
   /**
