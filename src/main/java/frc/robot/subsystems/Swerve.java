@@ -245,15 +245,14 @@ public class Swerve extends SubsystemBase {
             }
             if (leftRotationInput != 0 && rightRotationInput == 0) {
                 swerveDrive.setHeadingCorrection(false);
-                double leftRotationOutput = Math.pow(leftRotationInput, 3) * maximumAngularSpeed * 2;
+                double leftRotationOutput = Math.pow(leftRotationInput, 3) * maximumAngularSpeed;
                 driveAllianceRelative(xInput * maximumSpeed, yInput * maximumSpeed, leftRotationOutput, false);
             }
             // If right trigger pressed, rotate left at a rate proportional to the right
             // trigger input
             else if (rightRotationInput != 0 && leftRotationInput == 0) {
                 swerveDrive.setHeadingCorrection(false);
-                double rightRotationOutput = -Math.pow(rightRotationInput, 3) * maximumAngularSpeed
-                        * 2;
+                double rightRotationOutput = -Math.pow(rightRotationInput, 3) * maximumAngularSpeed;
                 driveAllianceRelative(xInput * maximumSpeed, yInput * maximumSpeed, rightRotationOutput, false);
                 currentTargetAngle = null;
             }
