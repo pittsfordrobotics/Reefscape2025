@@ -8,13 +8,10 @@ import com.revrobotics.spark.SparkMax;
 
 import java.util.function.DoubleSupplier;
 
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
@@ -25,7 +22,6 @@ import frc.robot.Constants.ClimberConstants;
 public class Climber extends SubsystemBase {
   private SparkMax climbMotor1 = new SparkMax(ClimberConstants.CAN_CLIMBER_1, MotorType.kBrushless);
   private SparkMax climbMotor2 = new SparkMax(ClimberConstants.CAN_CLIMBER_2, MotorType.kBrushless);
-  private SparkClosedLoopController climbController = climbMotor1.getClosedLoopController();
   /** Creates a new Climber. */
   public Climber() {
     SparkMaxConfig climbConfig1 = new SparkMaxConfig();
@@ -40,8 +36,6 @@ public class Climber extends SubsystemBase {
     climbConfig2.follow(climbMotor1);
     climbConfig2.inverted(true);
 
-    climbConfig1.closedLoop.pid(0.01, 0, 0.01);
-    climbConfig1.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
     climbMotor1.configure(climbConfig2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     climbMotor2.configure(climbConfig2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
@@ -49,13 +43,6 @@ public class Climber extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    
-  }
-  private void setClimbHeight(double height) {
-    climbController.setReference(height, ControlType.kPosition);
-  }
-  public Command dynamicClimbHeight(DoubleSupplier height){
-    return run(() -> setClimbHeight(height.getAsDouble()));
   }
 
   private void setClimbSpeed(double speed) {
