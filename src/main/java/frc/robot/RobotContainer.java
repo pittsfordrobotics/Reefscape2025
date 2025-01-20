@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Algae;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 
 import java.io.File;
@@ -28,6 +29,7 @@ public class RobotContainer {
   //private final Swerve swerve;
   private final Intake intake;
   private final Algae algae;
+  private final Climber climber;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
@@ -38,12 +40,15 @@ public class RobotContainer {
     //swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve/maxSwerve"));
     intake = new Intake();
     algae = new Algae();
+    climber = new Climber();
 
     SmartDashboard.putNumber("Intake Speed", -0.25);
     SmartDashboard.putNumber("Algae Speed", 0.25);
     SmartDashboard.putNumber("Algae Pivot Speed", 0.25);
     SmartDashboard.putNumber("Algae Angle 1", 0);
     
+    SmartDashboard.putNumber("Climb Speed", 0.25);
+
     // Configure the trigger bindings
     configureBindings();
   }
@@ -96,8 +101,14 @@ public class RobotContainer {
     //Elevator Stuff:
     //
 
-    //Climber Stuff:
-    //
+    //Drive Climber:
+    driverController.leftTrigger().whileTrue(climber.dynamicDriveClimb(
+      () -> SmartDashboard.getNumber(("Climb Speed"), 0.25)))
+      .onFalse(climber.stopClimb());
+    
+    driverController.leftBumper().whileTrue(climber.dynamicDriveClimb(
+    () -> -1 * SmartDashboard.getNumber("Climb Speed", 0.25)))
+    .onFalse(climber.stopClimb());
 
   }
 

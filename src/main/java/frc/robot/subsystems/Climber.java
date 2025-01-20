@@ -5,6 +5,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkMax;
+
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -12,6 +15,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
 
@@ -30,6 +34,7 @@ public class Climber extends SubsystemBase {
     climbConfig2.idleMode(IdleMode.kBrake);
 
     climbConfig2.follow(climbMotor1);
+    climbConfig2.inverted(true);
 
     climbMotor1.configure(climbConfig2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     climbMotor2.configure(climbConfig2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -40,5 +45,15 @@ public class Climber extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  
+  private void setClimbSpeed(double speed) {
+    climbMotor1.set(speed);
+  }
+
+  public Command dynamicDriveClimb(DoubleSupplier speed){
+    return run(() -> setClimbSpeed(speed.getAsDouble()));
+  }
+
+  public Command stopClimb(){
+    return run(() -> setClimbSpeed(0));
+  }
 }
