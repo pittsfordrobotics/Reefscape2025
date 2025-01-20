@@ -42,7 +42,8 @@ public class RobotContainer {
     SmartDashboard.putNumber("Intake Speed", -0.25);
     SmartDashboard.putNumber("Algae Speed", 0.25);
     SmartDashboard.putNumber("Algae Pivot Speed", 0.25);
-
+    SmartDashboard.putNumber("Algae Angle 1", 0);
+    
     // Configure the trigger bindings
     configureBindings();
   }
@@ -68,11 +69,11 @@ public class RobotContainer {
     
     //Pivot Algae arm:
     //Pos 1
-    /* driverController.rightTrigger().onTrue(algae.dynamicAlgaeSetPivot(
+     driverController.leftTrigger().onTrue(algae.dynamicAlgaeSetPivot(
       () -> SmartDashboard.getNumber("Algae Angle 1", 0)));
-    //Pos 2
-    driverController.rightBumper().onTrue(algae.dynamicAlgaeSetPivot(
-      () -> SmartDashboard.getNumber("Algae Angle 2", 0))); */
+    // //Pos 2
+    // driverController.rightBumper().onTrue(algae.dynamicAlgaeSetPivot(
+    //   () -> SmartDashboard.getNumber("Algae Angle 2", 0))); 
     
     //Rotate Algae arm:
     driverController.rightTrigger().whileTrue(algae.dynamicAlgaeSpeedPivot(

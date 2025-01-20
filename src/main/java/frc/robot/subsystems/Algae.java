@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 
@@ -16,6 +17,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,7 +28,6 @@ import frc.robot.Constants.IntakeConstants;
 public class Algae extends SubsystemBase {
   private SparkMax algaePickupMotor = new SparkMax(AlgaeConstants.CAN_ALGAE_PICKUP_MOTOR, MotorType.kBrushless);
   private SparkMax algaePivotMotor = new SparkMax(AlgaeConstants.CAN_ALGAE_PIVOT_MOTOR, MotorType.kBrushless);
-
   private SparkClosedLoopController algaePivotController = algaePivotMotor.getClosedLoopController();
   /** Creates a new Algae. */
   public Algae() {
@@ -41,7 +42,8 @@ public class Algae extends SubsystemBase {
 
     algaePickupMotor.configure(algaeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     
-    //pivotConfig.closedLoop.pid(0.01, 0, 0.01);
+    pivotConfig.closedLoop.pid(0.01, 0, 0.01);
+    pivotConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
     algaePivotMotor.configure(pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
@@ -54,16 +56,12 @@ public class Algae extends SubsystemBase {
     algaePivotController.setReference(degrees, ControlType.kPosition);
   }
 
-  private void setAlgaePivotSpeed(double speed) {
-    algaePivotMotor.set(speed);
-  }
-
   public Command dynamicAlgaePickup(DoubleSupplier speed){
     return run(() -> algaePickupMotor.set(speed.getAsDouble()));
   }
 
-  public Command dynamicAlgaeSetPivot(Double degrees){
-    return run(() -> setAlgaePivotPosition(degrees));
+  public Command dynamicAlgaeSetPivot(DoubleSupplier degrees){
+    return run(() -> setAlgaePivotPosition(degrees.getAsDouble()));
   }
 
   public Command dynamicAlgaeSpeedPivot(DoubleSupplier speed){
