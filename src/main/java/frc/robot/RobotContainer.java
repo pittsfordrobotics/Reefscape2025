@@ -74,7 +74,7 @@ public class RobotContainer {
     
     //Pivot Algae arm:
     //Pos 1
-     driverController.leftTrigger().onTrue(algae.dynamicAlgaeSetPivot(
+     driverController.povLeft().onTrue(algae.dynamicAlgaeSetPivot(
       () -> SmartDashboard.getNumber("Algae Angle 1", 0)));
     // //Pos 2
     // driverController.rightBumper().onTrue(algae.dynamicAlgaeSetPivot(
@@ -97,6 +97,9 @@ public class RobotContainer {
     driverController.x().whileTrue(algae.dynamicAlgaePickup(
       () -> -1 * SmartDashboard.getNumber("Algae Speed", 0.25)))
       .onFalse(algae.stopAlgaePickup());
+
+    driverController.povUp().onTrue(climber.dynamicClimbHeight(
+      () -> 1));
 
     //Elevator Stuff:
     //
