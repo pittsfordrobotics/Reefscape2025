@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.objectiveTracker.ButtonBoard;
 import frc.robot.subsystems.objectiveTracker.ObjectiveSelecterIONetworkTables;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.MoveDirection;
@@ -13,8 +14,10 @@ import frc.robot.subsystems.Algae;
 import frc.robot.subsystems.Intake;
 
 import java.io.File;
+import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,10 +36,14 @@ public class RobotContainer {
   private final Intake intake;
   private final Algae algae;
   private final ObjectiveTracker objectiveTracker;
+  private ButtonBoard buttonBoard;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
+  private final Joystick buttonBoardController =
+      new Joystick(OperatorConstants.BUTTON_BOARD_PORT);
+  private final BooleanSupplier[] buttonSupplier = new BooleanSupplier[9];
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -46,6 +53,12 @@ public class RobotContainer {
 
     ObjectiveSelecterIONetworkTables objectiveSelecterIOImpl = new ObjectiveSelecterIONetworkTables();
     objectiveTracker = new ObjectiveTracker(objectiveSelecterIOImpl);
+
+    for (int i = 1; i <= 9; i++) {
+      final int index = i;
+      buttonSupplier[index] = () -> buttonBoardController.getRawButton(index);
+    }
+    buttonBoard = new ButtonBoard(buttonSupplier);
 
     SmartDashboard.putNumber("speed", 0.25);
     // Configure the trigger bindings
