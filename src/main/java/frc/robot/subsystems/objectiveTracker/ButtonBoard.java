@@ -9,47 +9,48 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ButtonBoard extends SubsystemBase {
-  private BooleanSupplier[] buttonSupplier;
-  private boolean[] buttons;
+  
+  public interface ButtonSupplier {
+    boolean getButtonState(int buttonNumber);
+  }
+
+  private ButtonSupplier buttonSupplier;
   private int level = 1;
   private boolean rightSide = false;
   private int reefSide = 0;
+
   /** Creates a new ButtonBoard. */
-  public ButtonBoard(BooleanSupplier[] buttonSupplier) {
+  public ButtonBoard(ButtonSupplier buttonSupplier) {
     this.buttonSupplier = buttonSupplier;
   }
 
   @Override
   public void periodic() {
-    for(int i = 0; i < buttonSupplier.length; i++) {
-      buttons[i] = buttonSupplier[i].getAsBoolean();
-    }
-
-    if(buttons[5]) {
+    if(buttonSupplier.getButtonState(5)) {
       level = 4;
     }
 
-    else if(buttons[6]) {
+    else if(buttonSupplier.getButtonState(6)) {
       level = 3;
     }
 
-    else if(buttons[7]) {
+    else if(buttonSupplier.getButtonState(7)) {
       level = 2;
     }
 
-    else if(buttons[8]) {
+    else if(buttonSupplier.getButtonState(8)) {
       level = 1;
     }
 
-    if(buttons[1]) {
+    if(buttonSupplier.getButtonState(1)) {
       rightSide = true;
     }
 
-    else if(buttons[2]) {
+    else if(buttonSupplier.getButtonState(2)) {
       rightSide = false;
     }
     
-    if(buttons[3]) {
+    if(buttonSupplier.getButtonState(3)) {
       if(reefSide == 5) {
         reefSide = 0;
       } else {
@@ -57,7 +58,7 @@ public class ButtonBoard extends SubsystemBase {
       }
     }
 
-    else if(buttons[4]) {
+    else if(buttonSupplier.getButtonState(4)) {
       if(reefSide == 0) {
         reefSide = 5;
       } else {

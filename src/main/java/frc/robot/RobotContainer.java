@@ -43,7 +43,6 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
   private final Joystick buttonBoardController =
       new Joystick(OperatorConstants.BUTTON_BOARD_PORT);
-  private final BooleanSupplier[] buttonSupplier = new BooleanSupplier[9];
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -54,11 +53,7 @@ public class RobotContainer {
     ObjectiveSelecterIONetworkTables objectiveSelecterIOImpl = new ObjectiveSelecterIONetworkTables();
     objectiveTracker = new ObjectiveTracker(objectiveSelecterIOImpl);
 
-    for (int i = 1; i <= 9; i++) {
-      final int index = i;
-      buttonSupplier[index] = () -> buttonBoardController.getRawButton(index);
-    }
-    buttonBoard = new ButtonBoard(buttonSupplier);
+    buttonBoard = new ButtonBoard((int i) -> buttonBoardController.getRawButton(i));
 
     SmartDashboard.putNumber("speed", 0.25);
     // Configure the trigger bindings
