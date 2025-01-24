@@ -73,6 +73,6 @@ public class Algae extends SubsystemBase {
   }
 
   public Command stopAlgaePivot(){
-    return run(() -> algaePivotMotor.set(0) );
+    return run(() -> algaePivotMotor.set(0));
   }
 }

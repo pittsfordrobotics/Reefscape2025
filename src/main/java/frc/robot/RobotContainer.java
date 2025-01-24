@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Algae;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 
 import java.io.File;
@@ -30,6 +31,7 @@ public class RobotContainer {
   private final Intake intake;
   private final Algae algae;
   private final Climber climber;
+  private final Elevator elevator;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
@@ -41,11 +43,14 @@ public class RobotContainer {
     intake = new Intake();
     algae = new Algae();
     climber = new Climber();
+    elevator = new Elevator();
 
     SmartDashboard.putNumber("Intake Speed", -0.25);
     SmartDashboard.putNumber("Algae Speed", 0.25);
+
     SmartDashboard.putNumber("Algae Pivot Speed", 0.25);
     SmartDashboard.putNumber("Algae Angle 1", 0);
+    SmartDashboard.putNumber("Algae Angle 2", 0);
     
     SmartDashboard.putNumber("Climb Speed", 0.25);
 
@@ -74,20 +79,20 @@ public class RobotContainer {
     
     //Pivot Algae arm:
     //Pos 1
-     driverController.leftTrigger().onTrue(algae.dynamicAlgaeSetPivot(
+    driverController.rightTrigger().onTrue(algae.dynamicAlgaeSetPivot(
       () -> SmartDashboard.getNumber("Algae Angle 1", 0)));
     // //Pos 2
-    // driverController.rightBumper().onTrue(algae.dynamicAlgaeSetPivot(
-    //   () -> SmartDashboard.getNumber("Algae Angle 2", 0))); 
+    driverController.rightBumper().onTrue(algae.dynamicAlgaeSetPivot(
+      () -> SmartDashboard.getNumber("Algae Angle 2", 0))); 
     
     //Rotate Algae arm:
-    driverController.rightTrigger().whileTrue(algae.dynamicAlgaeSpeedPivot(
+    /*driverController.rightTrigger().whileTrue(algae.dynamicAlgaeSpeedPivot(
       () -> SmartDashboard.getNumber("Algae Pivot Speed", 0.25)))
       .onFalse(algae.stopAlgaePivot());
       
     driverController.rightBumper().whileTrue(algae.dynamicAlgaeSpeedPivot(
       () -> -1 * SmartDashboard.getNumber("Algae Pivot Speed", 0.25)))
-      .onFalse(algae.stopAlgaePivot());
+      .onFalse(algae.stopAlgaePivot());*/
 
     //Drive Algae pickup:
     driverController.a().whileTrue(algae.dynamicAlgaePickup(
