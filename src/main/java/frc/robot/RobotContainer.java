@@ -12,6 +12,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 
 import java.io.File;
+import java.security.Key;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -53,6 +54,8 @@ public class RobotContainer {
     SmartDashboard.putNumber("Algae Angle 2", 0);
     
     SmartDashboard.putNumber("Climb Speed", 0.25);
+    SmartDashboard.putNumber("Climb Default Angle", 0);
+    SmartDashboard.putNumber("Climb Active Angle", 0);
 
     // Configure the trigger bindings
     configureBindings();
@@ -78,12 +81,10 @@ public class RobotContainer {
         .onFalse(intake.stopIntake());
     
     //Pivot Algae arm:
-    //Pos 1
     driverController.rightTrigger().onTrue(algae.dynamicAlgaeSetPivot(
-      () -> SmartDashboard.getNumber("Algae Angle 1", 0)));
-    // //Pos 2
-    driverController.rightBumper().onTrue(algae.dynamicAlgaeSetPivot(
-      () -> SmartDashboard.getNumber("Algae Angle 2", 0))); 
+      () -> SmartDashboard.getNumber("Algae Angle 1", 0)))
+      .onFalse((algae.dynamicAlgaeSetPivot(
+        () -> SmartDashboard.getNumber("Algae Angle 2", 0))));
     
     //Rotate Algae arm:
     /*driverController.rightTrigger().whileTrue(algae.dynamicAlgaeSpeedPivot(
@@ -107,13 +108,14 @@ public class RobotContainer {
     //
 
     //Drive Climber:
-    driverController.leftTrigger().whileTrue(climber.dynamicDriveClimb(
-      () -> SmartDashboard.getNumber(("Climb Speed"), 0.25)))
-      .onFalse(climber.stopClimb());
+    driverController.leftTrigger().whileTrue(climber.climbToPosition(
+      () -> SmartDashboard.getNumber(("Climb Active Angle"), 0.25)))
+      .whileFalse(climber.climbToPosition(
+        () -> SmartDashboard.getNumber("Angle Default Angle", 0)));
     
-    driverController.leftBumper().whileTrue(climber.dynamicDriveClimb(
+    /*driverController.leftBumper().whileTrue(climber.dynamicDriveClimb(
     () -> -1 * SmartDashboard.getNumber("Climb Speed", 0.25)))
-    .onFalse(climber.stopClimb());
+    .onFalse(climber.stopClimb());*/
 
   }
 

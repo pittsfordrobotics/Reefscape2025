@@ -4,10 +4,13 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.spark.SparkAbsoluteEncoder;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 
 import java.util.function.DoubleSupplier;
 
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -22,6 +25,7 @@ import frc.robot.Constants.ClimberConstants;
 public class Climber extends SubsystemBase {
   private SparkMax climbMotor1 = new SparkMax(ClimberConstants.CAN_CLIMBER_1, MotorType.kBrushless);
   private SparkMax climbMotor2 = new SparkMax(ClimberConstants.CAN_CLIMBER_2, MotorType.kBrushless);
+  private SparkClosedLoopController climbClosedLoopController = climbMotor1.getClosedLoopController();
   /** Creates a new Climber. */
   public Climber() {
     SparkMaxConfig climbConfig1 = new SparkMaxConfig();
@@ -32,6 +36,8 @@ public class Climber extends SubsystemBase {
     
     climbConfig1.idleMode(IdleMode.kBrake);
     climbConfig2.idleMode(IdleMode.kBrake);
+
+    climbConfig1.closedLoop.pid(0.1, 0, 0.1);
 
     climbConfig2.follow(climbMotor1);
     climbConfig2.inverted(true);
@@ -51,6 +57,14 @@ public class Climber extends SubsystemBase {
 
   public Command dynamicDriveClimb(DoubleSupplier speed){
     return run(() -> setClimbSpeed(speed.getAsDouble()));
+  }
+
+  private void setClimbPosition(double degrees) {
+    climbClosedLoopController.setReference(degrees, ControlType.kPosition);
+  }
+
+  public Command climbToPosition(DoubleSupplier degrees){
+    return run(() -> setClimbPosition(degrees.getAsDouble()));
   }
 
   public Command stopClimb(){
