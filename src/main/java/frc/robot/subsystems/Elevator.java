@@ -18,6 +18,8 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
@@ -25,6 +27,7 @@ import frc.robot.Constants.ElevatorConstants;
 public class Elevator extends SubsystemBase {
   private SparkMax elevatorMotor = new SparkMax(ElevatorConstants.CAN_ELEVATOR_MOTOR, MotorType.kBrushless);
   private SparkClosedLoopController elevatorController = elevatorMotor.getClosedLoopController();
+  private ProfiledPIDController profPID = new ProfiledPIDController(0.01, 0, 0.01, new TrapezoidProfile.Constraints(2, 1.5));
   // private RelativeEncoder elevatorRelativeEncoder = elevatorMotor.getAlternateEncoder();
   /** Creates a new Elevator. */
   public Elevator() {
@@ -36,10 +39,10 @@ public class Elevator extends SubsystemBase {
     
     elevatorMotor.configure(elevatorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    elevatorConfig.closedLoop.pid(0.01, 0, 0.01);
-    // elevatorConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
-    elevatorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    elevatorMotor.configure(elevatorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // elevatorConfig.closedLoop.pid(0.01, 0, 0.01);
+    // // elevatorConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+    // elevatorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+    // elevatorMotor.configure(elevatorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   @Override
