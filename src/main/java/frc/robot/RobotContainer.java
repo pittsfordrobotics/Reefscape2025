@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Algae;
+import frc.robot.subsystems.Coral;
 import frc.robot.subsystems.Intake;
 
 import java.io.File;
@@ -39,6 +40,8 @@ public class RobotContainer {
     swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve"));
     intake = new Intake();
     algae = new Algae();
+    coral = new Coral();
+
 
     SmartDashboard.putNumber("speed", 0.25);
     // Configure the trigger bindings
@@ -70,11 +73,10 @@ public class RobotContainer {
     //Drive Algae pickup:
     driverController.a().whileTrue(algae.dynamicAlgaePickup(
         () -> SmartDashboard.getNumber("Algae Speed", 0.25)));
-    
-    //Drive Algae pickup:
-    driverController.b().whileTrue(coral.dynamicAlgaePickup(
-    () -> SmartDashboard.getNumber("Algae Speed", 0.25)));
 
+    //Drive Coral output:
+    driverController.leftTrigger().whileTrue(coral.dynamicDriveCoral(
+      () -> SmartDashboard.getNumber("Coral Speed", 0.25)));
   }
 
   /**
