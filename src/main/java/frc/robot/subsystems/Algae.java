@@ -39,7 +39,7 @@ public class Algae extends SubsystemBase {
   private SparkAbsoluteEncoder pivotEncoder;
 
   private ProfiledPIDController algaePivotProfiledPIDController = new ProfiledPIDController(
-    0.01, 0, 0.01, new TrapezoidProfile.Constraints(
+    AlgaeConstants.PROFILED_PID_KP, AlgaeConstants.PROFILED_PID_KI, AlgaeConstants.PROFILED_PID_KP, new TrapezoidProfile.Constraints(
       AlgaeConstants.MAX_VELOCITY, AlgaeConstants.MAX_ACCELERATION));
   
   private ArmFeedforward algaePivotFeedforward = new ArmFeedforward(

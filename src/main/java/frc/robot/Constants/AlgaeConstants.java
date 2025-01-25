@@ -13,6 +13,10 @@ public class AlgaeConstants {
     public static final int ARM_FEEDFORWARD_KG = 1;
     public static final int ARM_FEEDFORWARD_KV = 1;
 
+    public static final int PROFILED_PID_KP = 1;
+    public static final int PROFILED_PID_KI = 1;
+    public static final int PROFILED_PID_KD = 1;
+
     public static final int MAX_VELOCITY = 1;
     public static final int MAX_ACCELERATION = 1;
 }
