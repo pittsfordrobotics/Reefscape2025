@@ -31,8 +31,7 @@ public class ButtonBoard extends SubsystemBase {
       }
     }
 
-    assert buttons[1] || buttons[2]; //maybe just make buttons[1] a toggle and do away with [2]
-    rightSide = buttons[1];
+    if(buttons[1] || buttons[2]) rightSide = buttons[1];
     
     if(buttons[3]) {
       reefSide++;
