@@ -25,46 +25,21 @@ public class ButtonBoard extends SubsystemBase {
       buttons[i] = buttonSupplier[i].getAsBoolean();
     }
 
-    if(buttons[5]) {
-      level = 4;
+    for(int i=5; i<=8; i++) {
+      if(buttons[i]) {
+        level = 9 - i;
+      }
     }
 
-    else if(buttons[6]) {
-      level = 3;
-    }
-
-    else if(buttons[7]) {
-      level = 2;
-    }
-
-    else if(buttons[8]) {
-      level = 1;
-    }
-
-    if(buttons[1]) {
-      rightSide = true;
-    }
-
-    else if(buttons[2]) {
-      rightSide = false;
-    }
+    assert buttons[1] || buttons[2]; //maybe just make buttons[1] a toggle and do away with [2]
+    rightSide = buttons[1];
     
     if(buttons[3]) {
-      if(reefSide == 5) {
-        reefSide = 0;
-      } else {
-        reefSide++;
-      }
+      reefSide++;
+    } else if(buttons[4]) {
+      reefSide--;
     }
-
-    else if(buttons[4]) {
-      if(reefSide == 0) {
-        reefSide = 5;
-      } else {
-        reefSide--;
-      }
-    }
-    // This method will be called once per scheduler run
+    reefSide %= 6; //maintain 0-6 range
   }
 
   public int getLevel() {
@@ -81,6 +56,6 @@ public class ButtonBoard extends SubsystemBase {
 
   /** @return The current selection index to be shown in the ObjectiveTracker app */
   public int getSelectedIndex() {
-    return rightSide ? 1 : 0 + (4 - level) * 2;
+    return (rightSide ? 1 : 0) + (4 - level) * 2;
   }
 }
