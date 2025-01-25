@@ -18,6 +18,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,9 +27,12 @@ import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
   private SparkMax elevatorMotor = new SparkMax(ElevatorConstants.CAN_ELEVATOR_MOTOR, MotorType.kBrushless);
-  private SparkClosedLoopController elevatorController = elevatorMotor.getClosedLoopController();
-  private ProfiledPIDController profPID = new ProfiledPIDController(0.01, 0, 0.01, new TrapezoidProfile.Constraints(2, 1.5));
-  // private RelativeEncoder elevatorRelativeEncoder = elevatorMotor.getAlternateEncoder();
+  // private SparkClosedLoopController elevatorController = elevatorMotor.getClosedLoopController();
+  private ProfiledPIDController profElevatorController = new ProfiledPIDController(
+    0.01, 0, 0.01, // UPDATE THIS!!!!!
+    new TrapezoidProfile.Constraints(2, 1.5));
+  private RelativeEncoder elevatorRelativeEncoder = elevatorMotor.getEncoder();
+  private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 0, 0); // ALSO UPDATE THIS!!!!
   /** Creates a new Elevator. */
   public Elevator() {
     SparkMaxConfig elevatorConfig = new SparkMaxConfig();
@@ -36,9 +40,9 @@ public class Elevator extends SubsystemBase {
     elevatorConfig.smartCurrentLimit(20, 20);
 
     elevatorConfig.idleMode(IdleMode.kBrake);
-    
-    elevatorMotor.configure(elevatorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
+    elevatorMotor.configure(elevatorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  
     // elevatorConfig.closedLoop.pid(0.01, 0, 0.01);
     // // elevatorConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
     // elevatorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
@@ -51,7 +55,10 @@ public class Elevator extends SubsystemBase {
   }
 
   private void setElevatorPosition(double height){
-    elevatorController.setReference(height, ControlType.kPosition);
+    // elevatorController.setReference(height, ControlType.kPosition);
+    elevatorMotor.setVoltage(profElevatorController.calculate(
+      elevatorRelativeEncoder.getPosition() + elevatorFeedforward.calculate(profElevatorController.getSetpoint().velocity), 
+      height));
   }
 
   public Command dynamicElevatorSetPosition(DoubleSupplier height){
