@@ -86,15 +86,6 @@ public class RobotContainer {
       () -> SmartDashboard.getNumber("Algae Active Angle", 0)))
       .onFalse((algae.dynamicAlgaeSetPivot(
         () -> SmartDashboard.getNumber("Algae Default Angle", 0))));
-    
-    //Rotate Algae arm:
-    /*driverController.rightTrigger().whileTrue(algae.dynamicAlgaeSpeedPivot(
-      () -> SmartDashboard.getNumber("Algae Pivot Speed", 0.25)))
-      .onFalse(algae.stopAlgaePivot());
-      
-    driverController.rightBumper().whileTrue(algae.dynamicAlgaeSpeedPivot(
-      () -> -1 * SmartDashboard.getNumber("Algae Pivot Speed", 0.25)))
-      .onFalse(algae.stopAlgaePivot());*/
 
     //Drive Algae pickup:
     driverController.a().whileTrue(algae.dynamicAlgaePickup(
@@ -105,7 +96,7 @@ public class RobotContainer {
       () -> -1 * SmartDashboard.getNumber("Algae Speed", 0.25)))
       .onFalse(algae.stopAlgaePickup());
 
-    //Elevator Stuff:
+    //Elevator Inputs:
     //
 
     //Drive Climber:
@@ -113,10 +104,6 @@ public class RobotContainer {
       () -> SmartDashboard.getNumber(("Climb Active Angle"), 0.25)))
       .onFalse(climber.climbToPosition(
         () -> SmartDashboard.getNumber("Angle Default Angle", 0)));
-    
-    /*driverController.leftBumper().whileTrue(climber.dynamicDriveClimb(
-    () -> -1 * SmartDashboard.getNumber("Climb Speed", 0.25)))
-    .onFalse(climber.stopClimb());*/
 
   }
 
