@@ -28,6 +28,7 @@ public class RobotContainer {
   private final Swerve swerve;
   private final Intake intake;
   private final Algae algae;
+  private final Coral coral;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
@@ -67,8 +68,12 @@ public class RobotContainer {
       () -> SmartDashboard.getNumber("Algae Angle 2", 0)));
     
     //Drive Algae pickup:
-    driverController.a().whileTrue(algae.dynamicAlgaePickup(() -> SmartDashboard.getNumber("Algae Speed", 0.25)));
-    //
+    driverController.a().whileTrue(algae.dynamicAlgaePickup(
+        () -> SmartDashboard.getNumber("Algae Speed", 0.25)));
+    
+    //Drive Algae pickup:
+    driverController.b().whileTrue(coral.dynamicAlgaePickup(
+    () -> SmartDashboard.getNumber("Algae Speed", 0.25)));
 
   }
 

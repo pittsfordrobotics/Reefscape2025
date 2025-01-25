@@ -15,31 +15,29 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.CoralConstants;
 
-public class Intake extends SubsystemBase {
-  private SparkMax intakeMotor = new SparkMax(IntakeConstants.CAN_INTAKE_MOTOR, MotorType.kBrushless);
-  
-  /** Creates a new IntakeSubsystem. */
-  public Intake() {
-    SparkMaxConfig intakeConfig = new SparkMaxConfig();
-    intakeConfig.smartCurrentLimit(20, 20);
-    intakeConfig.idleMode(IdleMode.kCoast);
-    intakeMotor.configure(intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+public class Coral extends SubsystemBase {
+  private SparkMax coralMotor = new SparkMax(CoralConstants.CAN_CORAL_MOTOR, MotorType.kBrushless);
+
+  /** Creates a new Coral. */
+  public Coral() {
+    SparkMaxConfig coralConfig = new SparkMaxConfig();
+    coralConfig.smartCurrentLimit(20, 20);
+    coralConfig.idleMode(IdleMode.kCoast);
+    coralMotor.configure(coralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
-  
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
 
-  private void setIntake(double speed) {
-    intakeMotor.set(speed);
+  private void setCoral(double speed) {
+    coralMotor.set(speed);
   }
 
-  public Command dynamicDriveIntake(DoubleSupplier speed){
-    return run(() -> setIntake(speed.getAsDouble()));
+  public Command dynamicDriveCoral(DoubleSupplier speed) {
+    return run(() -> setCoral(speed.getAsDouble()));
   }
-
-  
 }
