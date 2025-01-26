@@ -9,8 +9,8 @@ public class SwerveConstants {
     private static SwerveModuleConstants BACK_RIGHT_CONSTANTS = new SwerveModuleConstants(0.25825, 2.7213, 0.63848, 0, 0, 0);
     public static final SwerveModuleConstants[] MODULE_CONSTANTS = {FRONT_LEFT_CONSTANTS, FRONT_RIGHT_CONSTANTS, BACK_LEFT_CONSTANTS, BACK_RIGHT_CONSTANTS};
 
-    public static double SWERVE_MAXIMUM_VELOCITY = 5.59;
-    public static double SWERVE_MAXIMUM_ANGULAR_VELOCITY = 6;
+    public static double SWERVE_MAXIMUM_VELOCITY = 5.5;
+    public static double SWERVE_MAXIMUM_ANGULAR_VELOCITY = 13.6;
 
     // public class BACK_LEFT {
     //     public static final double drive_kS = 0.26965;

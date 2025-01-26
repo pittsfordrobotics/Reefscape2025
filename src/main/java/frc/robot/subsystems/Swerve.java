@@ -9,6 +9,8 @@ import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -59,7 +61,7 @@ public class Swerve extends SubsystemBase {
 
         // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary
         // objects being created.
-        SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+        SwerveDriveTelemetry.verbosity = TelemetryVerbosity.INFO;
         try {
             swerveDrive = new SwerveParser(config_dir).createSwerveDrive(maximumSpeed);
             // Alternative method if you don't want to supply the conversion factor via JSON
@@ -395,6 +397,18 @@ public class Swerve extends SubsystemBase {
         swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
     }
 
+    /** 
+     * Set the hardware zero point of the angle motor's absolute encoder to the current position.
+     * The 45 + 90n degree angle offsets are in software, on top of this. 
+     * */
+    public void zeroSwerveOffsets() {
+        for (SwerveModule module : swerveDrive.getModules()) {
+            double position = module.getRawAbsolutePosition();
+            // double encoderOffset = ((SparkMax) module.configuration.angleMotor.getMotor()).configAccessor.absoluteEncoder.getZeroOffset();
+            module.configuration.absoluteEncoder.setAbsoluteEncoderOffset((0 + position) % 360);
+        }
+    }
+
     public void setSwerveOffsets() {
         Rotation2d[] currentOffsets = new Rotation2d[4];
         Rotation2d[] newOffsets = new Rotation2d[4];
@@ -417,10 +431,10 @@ public class Swerve extends SubsystemBase {
 
     private double getAngleForModule(int moduleNumber) {
       return switch (moduleNumber) {
-          case 0 -> -90;
-          case 1 -> 0;
-          case 2 -> -180;
-          case 3 -> -270;
+          case 0 -> 225;
+          case 1 -> 315;
+          case 2 -> 135;
+          case 3 -> 45;
           default -> 0;
       };
   }
