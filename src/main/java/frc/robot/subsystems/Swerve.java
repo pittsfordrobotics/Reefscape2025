@@ -59,7 +59,7 @@ public class Swerve extends SubsystemBase {
 
         // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary
         // objects being created.
-        SwerveDriveTelemetry.verbosity = Robot.isReal() ? TelemetryVerbosity.LOW : TelemetryVerbosity.HIGH;
+        SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
         try {
             swerveDrive = new SwerveParser(config_dir).createSwerveDrive(maximumSpeed);
             // Alternative method if you don't want to supply the conversion factor via JSON

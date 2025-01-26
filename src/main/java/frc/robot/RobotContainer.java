@@ -39,6 +39,15 @@ public class RobotContainer {
     intake = new Intake();
     algae = new Algae();
 
+    Command enhancedHeadingSteeringCommand = swerve.enhancedHeadingDriveCommand(
+        () -> -driverController.getLeftY(),
+        () -> -driverController.getLeftX(),
+        () -> -driverController.getRightY(),
+        () -> -driverController.getRightX(),
+        driverController::getLeftTriggerAxis,
+        driverController::getRightTriggerAxis);
+    swerve.setDefaultCommand(enhancedHeadingSteeringCommand);
+
     SmartDashboard.putNumber("speed", 0.25);
     // Configure the trigger bindings
     configureBindings();
