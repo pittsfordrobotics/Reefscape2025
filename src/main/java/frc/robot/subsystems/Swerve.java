@@ -367,7 +367,7 @@ public class Swerve extends SubsystemBase {
     return SwerveDriveTest.generateSysIdCommand(
         SwerveDriveTest.setDriveSysIdRoutine(
             new Config(),
-            this, swerveDrive, 12),
+            this, swerveDrive, 12, false),
         3.0, 5.0, 3.0); // TODO: Tweak (increase quasitimeout if possible) for running sysid characterization
   }
 
@@ -404,8 +404,8 @@ public class Swerve extends SubsystemBase {
     public void zeroSwerveOffsets() {
         for (SwerveModule module : swerveDrive.getModules()) {
             double position = module.getRawAbsolutePosition();
-            // double encoderOffset = ((SparkMax) module.configuration.angleMotor.getMotor()).configAccessor.absoluteEncoder.getZeroOffset();
-            module.configuration.absoluteEncoder.setAbsoluteEncoderOffset((0 + position) % 360);
+            double encoderOffset = ((SparkMax) module.configuration.angleMotor.getMotor()).configAccessor.absoluteEncoder.getZeroOffset();
+            module.configuration.absoluteEncoder.setAbsoluteEncoderOffset(MathUtil.inputModulus((encoderOffset + position) / 360, 0, 1));
         }
     }
 
@@ -424,7 +424,7 @@ public class Swerve extends SubsystemBase {
             encoders[i] = (SparkAbsoluteEncoder) swerveDrive.getModules()[i].getAbsoluteEncoder().getAbsoluteEncoder();
             measuredPositions[i] = Rotation2d.fromDegrees(encoders[i].getPosition());
             newOffsets[i] = currentOffsets[i].plus(measuredPositions[i]).plus(Rotation2d.fromDegrees(getAngleForModule(i)));
-            moduleConfigs[i].absoluteEncoder.setAbsoluteEncoderOffset(MathUtil.inputModulus(newOffsets[i].getDegrees(), 0, 360));
+            moduleConfigs[i].absoluteEncoder.setAbsoluteEncoderOffset(MathUtil.inputModulus(newOffsets[i].getDegrees() / 360, 0, 1));
             swerveDrive.getModules()[i].getAngleMotor().burnFlash();
         }
     }
