@@ -50,7 +50,8 @@ public class RobotContainer {
     swerve.setDefaultCommand(enhancedHeadingSteeringCommand);
 
     SmartDashboard.putNumber("speed", 0.25);
-    Shuffleboard.getTab("Config").add("Zero swerve offsets", swerve.runOnce(() -> swerve.zeroSwerveOffsets()).ignoringDisable(true));
+    Shuffleboard.getTab("Config").add("Zero swerve offsets", swerve.runOnce(() -> swerve.setSwerveOffsets()).ignoringDisable(true));
+    Shuffleboard.getTab("Config").add("Set offsets to 0", swerve.runOnce(() -> swerve.zeroSwerveOffsets()).ignoringDisable(true));
     // Configure the trigger bindings
     configureBindings();
   }
@@ -80,6 +81,10 @@ public class RobotContainer {
     //Drive Algae pickup:
     driverController.a().whileTrue(algae.dynamicAlgaePickup(() -> SmartDashboard.getNumber("Algae Speed", 0.25)));
     //
+
+    //Drive Swerve forward and backward:
+    driverController.povUp().whileTrue(swerve.driveForward(0.2));
+    driverController.povDown().whileTrue(swerve.driveForward(-0.2));
 
   }
 

@@ -403,9 +403,12 @@ public class Swerve extends SubsystemBase {
      * */
     public void zeroSwerveOffsets() {
         for (SwerveModule module : swerveDrive.getModules()) {
-            double position = module.getRawAbsolutePosition();
-            double encoderOffset = ((SparkMax) module.configuration.angleMotor.getMotor()).configAccessor.absoluteEncoder.getZeroOffset();
-            module.configuration.absoluteEncoder.setAbsoluteEncoderOffset(MathUtil.inputModulus((encoderOffset + position) / 360, 0, 1));
+            // double position = module.getRawAbsolutePosition();
+            // double encoderOffset = ((SparkMax) module.configuration.angleMotor.getMotor()).configAccessor.absoluteEncoder.getZeroOffset();
+            // module.configuration.absoluteEncoder.setAbsoluteEncoderOffset(MathUtil.inputModulus((encoderOffset + position) / 360, 0, 1));
+            module.configuration.absoluteEncoder.setAbsoluteEncoderOffset(0);
+            System.out.println("absolute position:" + module.configuration.absoluteEncoder.getAbsolutePosition());
+            System.out.println("raw ap:" + module.getRawAbsolutePosition());
         }
     }
 
@@ -416,16 +419,19 @@ public class Swerve extends SubsystemBase {
         double[] angleOffsets = new double[4];
         SparkAbsoluteEncoder[] encoders = new SparkAbsoluteEncoder[4];
         SwerveModuleConfiguration[] moduleConfigs = new SwerveModuleConfiguration[4];
+        SparkMax[] angleMotors = new SparkMax[4];
         for (int i = 0; i < 4; i++) {
-            currentOffsets[i] = Rotation2d.fromDegrees(angleOffsets[i]);
             moduleConfigs[i] = swerveDrive.getModules()[i].configuration;
-            angleOffsets[i] = moduleConfigs[i].angleOffset;
+            angleMotors[i] = (SparkMax) swerveDrive.getModules()[i].getAngleMotor().getMotor();
+            angleOffsets[i] = angleMotors[i].configAccessor.absoluteEncoder.getZeroOffset() * 360;
+            currentOffsets[i] = Rotation2d.fromDegrees(angleOffsets[i]);
             
             encoders[i] = (SparkAbsoluteEncoder) swerveDrive.getModules()[i].getAbsoluteEncoder().getAbsoluteEncoder();
             measuredPositions[i] = Rotation2d.fromDegrees(encoders[i].getPosition());
-            newOffsets[i] = currentOffsets[i].plus(measuredPositions[i]).plus(Rotation2d.fromDegrees(getAngleForModule(i)));
+            newOffsets[i] = new Rotation2d().plus(currentOffsets[i]).plus(measuredPositions[i]).plus(Rotation2d.fromDegrees(getAngleForModule(i)));
             moduleConfigs[i].absoluteEncoder.setAbsoluteEncoderOffset(MathUtil.inputModulus(newOffsets[i].getDegrees() / 360, 0, 1));
-            swerveDrive.getModules()[i].getAngleMotor().burnFlash();
+            System.out.println("Module " + i + " offset: " + newOffsets[i].getDegrees());
+            System.out.println(currentOffsets[i].getDegrees() + " + " + measuredPositions[i].getDegrees() + " = " + newOffsets[i].getDegrees());
         }
     }
 
@@ -435,8 +441,14 @@ public class Swerve extends SubsystemBase {
           case 1 -> 315;
           case 2 -> 135;
           case 3 -> 45;
-          default -> 0;
+          default -> throw new IllegalArgumentException("Invalid module number");
       };
+  }
+
+  public Command driveForward(double percentage) {
+    return run(() -> {
+        swerveDrive.drive(new Translation2d(percentage * maximumSpeed, 0), 0, false, false);
+    });
   }
 
   @Override
