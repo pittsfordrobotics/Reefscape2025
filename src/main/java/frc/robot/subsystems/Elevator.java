@@ -34,10 +34,12 @@ public class Elevator extends SubsystemBase {
     new TrapezoidProfile.Constraints(2, 1.5));
   private RelativeEncoder elevatorRelativeEncoder = elevatorMotor.getEncoder();
   private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 0, 0); // *****ALSO UPDATE THIS!!!!******
+  private SparkMax elevatorFollowingMotor = new SparkMax(ElevatorConstants.CAN_FOLLOW_ELEVATOR_MOTOR, MotorType.kBrushless);
 
   // SHUTTLE
   private SparkMax shuttleMotor = new SparkMax(ElevatorConstants.CAN_SHUTTLE_MOTOR, MotorType.kBrushless);
   private RelativeEncoder shuttleRelativeEncoder = shuttleMotor.getEncoder();
+
   /** Creates a new Elevator. */
   public Elevator() {
     SparkMaxConfig elevatorConfig = new SparkMaxConfig();
@@ -49,6 +51,12 @@ public class Elevator extends SubsystemBase {
     shuttleConfig.smartCurrentLimit(10, 10); // ******UPDATE THIS!!!!!*********
     shuttleConfig.idleMode(IdleMode.kBrake);
     shuttleMotor.configure(shuttleConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    SparkMaxConfig elevatorFollowingMotorConfig = new SparkMaxConfig();
+    elevatorFollowingMotorConfig.smartCurrentLimit(20, 20);
+    elevatorFollowingMotorConfig.idleMode(IdleMode.kBrake);
+    elevatorFollowingMotorConfig.follow(ElevatorConstants.CAN_ELEVATOR_MOTOR);
+    elevatorFollowingMotor.configure(elevatorFollowingMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   
     // elevatorConfig.closedLoop.pid(0.01, 0, 0.01);
     // // elevatorConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
@@ -63,6 +71,7 @@ public class Elevator extends SubsystemBase {
 
   private void setElevatorPosition(double height){
     // elevatorController.setReference(height, ControlType.kPosition);
+
     elevatorMotor.setVoltage(profElevatorController.calculate(
       elevatorRelativeEncoder.getPosition() + elevatorFeedforward.calculate(profElevatorController.getSetpoint().velocity), 
       height));
