@@ -13,12 +13,16 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
   private SparkMax intakeMotor = new SparkMax(IntakeConstants.CAN_INTAKE_MOTOR, MotorType.kBrushless);
+
+  DigitalInput coralSensor = new DigitalInput(0);
   
   /** Creates a new IntakeSubsystem. */
   public Intake() {
@@ -34,10 +38,15 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    coralSensor.get();
   }
 
   private void setIntake(double speed) {
-    intakeMotor.set(speed);
+    Commands.race(
+      Commands.runOnce(() -> intakeMotor.set(speed)),
+      Commands.run(() -> coralSensor.get())
+    );
+    
   }
 
   public Command dynamicDriveIntake(DoubleSupplier speed){

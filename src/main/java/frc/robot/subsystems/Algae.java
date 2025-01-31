@@ -74,9 +74,9 @@ public class Algae extends SubsystemBase {
   }
 
   private void setAlgaePivotPosition(double degrees) {
-    this.run(() -> algaePivotMotor.set(
+    algaePivotMotor.set(
       algaePivotProfiledPIDController.calculate(pivotEncoder.getPosition(), degrees) 
-    + algaePivotFeedforward.calculate(pivotEncoder.getPosition(), pivotEncoder.getVelocity())));
+    + algaePivotFeedforward.calculate(pivotEncoder.getPosition(), pivotEncoder.getVelocity()));
   }
 
   public Command dynamicAlgaePickup(DoubleSupplier speed){
