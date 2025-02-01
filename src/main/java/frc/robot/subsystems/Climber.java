@@ -37,7 +37,10 @@ public class Climber extends SubsystemBase {
     climbConfig1.idleMode(IdleMode.kBrake);
     climbConfig2.idleMode(IdleMode.kBrake);
 
-    climbConfig1.closedLoop.pid(0.1, 0, 0.1);
+    climbConfig1.closedLoop.pid(
+      ClimberConstants.CLIMBER_PID_P,
+      ClimberConstants.CLIMBER_PID_I,
+      ClimberConstants.CLIMBER_PID_D);
 
     climbConfig2.follow(climbMotor1);
     climbConfig2.inverted(true);
