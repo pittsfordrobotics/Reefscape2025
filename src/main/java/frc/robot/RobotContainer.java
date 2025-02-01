@@ -76,10 +76,8 @@ public class RobotContainer {
 
     //Drive Coral output:
     driverController.leftTrigger().whileTrue(coral.dynamicDriveCoral(
-      () -> SmartDashboard.getNumber("Coral Speed", 0.25)));
-
-    //Stop Coral output:
-    driverController.leftBumper().onFalse(coral.stopCoral());
+      () -> SmartDashboard.getNumber("Coral Speed", 0.25)))
+        .onFalse(coral.stopCoral());
   }
 
   /**
