@@ -9,6 +9,7 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Algae;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Coral;
 import frc.robot.subsystems.Intake;
 
 import java.io.File;
@@ -36,6 +37,7 @@ public class RobotContainer {
   private final Algae algae;
   private final Climber climber;
   private final Elevator elevator;
+  private final Coral coral;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
@@ -48,6 +50,7 @@ public class RobotContainer {
     algae = new Algae();
     climber = new Climber();
     elevator = new Elevator();
+    coral = new Coral();
 
     SmartDashboard.putNumber("Intake Speed", -0.25);
     SmartDashboard.putNumber("Algae Speed", 0.25);
@@ -111,8 +114,10 @@ public class RobotContainer {
       () -> -1 * SmartDashboard.getNumber("Algae Speed", 0.25)))
       .onFalse(algae.stopAlgaePickup());
 
-    //Elevator Inputs:
-    //
+    //Drive Coral output:
+    driverController.leftTrigger().whileTrue(coral.dynamicDriveCoral(
+      () -> SmartDashboard.getNumber("Coral Speed", 0.25)))
+        .onFalse(coral.stopCoral());
 
     //Drive Climber:
     driverController.leftTrigger().onTrue(climber.climbToPosition(
@@ -123,6 +128,7 @@ public class RobotContainer {
     //Drive Swerve forward and backward:
     driverController.povUp().whileTrue(swerve.driveForward(0.2));
     driverController.povDown().whileTrue(swerve.driveForward(-0.2));
+
 
   }
 
