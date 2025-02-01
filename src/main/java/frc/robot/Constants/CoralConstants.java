@@ -7,4 +7,6 @@ package frc.robot.Constants;
 /** Add your docs here. */
 public class CoralConstants {
     public static final int CAN_CORAL_MOTOR = 50;
+    // This CAN ID is tbd
+    public static final double CORAL_SPEED = 0.5;
 }

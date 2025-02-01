@@ -37,6 +37,10 @@ public class Coral extends SubsystemBase {
     coralMotor.set(speed);
   }
 
+  public Command placeCoral(){
+    return run(() -> setCoral(CoralConstants.CORAL_SPEED));
+  }
+
   public Command dynamicDriveCoral(DoubleSupplier speed) {
     return run(() -> setCoral(speed.getAsDouble()));
   }
