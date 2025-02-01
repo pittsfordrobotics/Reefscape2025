@@ -91,13 +91,13 @@ public class Elevator extends SubsystemBase {
   private void setElevatorPosition(double pos){
     if (pos >= ElevatorConstants.ELEVATOR_MAX_HEIGHT || pos < 0) return;
     // elevatorController.setReference(height, ControlType.kPosition);
-    elevatorMotor.setVoltage(profElevatorController.calculate(elevatorRelativeEncoder.getPosition() + ElevatorConstants.ELEVATOR_FEEDFORWARD));
+    elevatorMotor.set(profElevatorController.calculate(elevatorRelativeEncoder.getPosition(), pos) + ElevatorConstants.ELEVATOR_FEEDFORWARD);
   }
 
   private void setShuttlePosition(double pos){
     if (pos >= ElevatorConstants.SHUTTLE_LENGTH || pos < 0) return;
     // elevatorController.setReference(height, ControlType.kPosition);
-    shuttleMotor.setVoltage(profShuttleController.calculate(shuttleRelativeEncoder.getPosition() + ElevatorConstants.SHUTTLE_FEEDFORWARD));
+    shuttleMotor.set(profShuttleController.calculate(shuttleRelativeEncoder.getPosition(), pos) + ElevatorConstants.SHUTTLE_FEEDFORWARD);
   }
 
   // private void setTotalPosition(double height){
