@@ -18,6 +18,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -29,9 +30,8 @@ import frc.robot.Constants.ElevatorConstants;
 public class Elevator extends SubsystemBase {
   // ELEVATOR
   private SparkMax elevatorMotor = new SparkMax(ElevatorConstants.CAN_ELEVATOR_MOTOR, MotorType.kBrushless);
-  // private SparkClosedLoopController elevatorController = elevatorMotor.getClosedLoopController();
   private ProfiledPIDController profElevatorController = new ProfiledPIDController(
-    0.01, 0, 0.01, // ******UPDATE THIS!!!!!*********
+    ElevatorConstants.ELEVATOR_Kp, ElevatorConstants.ELEVATOR_Ki, ElevatorConstants.ELEVATOR_Kd,
     new TrapezoidProfile.Constraints(2, 1.5));
   private RelativeEncoder elevatorRelativeEncoder = elevatorMotor.getEncoder();
   // private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 0, 0); // *****ALSO UPDATE THIS!!!!******
@@ -41,13 +41,15 @@ public class Elevator extends SubsystemBase {
   private SparkMax shuttleMotor = new SparkMax(ElevatorConstants.CAN_SHUTTLE_MOTOR, MotorType.kBrushless);
   private RelativeEncoder shuttleRelativeEncoder = shuttleMotor.getEncoder();
   private ProfiledPIDController profShuttleController = new ProfiledPIDController(
-    0.01, 0, 0.01, // UPDATE!!!
+    ElevatorConstants.SHUTTLE_Kp, ElevatorConstants.SHUTTLE_Ki, ElevatorConstants.SHUTTLE_Kd, 
     new TrapezoidProfile.Constraints(2, 1.5));
   // private ElevatorFeedforward shuttleFeedforward = new ElevatorFeedforward(0, 0, 0);
   
   // OTHER
-  private double elevatorPos = 0; // height from bottom elevtor position to bottom of shuttle slide
-  private double shuttlePos = 0; // from bottom of shuttle slide to **TBD**
+  @Logged(name = "Elevator Position Inches")
+  public double elevatorPos = 0; // height from bottom elevtor position to bottom of shuttle slide
+  @Logged(name = "Shuttle Posiiton Inches")
+  public double shuttlePos = 0; // from bottom of shuttle slide to **TBD**
 
   /** Creates a new Elevator. */
   public Elevator() {
@@ -66,11 +68,6 @@ public class Elevator extends SubsystemBase {
     // elevatorFollowingMotorConfig.idleMode(IdleMode.kBrake);
     // elevatorFollowingMotorConfig.follow(elevatorMotor, false);
     // elevatorFollowingMotor.configure(elevatorFollowingMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-  
-    // elevatorConfig.closedLoop.pid(0.01, 0, 0.01);
-    // // elevatorConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
-    // elevatorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    // elevatorMotor.configure(elevatorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   @Override
@@ -80,8 +77,9 @@ public class Elevator extends SubsystemBase {
     shuttlePos = shuttleRelativeEncoder.getPosition() / ElevatorConstants.SHUTTLE_TICKS_PER_INCH;
   }
 
+  @Logged(name = "Total Height Inches")
   public double getTotalHeightInches(){
-    return elevatorPos + shuttlePos;
+    return elevatorPos + shuttlePos + ElevatorConstants.GROUND_TO_ELEVATOR_BOTTOM_INCHES;
   }
 
   private boolean isAtHeight(double height){
@@ -89,24 +87,24 @@ public class Elevator extends SubsystemBase {
   }
 
   private void setElevatorPosition(double pos){
-    if (pos >= ElevatorConstants.ELEVATOR_MAX_HEIGHT || pos < 0) return;
+    if (pos >= ElevatorConstants.ELEVATOR_MAX_HEIGHT_INCHES || pos < 0) return;
+    pos /= ElevatorConstants.ELEVATOR_TICKS_PER_INCH;
     // elevatorController.setReference(height, ControlType.kPosition);
     elevatorMotor.set(profElevatorController.calculate(elevatorRelativeEncoder.getPosition(), pos) + ElevatorConstants.ELEVATOR_FEEDFORWARD);
   }
 
   private void setShuttlePosition(double pos){
-    if (pos >= ElevatorConstants.SHUTTLE_LENGTH || pos < 0) return;
+    if (pos >= ElevatorConstants.SHUTTLE_LENGTH_INCHES || pos < 0) return;
+    pos /= ElevatorConstants.SHUTTLE_TICKS_PER_INCH;
     // elevatorController.setReference(height, ControlType.kPosition);
     shuttleMotor.set(profShuttleController.calculate(shuttleRelativeEncoder.getPosition(), pos) + ElevatorConstants.SHUTTLE_FEEDFORWARD);
   }
 
-  // private void setTotalPosition(double height){
-    
-  // }
-
   public Command dynamicElevatorSetPosition(DoubleSupplier height){
-    double heightShuttle = (height.getAsDouble()/ElevatorConstants.ELEVATOR_TOTAL_MAX_HEIGHT) * ElevatorConstants.SHUTTLE_LENGTH;
-    double heightElevator = (height.getAsDouble()/ElevatorConstants.ELEVATOR_TOTAL_MAX_HEIGHT) * ElevatorConstants.ELEVATOR_MAX_HEIGHT;
+    double heightShuttle = ((height.getAsDouble() - ElevatorConstants.GROUND_TO_ELEVATOR_BOTTOM_INCHES)/ElevatorConstants.ELEVATOR_TOTAL_MAX_HEIGHT_INCHES) 
+      * ElevatorConstants.SHUTTLE_LENGTH_INCHES;
+    double heightElevator = ((height.getAsDouble() - ElevatorConstants.GROUND_TO_ELEVATOR_BOTTOM_INCHES)/ElevatorConstants.ELEVATOR_TOTAL_MAX_HEIGHT_INCHES) 
+      * ElevatorConstants.ELEVATOR_MAX_HEIGHT_INCHES;
     return Commands.parallel(run(() -> setShuttlePosition(heightShuttle)), run(() -> setElevatorPosition(heightElevator)));
   }
 }
