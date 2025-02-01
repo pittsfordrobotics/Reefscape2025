@@ -43,7 +43,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    //swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve/maxSwerve"));
+    swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve"));
     intake = new Intake();
     algae = new Algae();
     climber = new Climber();
@@ -60,6 +60,18 @@ public class RobotContainer {
     SmartDashboard.putNumber("Climb Default Angle", 0);
     SmartDashboard.putNumber("Climb Active Angle", 0);
 
+    Command enhancedHeadingSteeringCommand = swerve.enhancedHeadingDriveCommand(
+        () -> -driverController.getLeftY(),
+        () -> -driverController.getLeftX(),
+        () -> -driverController.getRightY(),
+        () -> -driverController.getRightX(),
+        driverController::getLeftTriggerAxis,
+        driverController::getRightTriggerAxis);
+    swerve.setDefaultCommand(enhancedHeadingSteeringCommand);
+
+    SmartDashboard.putNumber("speed", 0.25);
+    Shuffleboard.getTab("Config").add("Zero swerve offsets", swerve.runOnce(() -> swerve.setSwerveOffsets()).ignoringDisable(true));
+    Shuffleboard.getTab("Config").add("Set offsets to 0", swerve.runOnce(() -> swerve.zeroSwerveOffsets()).ignoringDisable(true));
     // Configure the trigger bindings
     configureBindings();
   }
@@ -107,6 +119,10 @@ public class RobotContainer {
       () -> SmartDashboard.getNumber(("Climb Active Angle"), 0.25)))
       .onFalse(climber.climbToPosition(
         () -> SmartDashboard.getNumber("Angle Default Angle", 0)));
+
+    //Drive Swerve forward and backward:
+    driverController.povUp().whileTrue(swerve.driveForward(0.2));
+    driverController.povDown().whileTrue(swerve.driveForward(-0.2));
 
   }
 
