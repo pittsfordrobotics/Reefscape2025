@@ -33,30 +33,38 @@ public class Elevator extends SubsystemBase {
     0.01, 0, 0.01, // ******UPDATE THIS!!!!!*********
     new TrapezoidProfile.Constraints(2, 1.5));
   private RelativeEncoder elevatorRelativeEncoder = elevatorMotor.getEncoder();
-  private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 0, 0); // *****ALSO UPDATE THIS!!!!******
-  private SparkMax elevatorFollowingMotor = new SparkMax(ElevatorConstants.CAN_FOLLOW_ELEVATOR_MOTOR, MotorType.kBrushless);
+  // private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 0, 0); // *****ALSO UPDATE THIS!!!!******
+  // private SparkMax elevatorFollowingMotor = new SparkMax(ElevatorConstants.CAN_FOLLOW_ELEVATOR_MOTOR, MotorType.kBrushless);
 
   // SHUTTLE
   private SparkMax shuttleMotor = new SparkMax(ElevatorConstants.CAN_SHUTTLE_MOTOR, MotorType.kBrushless);
   private RelativeEncoder shuttleRelativeEncoder = shuttleMotor.getEncoder();
+  private ProfiledPIDController profShuttleController = new ProfiledPIDController(
+    0.01, 0, 0.01, // UPDATE!!!
+    new TrapezoidProfile.Constraints(2, 1.5));
+  // private ElevatorFeedforward shuttleFeedforward = new ElevatorFeedforward(0, 0, 0);
+  
+  // OTHER
+  private double elevatorPos = 0; // height from bottom elevtor position to bottom of shuttle slide
+  private double shuttlePos = 0; // from bottom of shuttle slide to **TBD**
 
   /** Creates a new Elevator. */
   public Elevator() {
     SparkMaxConfig elevatorConfig = new SparkMaxConfig();
-    elevatorConfig.smartCurrentLimit(20, 20);
+    elevatorConfig.smartCurrentLimit(40, 40);
     elevatorConfig.idleMode(IdleMode.kBrake);
     elevatorMotor.configure(elevatorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     SparkMaxConfig shuttleConfig = new SparkMaxConfig();
-    shuttleConfig.smartCurrentLimit(10, 10); // ******UPDATE THIS!!!!!*********
+    shuttleConfig.smartCurrentLimit(20, 20);
     shuttleConfig.idleMode(IdleMode.kBrake);
     shuttleMotor.configure(shuttleConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    SparkMaxConfig elevatorFollowingMotorConfig = new SparkMaxConfig();
-    elevatorFollowingMotorConfig.smartCurrentLimit(20, 20);
-    elevatorFollowingMotorConfig.idleMode(IdleMode.kBrake);
-    elevatorFollowingMotorConfig.follow(ElevatorConstants.CAN_ELEVATOR_MOTOR);
-    elevatorFollowingMotor.configure(elevatorFollowingMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // SparkMaxConfig elevatorFollowingMotorConfig = new SparkMaxConfig();
+    // elevatorFollowingMotorConfig.smartCurrentLimit(20, 20);
+    // elevatorFollowingMotorConfig.idleMode(IdleMode.kBrake);
+    // elevatorFollowingMotorConfig.follow(elevatorMotor, false);
+    // elevatorFollowingMotor.configure(elevatorFollowingMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   
     // elevatorConfig.closedLoop.pid(0.01, 0, 0.01);
     // // elevatorConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
@@ -67,17 +75,35 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    elevatorPos = elevatorRelativeEncoder.getPosition() / ElevatorConstants.ELEVATOR_TICKS_PER_INCH;
+    shuttlePos = shuttleRelativeEncoder.getPosition() / ElevatorConstants.SHUTTLE_TICKS_PER_INCH;
   }
 
-  private void setElevatorPosition(double height){
-    // elevatorController.setReference(height, ControlType.kPosition);
+  public double getTotalHeightInches(){
+    return elevatorPos + shuttlePos;
+  }
 
-    elevatorMotor.setVoltage(profElevatorController.calculate(
-      elevatorRelativeEncoder.getPosition() + elevatorFeedforward.calculate(profElevatorController.getSetpoint().velocity), 
-      height));
+  private boolean isAtHeight(double height){
+    return (height == getTotalHeightInches());
+  }
+
+  private void setElevatorPosition(double pos){
+    if (pos >= ElevatorConstants.ELEVATOR_MAX_HEIGHT) return;
+    // elevatorController.setReference(height, ControlType.kPosition);
+    elevatorMotor.setVoltage(profElevatorController.calculate(elevatorRelativeEncoder.getPosition() + ElevatorConstants.ELEVATOR_FEEDFORWARD));
+  }
+
+  private void setShuttlePosition(double pos){
+    if (pos >= ElevatorConstants.SHUTTLE_LENGTH) return;
+    // elevatorController.setReference(height, ControlType.kPosition);
+    shuttleMotor.setVoltage(profShuttleController.calculate(shuttleRelativeEncoder.getPosition() + ElevatorConstants.SHUTTLE_FEEDFORWARD));
+  }
+
+  private void setTotalPosition(double height){
+
   }
 
   public Command dynamicElevatorSetPosition(DoubleSupplier height){
-    return run(() -> setElevatorPosition(height.getAsDouble()));
+    return run(() -> setTotalPosition(height.getAsDouble()));
   }
 }
