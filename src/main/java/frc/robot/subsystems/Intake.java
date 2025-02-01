@@ -13,6 +13,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -37,20 +38,24 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    coralSensor.get();
+
   }
 
   private void setIntake(double speed) {
-    Commands.race(
-      Commands.runOnce(() -> intakeMotor.set(speed)),
-      Commands.run(() -> coralSensor.get())
-    );
+    intakeMotor.set(speed);
     
+  }
+  @Logged(name = "IsCoralDetected")
+  public boolean isCoralDetected() {
+    return coralSensor.get();
   }
 
   public Command dynamicDriveIntake(DoubleSupplier speed){
     return run(() -> setIntake(speed.getAsDouble()));
+  }
+
+  public Command intakeCoralWithSensor() {
+    return run(() -> setIntake(IntakeConstants.CORAL_INTAKE_SPEED)).until(this::isCoralDetected);
   }
 
   public Command stopIntake(){
