@@ -45,11 +45,23 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve"));
+    //swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve/maxSwerve"));
     intake = new Intake();
     algae = new Algae();
     climber = new Climber();
     elevator = new Elevator();
+    SmartDashboard.putNumber("Intake Speed", -0.25);
+    SmartDashboard.putNumber("Algae Speed", 0.25);
+
+    SmartDashboard.putNumber("Algae Pivot Speed", 0.25);
+    SmartDashboard.putNumber("Algae Angle 1", 0);
+    SmartDashboard.putNumber("Algae Angle 2", 0);
+    
+    SmartDashboard.putNumber("Climb Speed", 0.25);
+    SmartDashboard.putNumber("Climb Default Angle", 0);
+    SmartDashboard.putNumber("Climb Active Angle", 0);
+
+    swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve"));
     coral = new Coral();
 
     SmartDashboard.putNumber("Intake Speed", -0.25);
@@ -93,6 +105,16 @@ public class RobotContainer {
     driverController.b().onTrue(intake.intakeCoralWithSensor())
       .onFalse(intake.stopIntake());
 
+      driverController.y().whileTrue(intake.dynamicDriveIntake(
+        () -> -1 * SmartDashboard.getNumber("Intake Speed", -0.25)))
+        .onFalse(intake.stopIntake());
+    
+    //Pivot Algae arm:
+    driverController.rightTrigger().onTrue(algae.dynamicAlgaeSetPivot(
+      () -> SmartDashboard.getNumber("Algae Angle 1", 0)))
+      .onFalse((algae.dynamicAlgaeSetPivot(
+        () -> SmartDashboard.getNumber("Algae Angle 2", 0))));
+
       //The below input can be removed if needed to free up inputs vvv
     driverController.y().whileTrue(intake.dynamicDriveIntake(
       () -> -1 * SmartDashboard.getNumber("Intake Speed", -0.25)))
@@ -104,31 +126,21 @@ public class RobotContainer {
       () -> SmartDashboard.getNumber("Algae Active Angle", 0)))
       .onFalse((algae.dynamicAlgaeSetPivot(
         () -> SmartDashboard.getNumber("Algae Default Angle", 0))));
-
-    //Drive Algae pickup:
-    driverController.a().whileTrue(algae.dynamicAlgaePickup(
-      () -> SmartDashboard.getNumber("Algae Speed", 0.25)))
-      .onFalse(algae.stopAlgaePickup());
     
-    driverController.x().whileTrue(algae.dynamicAlgaePickup(
-      () -> -1 * SmartDashboard.getNumber("Algae Speed", 0.25)))
-      .onFalse(algae.stopAlgaePickup());
-
     //Drive Coral output:
     driverController.leftTrigger().whileTrue(coral.dynamicDriveCoral(
       () -> SmartDashboard.getNumber("Coral Speed", 0.25)))
         .onFalse(coral.stopCoral());
-
-    //Drive Climber:
-    driverController.leftTrigger().onTrue(climber.climbToPosition(
-      () -> SmartDashboard.getNumber(("Climb Active Angle"), 0.25)))
-      .onFalse(climber.climbToPosition(
-        () -> SmartDashboard.getNumber("Angle Default Angle", 0)));
-
+    
     //Drive Swerve forward and backward:
     driverController.povUp().whileTrue(swerve.driveForward(0.2));
     driverController.povDown().whileTrue(swerve.driveForward(-0.2));
 
+    //Drive Climber:
+    driverController.leftTrigger().whileTrue(climber.climbToPosition(
+      () -> SmartDashboard.getNumber(("Climb Active Angle"), 0.25)))
+      .whileFalse(climber.climbToPosition(
+        () -> SmartDashboard.getNumber("Angle Default Angle", 0)));
 
   }
 
