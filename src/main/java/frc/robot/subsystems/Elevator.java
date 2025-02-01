@@ -22,6 +22,7 @@ import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 
@@ -88,22 +89,24 @@ public class Elevator extends SubsystemBase {
   }
 
   private void setElevatorPosition(double pos){
-    if (pos >= ElevatorConstants.ELEVATOR_MAX_HEIGHT) return;
+    if (pos >= ElevatorConstants.ELEVATOR_MAX_HEIGHT || pos < 0) return;
     // elevatorController.setReference(height, ControlType.kPosition);
     elevatorMotor.setVoltage(profElevatorController.calculate(elevatorRelativeEncoder.getPosition() + ElevatorConstants.ELEVATOR_FEEDFORWARD));
   }
 
   private void setShuttlePosition(double pos){
-    if (pos >= ElevatorConstants.SHUTTLE_LENGTH) return;
+    if (pos >= ElevatorConstants.SHUTTLE_LENGTH || pos < 0) return;
     // elevatorController.setReference(height, ControlType.kPosition);
     shuttleMotor.setVoltage(profShuttleController.calculate(shuttleRelativeEncoder.getPosition() + ElevatorConstants.SHUTTLE_FEEDFORWARD));
   }
 
-  private void setTotalPosition(double height){
-
-  }
+  // private void setTotalPosition(double height){
+    
+  // }
 
   public Command dynamicElevatorSetPosition(DoubleSupplier height){
-    return run(() -> setTotalPosition(height.getAsDouble()));
+    double heightShuttle = (height.getAsDouble()/ElevatorConstants.ELEVATOR_TOTAL_MAX_HEIGHT) * ElevatorConstants.SHUTTLE_LENGTH;
+    double heightElevator = (height.getAsDouble()/ElevatorConstants.ELEVATOR_TOTAL_MAX_HEIGHT) * ElevatorConstants.ELEVATOR_MAX_HEIGHT;
+    return Commands.parallel(run(() -> setShuttlePosition(heightShuttle)), run(() -> setElevatorPosition(heightElevator)));
   }
 }

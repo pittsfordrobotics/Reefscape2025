@@ -8,6 +8,7 @@ public class ElevatorConstants {
     public static final double SHUTTLE_TICKS_PER_INCH = 10;
 
     public static final double ELEVATOR_MAX_HEIGHT = 100; // need to change + decide units
+    public static final double ELEVATOR_TOTAL_MAX_HEIGHT = 120;
     public static final double SHUTTLE_LENGTH = 20; // ^^^^^^
 
     public static final double ELEVATOR_FEEDFORWARD = 0.05;
