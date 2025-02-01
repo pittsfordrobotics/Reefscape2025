@@ -30,7 +30,7 @@ public class Intake extends SubsystemBase {
 
     intakeMotor.configure(intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
-
+  
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
