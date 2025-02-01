@@ -9,6 +9,8 @@ import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -59,7 +61,7 @@ public class Swerve extends SubsystemBase {
 
         // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary
         // objects being created.
-        SwerveDriveTelemetry.verbosity = Robot.isReal() ? TelemetryVerbosity.LOW : TelemetryVerbosity.HIGH;
+        SwerveDriveTelemetry.verbosity = TelemetryVerbosity.INFO;
         try {
             swerveDrive = new SwerveParser(config_dir).createSwerveDrive(maximumSpeed);
             // Alternative method if you don't want to supply the conversion factor via JSON
@@ -74,7 +76,7 @@ public class Swerve extends SubsystemBase {
 
             for(int i = 0; i < swerveDrive.getModules().length; i++) {
             // Lower the kS to reduce wobble?
-            swerveDrive.getModules()[i].setFeedforward(new SimpleMotorFeedforward(SwerveConstants.MODULE_CONSTANTS[i].drive_kS * 0.1, SwerveConstants.MODULE_CONSTANTS[i].drive_kV, SwerveConstants.MODULE_CONSTANTS[i].drive_kA));
+            // swerveDrive.getModules()[i].setFeedforward(new SimpleMotorFeedforward(SwerveConstants.MODULE_CONSTANTS[i].drive_kS * 0.1, SwerveConstants.MODULE_CONSTANTS[i].drive_kV, SwerveConstants.MODULE_CONSTANTS[i].drive_kA));
           }
         // setupPathPlanner();
   }
@@ -245,15 +247,14 @@ public class Swerve extends SubsystemBase {
             }
             if (leftRotationInput != 0 && rightRotationInput == 0) {
                 swerveDrive.setHeadingCorrection(false);
-                double leftRotationOutput = Math.pow(leftRotationInput, 3) * maximumAngularSpeed * 2;
+                double leftRotationOutput = Math.pow(leftRotationInput, 3) * maximumAngularSpeed;
                 driveAllianceRelative(xInput * maximumSpeed, yInput * maximumSpeed, leftRotationOutput, false);
             }
             // If right trigger pressed, rotate left at a rate proportional to the right
             // trigger input
             else if (rightRotationInput != 0 && leftRotationInput == 0) {
                 swerveDrive.setHeadingCorrection(false);
-                double rightRotationOutput = -Math.pow(rightRotationInput, 3) * maximumAngularSpeed
-                        * 2;
+                double rightRotationOutput = -Math.pow(rightRotationInput, 3) * maximumAngularSpeed;
                 driveAllianceRelative(xInput * maximumSpeed, yInput * maximumSpeed, rightRotationOutput, false);
                 currentTargetAngle = null;
             }
@@ -366,7 +367,7 @@ public class Swerve extends SubsystemBase {
     return SwerveDriveTest.generateSysIdCommand(
         SwerveDriveTest.setDriveSysIdRoutine(
             new Config(),
-            this, swerveDrive, 12),
+            this, swerveDrive, 12, false),
         3.0, 5.0, 3.0); // TODO: Tweak (increase quasitimeout if possible) for running sysid characterization
   }
 
@@ -396,6 +397,21 @@ public class Swerve extends SubsystemBase {
         swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
     }
 
+    /** 
+     * Set the hardware zero point of the angle motor's absolute encoder to the current position.
+     * The 45 + 90n degree angle offsets are in software, on top of this. 
+     * */
+    public void zeroSwerveOffsets() {
+        for (SwerveModule module : swerveDrive.getModules()) {
+            // double position = module.getRawAbsolutePosition();
+            // double encoderOffset = ((SparkMax) module.configuration.angleMotor.getMotor()).configAccessor.absoluteEncoder.getZeroOffset();
+            // module.configuration.absoluteEncoder.setAbsoluteEncoderOffset(MathUtil.inputModulus((encoderOffset + position) / 360, 0, 1));
+            module.configuration.absoluteEncoder.setAbsoluteEncoderOffset(0);
+            System.out.println("absolute position:" + module.configuration.absoluteEncoder.getAbsolutePosition());
+            System.out.println("raw ap:" + module.getRawAbsolutePosition());
+        }
+    }
+
     public void setSwerveOffsets() {
         Rotation2d[] currentOffsets = new Rotation2d[4];
         Rotation2d[] newOffsets = new Rotation2d[4];
@@ -403,27 +419,36 @@ public class Swerve extends SubsystemBase {
         double[] angleOffsets = new double[4];
         SparkAbsoluteEncoder[] encoders = new SparkAbsoluteEncoder[4];
         SwerveModuleConfiguration[] moduleConfigs = new SwerveModuleConfiguration[4];
+        SparkMax[] angleMotors = new SparkMax[4];
         for (int i = 0; i < 4; i++) {
-            currentOffsets[i] = Rotation2d.fromDegrees(angleOffsets[i]);
             moduleConfigs[i] = swerveDrive.getModules()[i].configuration;
-            angleOffsets[i] = moduleConfigs[i].angleOffset;
+            angleMotors[i] = (SparkMax) swerveDrive.getModules()[i].getAngleMotor().getMotor();
+            angleOffsets[i] = angleMotors[i].configAccessor.absoluteEncoder.getZeroOffset() * 360;
+            currentOffsets[i] = Rotation2d.fromDegrees(angleOffsets[i]);
             
             encoders[i] = (SparkAbsoluteEncoder) swerveDrive.getModules()[i].getAbsoluteEncoder().getAbsoluteEncoder();
             measuredPositions[i] = Rotation2d.fromDegrees(encoders[i].getPosition());
-            newOffsets[i] = currentOffsets[i].plus(measuredPositions[i]).plus(Rotation2d.fromDegrees(getAngleForModule(i)));
-            moduleConfigs[i].absoluteEncoder.setAbsoluteEncoderOffset(MathUtil.inputModulus(newOffsets[i].getDegrees(), 0, 360));
-            swerveDrive.getModules()[i].getAngleMotor().burnFlash();
+            newOffsets[i] = new Rotation2d().plus(currentOffsets[i]).plus(measuredPositions[i]).plus(Rotation2d.fromDegrees(getAngleForModule(i)));
+            moduleConfigs[i].absoluteEncoder.setAbsoluteEncoderOffset(MathUtil.inputModulus(newOffsets[i].getDegrees() / 360, 0, 1));
+            System.out.println("Module " + i + " offset: " + newOffsets[i].getDegrees());
+            System.out.println(currentOffsets[i].getDegrees() + " + " + measuredPositions[i].getDegrees() + " = " + newOffsets[i].getDegrees());
         }
     }
 
     private double getAngleForModule(int moduleNumber) {
       return switch (moduleNumber) {
-          case 0 -> -90;
-          case 1 -> 0;
-          case 2 -> -180;
-          case 3 -> -270;
-          default -> 0;
+          case 0 -> 225;
+          case 1 -> 315;
+          case 2 -> 135;
+          case 3 -> 45;
+          default -> throw new IllegalArgumentException("Invalid module number");
       };
+  }
+
+  public Command driveForward(double percentage) {
+    return run(() -> {
+        swerveDrive.drive(new Translation2d(percentage * maximumSpeed, 0), 0, false, false);
+    });
   }
 
   @Override

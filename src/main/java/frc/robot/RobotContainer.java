@@ -13,6 +13,7 @@ import frc.robot.subsystems.Intake;
 import java.io.File;
 
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -43,7 +44,18 @@ public class RobotContainer {
     coral = new Coral();
 
 
+    Command enhancedHeadingSteeringCommand = swerve.enhancedHeadingDriveCommand(
+        () -> -driverController.getLeftY(),
+        () -> -driverController.getLeftX(),
+        () -> -driverController.getRightY(),
+        () -> -driverController.getRightX(),
+        driverController::getLeftTriggerAxis,
+        driverController::getRightTriggerAxis);
+    swerve.setDefaultCommand(enhancedHeadingSteeringCommand);
+
     SmartDashboard.putNumber("speed", 0.25);
+    Shuffleboard.getTab("Config").add("Zero swerve offsets", swerve.runOnce(() -> swerve.setSwerveOffsets()).ignoringDisable(true));
+    Shuffleboard.getTab("Config").add("Set offsets to 0", swerve.runOnce(() -> swerve.zeroSwerveOffsets()).ignoringDisable(true));
     // Configure the trigger bindings
     configureBindings();
   }
@@ -78,8 +90,15 @@ public class RobotContainer {
     driverController.leftTrigger().whileTrue(coral.dynamicDriveCoral(
       () -> SmartDashboard.getNumber("Coral Speed", 0.25)));
 
+
     //Stop Coral output:
     driverController.leftBumper().onFalse(coral.stopCoral());
+
+    //Drive Swerve forward and backward:
+    driverController.povUp().whileTrue(swerve.driveForward(0.2));
+    driverController.povDown().whileTrue(swerve.driveForward(-0.2));
+
+
   }
 
   /**
