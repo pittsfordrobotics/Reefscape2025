@@ -15,6 +15,7 @@ import frc.robot.subsystems.Intake;
 import java.io.File;
 import java.security.Key;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -31,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //private final Swerve swerve;
+  @Logged(name = "Intake Subsystem")
   private final Intake intake;
   private final Algae algae;
   private final Climber climber;
@@ -48,7 +50,6 @@ public class RobotContainer {
     algae = new Algae();
     climber = new Climber();
     elevator = new Elevator();
-
     SmartDashboard.putNumber("Intake Speed", -0.25);
     SmartDashboard.putNumber("Algae Speed", 0.25);
 
@@ -63,6 +64,16 @@ public class RobotContainer {
     swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve"));
     coral = new Coral();
 
+    SmartDashboard.putNumber("Intake Speed", -0.25);
+    SmartDashboard.putNumber("Algae Speed", 0.25);
+
+    SmartDashboard.putNumber("Algae Pivot Speed", 0.25);
+    SmartDashboard.putNumber("Algae Active Angle", 0);
+    SmartDashboard.putNumber("Algae Default Angle", 0);
+    
+    SmartDashboard.putNumber("Climb Speed", 0.25);
+    SmartDashboard.putNumber("Climb Default Angle", 0);
+    SmartDashboard.putNumber("Climb Active Angle", 0);
 
     Command enhancedHeadingSteeringCommand = swerve.enhancedHeadingDriveCommand(
         () -> -driverController.getLeftY(),
@@ -91,8 +102,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     //Drive Intake:
-    driverController.b().whileTrue(intake.dynamicDriveIntake(
-      () -> SmartDashboard.getNumber("Intake Speed", -0.25)))
+    driverController.b().onTrue(intake.intakeCoralWithSensor())
       .onFalse(intake.stopIntake());
 
       driverController.y().whileTrue(intake.dynamicDriveIntake(
@@ -104,30 +114,24 @@ public class RobotContainer {
       () -> SmartDashboard.getNumber("Algae Angle 1", 0)))
       .onFalse((algae.dynamicAlgaeSetPivot(
         () -> SmartDashboard.getNumber("Algae Angle 2", 0))));
-    
-    //Rotate Algae arm:
-    /*driverController.rightTrigger().whileTrue(algae.dynamicAlgaeSpeedPivot(
-      () -> SmartDashboard.getNumber("Algae Pivot Speed", 0.25)))
-      .onFalse(algae.stopAlgaePivot());
-      
-    driverController.rightBumper().whileTrue(algae.dynamicAlgaeSpeedPivot(
-      () -> -1 * SmartDashboard.getNumber("Algae Pivot Speed", 0.25)))
-      .onFalse(algae.stopAlgaePivot());*/
 
-    //Drive Algae pickup:
-    driverController.a().whileTrue(algae.dynamicAlgaePickup(
-      () -> SmartDashboard.getNumber("Algae Speed", 0.25)))
-      .onFalse(algae.stopAlgaePickup());
+      //The below input can be removed if needed to free up inputs vvv
+    driverController.y().whileTrue(intake.dynamicDriveIntake(
+      () -> -1 * SmartDashboard.getNumber("Intake Speed", -0.25)))
+        .onFalse(intake.stopIntake());
+        // ^^^
     
-    driverController.x().whileTrue(algae.dynamicAlgaePickup(
-      () -> -1 * SmartDashboard.getNumber("Algae Speed", 0.25)))
-      .onFalse(algae.stopAlgaePickup());
-
+    //Pivot Algae arm:
+    driverController.rightTrigger().onTrue(algae.dynamicAlgaeSetPivot(
+      () -> SmartDashboard.getNumber("Algae Active Angle", 0)))
+      .onFalse((algae.dynamicAlgaeSetPivot(
+        () -> SmartDashboard.getNumber("Algae Default Angle", 0))));
+    
     //Drive Coral output:
     driverController.leftTrigger().whileTrue(coral.dynamicDriveCoral(
       () -> SmartDashboard.getNumber("Coral Speed", 0.25)))
         .onFalse(coral.stopCoral());
-
+    
     //Drive Swerve forward and backward:
     driverController.povUp().whileTrue(swerve.driveForward(0.2));
     driverController.povDown().whileTrue(swerve.driveForward(-0.2));
@@ -137,10 +141,6 @@ public class RobotContainer {
       () -> SmartDashboard.getNumber(("Climb Active Angle"), 0.25)))
       .whileFalse(climber.climbToPosition(
         () -> SmartDashboard.getNumber("Angle Default Angle", 0)));
-    
-    /*driverController.leftBumper().whileTrue(climber.dynamicDriveClimb(
-    () -> -1 * SmartDashboard.getNumber("Climb Speed", 0.25)))
-    .onFalse(climber.stopClimb());*/
 
   }
 

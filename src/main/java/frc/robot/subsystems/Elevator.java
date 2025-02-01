@@ -68,6 +68,7 @@ public class Elevator extends SubsystemBase {
     // elevatorFollowingMotorConfig.idleMode(IdleMode.kBrake);
     // elevatorFollowingMotorConfig.follow(elevatorMotor, false);
     // elevatorFollowingMotor.configure(elevatorFollowingMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
   }
 
   @Override
@@ -106,5 +107,13 @@ public class Elevator extends SubsystemBase {
     double heightElevator = ((height.getAsDouble() - ElevatorConstants.GROUND_TO_ELEVATOR_BOTTOM_INCHES)/ElevatorConstants.ELEVATOR_TOTAL_MAX_HEIGHT_INCHES) 
       * ElevatorConstants.ELEVATOR_MAX_HEIGHT_INCHES;
     return Commands.parallel(run(() -> setShuttlePosition(heightShuttle)), run(() -> setElevatorPosition(heightElevator)));
+  }
+
+  private void setElevatorPosition(double height){
+    elevatorController.setReference(height, ControlType.kPosition);
+  }
+
+  public Command dynamicElevatorSetPosition(DoubleSupplier height){
+    return run(() -> setElevatorPosition(height.getAsDouble()));
   }
 }
