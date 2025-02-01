@@ -35,7 +35,7 @@ public class Intake extends SubsystemBase {
 
     intakeMotor.configure(intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
-
+  
   @Override
   public void periodic() {
 
