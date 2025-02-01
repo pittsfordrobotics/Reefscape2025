@@ -33,6 +33,7 @@ import frc.robot.Constants.IntakeConstants;
 public class Algae extends SubsystemBase {
   private SparkMax algaePickupMotor = new SparkMax(AlgaeConstants.CAN_ALGAE_PICKUP_MOTOR, MotorType.kBrushless);
   private SparkMax algaePivotMotor = new SparkMax(AlgaeConstants.CAN_ALGAE_PIVOT_MOTOR, MotorType.kBrushless);
+  
   private SparkClosedLoopController algaePivotController = algaePivotMotor.getClosedLoopController();
 
   private SparkAbsoluteEncoder pivotEncoder;
@@ -88,6 +89,10 @@ public class Algae extends SubsystemBase {
 
   public Command dynamicAlgaeSpeedPivot(DoubleSupplier speed){
     return run(() -> algaePivotMotor.set(speed.getAsDouble()));
+  }
+
+  public Command stopAlgaePickup(){
+    return run(() -> algaePickupMotor.set(0));
   }
   
   public Command stopAlgaePivot(){
