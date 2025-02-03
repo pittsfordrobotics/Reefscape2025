@@ -38,6 +38,7 @@ public class RobotContainer {
   private final Climber climber;
   private final Elevator elevator;
   private final Coral coral;
+  private final Swerve swerve;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
