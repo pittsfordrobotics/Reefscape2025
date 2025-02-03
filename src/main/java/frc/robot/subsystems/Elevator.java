@@ -109,11 +109,11 @@ public class Elevator extends SubsystemBase {
     return Commands.parallel(run(() -> setShuttlePosition(heightShuttle)), run(() -> setElevatorPosition(heightElevator)));
   }
 
-  private void setElevatorPosition(double height){
-    elevatorController.setReference(height, ControlType.kPosition);
-  }
+  // private void setElevatorPosition(double height){
+  //   elevatorController.setReference(height, ControlType.kPosition);
+  // }
 
-  public Command dynamicElevatorSetPosition(DoubleSupplier height){
-    return run(() -> setElevatorPosition(height.getAsDouble()));
-  }
+  // public Command dynamicElevatorSetPosition(DoubleSupplier height){
+  //   return run(() -> setElevatorPosition(height.getAsDouble()));
+  // }
 }
