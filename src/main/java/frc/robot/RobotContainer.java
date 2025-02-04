@@ -11,6 +11,7 @@ import frc.robot.subsystems.Intake;
 
 import java.io.File;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Swerve swerve;
+  @Logged(name = "Intake Subsystem")
   private final Intake intake;
   private final Algae algae;
 
