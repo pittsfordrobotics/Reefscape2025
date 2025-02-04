@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import org.littletonrobotics.junction.LoggedRobot;
-
 import edu.wpi.first.epilogue.Epilogue;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.net.PortForwarder;
@@ -23,7 +21,7 @@ public class Robot extends TimedRobot {
   private Command autonomousCommand;
 
   @Logged(name = "RobotContainer")
-  private RobotContainer robotContainer;
+  public RobotContainer robotContainer;
 
   public Robot() {
     Epilogue.configure(config -> {
@@ -31,7 +29,6 @@ public class Robot extends TimedRobot {
     });
     
     Epilogue.bind(this);
-
   }
 
   /**

@@ -18,11 +18,14 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.logging.SparkMaxLogger;
 
 public class Intake extends SubsystemBase {
-  private SparkMax intakeMotor = new SparkMax(IntakeConstants.CAN_INTAKE_MOTOR, MotorType.kBrushless);
+  private final SparkMax intakeMotor = new SparkMax(IntakeConstants.CAN_INTAKE_MOTOR, MotorType.kBrushless);
   
-  
+  @Logged(name="IntakeMotor")
+  public final SparkMaxLogger intakeMotorLogger = new SparkMaxLogger(intakeMotor);
+
   DigitalInput coralSensor = new DigitalInput(0);
   
   /** Creates a new IntakeSubsystem. */
