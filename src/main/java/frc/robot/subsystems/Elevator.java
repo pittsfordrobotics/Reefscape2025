@@ -114,7 +114,7 @@ public class Elevator extends SubsystemBase {
     return run(() -> shuttleMotor.set(-0.05)).raceWith(Commands.waitUntil(isHomedLimitS())).andThen(run(() -> afterShuttleHomed()));
   }
   private BooleanSupplier isHomedLimitS(){
-    return (() -> elevatorMotor.getReverseLimitSwitch().isPressed());
+    return (() -> shuttleMotor.getReverseLimitSwitch().isPressed());
   }
 
   private void setElevatorPosition(double pos){
