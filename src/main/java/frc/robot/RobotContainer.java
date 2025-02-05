@@ -138,7 +138,7 @@ public class RobotContainer {
     driverController.povDown().whileTrue(swerve.driveForward(-0.2));
 
     //Drive Climber:
-    driverController.leftTrigger().whileTrue(climber.climbToPosition(
+    driverController.leftBumper().whileTrue(climber.climbToPosition(
       () -> SmartDashboard.getNumber(("Climb Active Angle"), 0.25)))
       .whileFalse(climber.climbToPosition(
         () -> SmartDashboard.getNumber("Angle Default Angle", 0)));
