@@ -54,6 +54,8 @@ public class Elevator extends SubsystemBase {
   public double shuttlePos = 0; // from bottom of shuttle slide to **TBD**
   @Logged(name = "Elevator Homed")
   public boolean elevatorIsHomed = false;
+  @Logged(name = "Shuttle Homed")
+  public boolean shuttleIsHomed = false;
 
   /** Creates a new Elevator. */
   public Elevator() {
@@ -91,17 +93,27 @@ public class Elevator extends SubsystemBase {
     return (height == getTotalHeightInches());
   }
 
-  private void afterHomed(){
+  private void afterElevatorHomed(){
     elevatorMotor.set(0);
     elevatorRelativeEncoder.setPosition(0);
     elevatorIsHomed = true;
   }
-
   public Command homeElevator(){
-    return run(() -> elevatorMotor.set(-0.05)).raceWith(Commands.waitUntil(isHomedLimit())).andThen(run(() -> afterHomed()));
+    return run(() -> elevatorMotor.set(-0.05)).raceWith(Commands.waitUntil(isHomedLimitE())).andThen(run(() -> afterElevatorHomed()));
+  }
+  private BooleanSupplier isHomedLimitE(){
+    return (() -> elevatorMotor.getReverseLimitSwitch().isPressed());
   }
 
-  private BooleanSupplier isHomedLimit(){
+  private void afterShuttleHomed(){
+    shuttleMotor.set(0);
+    shuttleRelativeEncoder.setPosition(0);
+    shuttleIsHomed = true;
+  }
+  public Command homeShuttle(){
+    return run(() -> shuttleMotor.set(-0.05)).raceWith(Commands.waitUntil(isHomedLimitS())).andThen(run(() -> afterShuttleHomed()));
+  }
+  private BooleanSupplier isHomedLimitS(){
     return (() -> elevatorMotor.getReverseLimitSwitch().isPressed());
   }
 
