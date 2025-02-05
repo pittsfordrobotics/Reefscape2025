@@ -15,6 +15,7 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/Shuffleboard/Config/Set offsets to 0": "Command",
+      "/Shuffleboard/Config/Zero gyro": "Command",
       "/Shuffleboard/Config/Zero swerve offsets": "Command",
       "/SmartDashboard/Encoders": "Alerts",
       "/SmartDashboard/Field": "Field2d",
@@ -45,6 +46,23 @@
   },
   "NetworkTables": {
     "transitory": {
+      "Epilogue": {
+        "Stats": {
+          "open": true
+        }
+      },
+      "Robot Data": {
+        "RobotContainer": {
+          "Intake Subsystem": {
+            "IntakeMotor": {
+              "open": true
+            },
+            "open": true
+          },
+          "open": true
+        },
+        "open": true
+      },
       "Shuffleboard": {
         "Config": {
           "open": true
