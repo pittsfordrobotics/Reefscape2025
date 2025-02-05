@@ -54,7 +54,6 @@ public class Elevator extends SubsystemBase {
   public double shuttlePos = 0; // from bottom of shuttle slide to **TBD**
   @Logged(name = "Elevator Homed")
   public boolean elevatorIsHomed = false;
-  private DigitalInput elevatorBottomLimit = new DigitalInput(ElevatorConstants.ELEVATOR_LIMIT_SWITCH);
 
   /** Creates a new Elevator. */
   public Elevator() {
@@ -103,7 +102,7 @@ public class Elevator extends SubsystemBase {
   }
 
   private BooleanSupplier isHomedLimit(){
-    return (() -> elevatorBottomLimit.get());
+    return (() -> elevatorMotor.getReverseLimitSwitch().isPressed());
   }
 
   private void setElevatorPosition(double pos){
