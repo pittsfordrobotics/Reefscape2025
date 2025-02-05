@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkMax;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.RelativeEncoder;
@@ -22,6 +23,7 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -50,6 +52,9 @@ public class Elevator extends SubsystemBase {
   public double elevatorPos = 0; // height from bottom elevtor position to bottom of shuttle slide
   @Logged(name = "Shuttle Posiiton Inches")
   public double shuttlePos = 0; // from bottom of shuttle slide to **TBD**
+  @Logged(name = "Elevator Homed")
+  public boolean elevatorIsHomed = false;
+  private DigitalInput elevatorBottomLimit = new DigitalInput(ElevatorConstants.ELEVATOR_LIMIT_SWITCH);
 
   /** Creates a new Elevator. */
   public Elevator() {
@@ -85,6 +90,20 @@ public class Elevator extends SubsystemBase {
 
   private boolean isAtHeight(double height){
     return (height == getTotalHeightInches());
+  }
+
+  private void afterHomed(){
+    elevatorMotor.set(0);
+    elevatorRelativeEncoder.setPosition(0);
+    elevatorIsHomed = true;
+  }
+
+  public Command homeElevator(){
+    return run(() -> elevatorMotor.set(-0.05)).raceWith(Commands.waitUntil(isHomedLimit())).andThen(run(() -> afterHomed()));
+  }
+
+  private BooleanSupplier isHomedLimit(){
+    return (() -> elevatorBottomLimit.get());
   }
 
   private void setElevatorPosition(double pos){
