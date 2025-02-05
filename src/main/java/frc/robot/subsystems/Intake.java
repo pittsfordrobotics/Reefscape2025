@@ -54,10 +54,6 @@ public class Intake extends SubsystemBase {
     intakeMotor.set(speed);
   }
 
-  public Command intakeCoralWithSensor() {
-    return run(() -> setIntake(IntakeConstants.CORAL_INTAKE_SPEED)).until(this::isCoralDetected);
-  }
-
   public Command dynamicDriveIntake(DoubleSupplier speed){
     return run(() -> setIntake(speed.getAsDouble()));
   }
