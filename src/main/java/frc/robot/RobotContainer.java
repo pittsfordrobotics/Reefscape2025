@@ -13,7 +13,6 @@ import frc.robot.subsystems.Coral;
 import frc.robot.subsystems.Intake;
 
 import java.io.File;
-import java.security.Key;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -88,6 +87,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("speed", 0.25);
     Shuffleboard.getTab("Config").add("Zero swerve offsets", swerve.runOnce(() -> swerve.setSwerveOffsets()).ignoringDisable(true));
     Shuffleboard.getTab("Config").add("Set offsets to 0", swerve.runOnce(() -> swerve.zeroSwerveOffsets()).ignoringDisable(true));
+    Shuffleboard.getTab("Config").add("Zero gyro", swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));
     // Configure the trigger bindings
     configureBindings();
   }

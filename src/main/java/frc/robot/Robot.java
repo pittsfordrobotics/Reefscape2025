@@ -22,7 +22,7 @@ public class Robot extends TimedRobot {
   private Command autonomousCommand;
 
   @Logged(name = "RobotContainer")
-  private RobotContainer robotContainer;
+  public RobotContainer robotContainer;
 
   public Robot() {
     Epilogue.configure(config -> {
