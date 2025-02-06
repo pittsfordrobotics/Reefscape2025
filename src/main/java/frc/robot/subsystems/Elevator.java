@@ -10,20 +10,15 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.epilogue.Logged;
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -46,9 +41,19 @@ public class Elevator extends SubsystemBase {
     new TrapezoidProfile.Constraints(2, 1.5));
   
   // OTHER
+  // Minor comment:
+  // It's not typically good to expose member variables publically.
+  // They're normally accessed via a "getter" method.
+  // Reason: if the variable is public, anyone outside the class could change it without the subsystem knowing about it.
+  // I'll change "elevatorPos" as an example:
+  private double elevatorPos = 0;  // height from bottom elevtor position to bottom of shuttle slide
+
   @Logged(name = "Elevator Position Inches")
-  public double elevatorPos = 0; // height from bottom elevtor position to bottom of shuttle slide
-  @Logged(name = "Shuttle Posiiton Inches")
+  public double getElevatorPosition() {
+    return elevatorPos;
+  }
+
+  @Logged(name = "Shuttle Position Inches")
   public double shuttlePos = 0; // from bottom of shuttle slide to **TBD**
   @Logged(name = "Elevator Homed")
   public boolean elevatorIsHomed = false;
@@ -91,16 +96,29 @@ public class Elevator extends SubsystemBase {
   }
 
   /* HOMING */
+  // Very nice methods and commands here!
   private void afterElevatorHomed(){
     elevatorMotor.set(0);
     elevatorRelativeEncoder.setPosition(0);
     elevatorIsHomed = true;
   }
+
   public Command homeElevator(){
-    return run(() -> elevatorMotor.set(-0.05)).raceWith(Commands.waitUntil(isHomedLimitE())).andThen(run(() -> afterElevatorHomed()));
+    // Instead of having separate methods, you could put the statements inline:
+    return run(() -> elevatorMotor.set(-0.05)).raceWith(Commands.waitUntil(this::isHomedLimitE))
+      .andThen(run(() -> {
+        elevatorMotor.set(0);
+        elevatorRelativeEncoder.setPosition(0);
+        elevatorIsHomed = true;
+      }));
   }
-  private BooleanSupplier isHomedLimitE(){
-    return (() -> elevatorMotor.getReverseLimitSwitch().isPressed());
+
+  // Try not to abbreviate method names too much.
+  // "isElevatorAtLimit" would be a good name.
+  // I would recommend having this return a boolean and not a supplier to make it easier to read.
+  // ...or just call the "isPressed" method directly in the command.
+  private boolean isHomedLimitE(){
+    return elevatorMotor.getReverseLimitSwitch().isPressed();
   }
 
   private void afterShuttleHomed(){
@@ -108,9 +126,11 @@ public class Elevator extends SubsystemBase {
     shuttleRelativeEncoder.setPosition(0);
     shuttleIsHomed = true;
   }
+
   public Command homeShuttle(){
     return run(() -> shuttleMotor.set(-0.05)).raceWith(Commands.waitUntil(isHomedLimitS())).andThen(run(() -> afterShuttleHomed()));
   }
+
   private BooleanSupplier isHomedLimitS(){
     return (() -> shuttleMotor.getReverseLimitSwitch().isPressed());
   }
@@ -130,12 +150,14 @@ public class Elevator extends SubsystemBase {
     shuttleMotor.set(profShuttleController.calculate(shuttleRelativeEncoder.getPosition(), pos) + ElevatorConstants.SHUTTLE_FEEDFORWARD);
   }
 
-  public Command dynamicElevatorSetPosition(DoubleSupplier height){
-    double heightShuttle = ((height.getAsDouble() - ElevatorConstants.GROUND_TO_ELEVATOR_BOTTOM_INCHES)/ElevatorConstants.ELEVATOR_TOTAL_MAX_HEIGHT_INCHES) 
-      * ElevatorConstants.SHUTTLE_LENGTH_INCHES;
-    double heightElevator = ((height.getAsDouble() - ElevatorConstants.GROUND_TO_ELEVATOR_BOTTOM_INCHES)/ElevatorConstants.ELEVATOR_TOTAL_MAX_HEIGHT_INCHES) 
-      * ElevatorConstants.ELEVATOR_MAX_HEIGHT_INCHES;
-    return Commands.parallel(run(() -> setShuttlePosition(heightShuttle)), run(() -> setElevatorPosition(heightElevator)));
+  public Command dynamicElevatorSetPosition(DoubleSupplier height) {
+    // Minor comment:
+    // instead of calculating the ratio twice, you can do it once and use it in both locations:
+    double heightRatio = ((height.getAsDouble() - ElevatorConstants.GROUND_TO_ELEVATOR_BOTTOM_INCHES)/ElevatorConstants.ELEVATOR_TOTAL_MAX_HEIGHT_INCHES);
+    double shuttleTargetHeightInches = heightRatio * ElevatorConstants.SHUTTLE_LENGTH_INCHES;
+    double elevatorTargetHeightInches = heightRatio * ElevatorConstants.ELEVATOR_MAX_HEIGHT_INCHES;
+    
+    return Commands.parallel(run(() -> setShuttlePosition(shuttleTargetHeightInches)), run(() -> setElevatorPosition(elevatorTargetHeightInches)));
   }
 
   /* TELEMETRY */
