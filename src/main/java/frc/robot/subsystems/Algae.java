@@ -44,7 +44,7 @@ public class Algae extends SubsystemBase {
   @Logged(name="AlgaePivotMotor")
   public final SparkMaxLogger algaePivotMotorLogger = new SparkMaxLogger(algaePivotMotor);
 
-  DigitalInput algaeSensor = new DigitalInput(1);
+  DigitalInput algaeSensor = new DigitalInput(AlgaeConstants.ALGAE_SENSOR_CHANNEL);
   
   private SparkClosedLoopController algaePivotController = algaePivotMotor.getClosedLoopController();
   

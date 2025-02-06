@@ -8,6 +8,7 @@ package frc.robot.Constants;
 public class AlgaeConstants {
     public static final int CAN_ALGAE_PICKUP_MOTOR = 21;
     public static final int CAN_ALGAE_PIVOT_MOTOR = 22;
+    public static final int ALGAE_SENSOR_CHANNEL = 2;
 
     public static final int ARM_FEEDFORWARD_KS = 1;
     public static final int ARM_FEEDFORWARD_KG = 1;
