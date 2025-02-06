@@ -40,25 +40,27 @@ public class Elevator extends SubsystemBase {
     ElevatorConstants.SHUTTLE_Kp, ElevatorConstants.SHUTTLE_Ki, ElevatorConstants.SHUTTLE_Kd, 
     new TrapezoidProfile.Constraints(2, 1.5));
   
-  // OTHER
-  // Minor comment:
-  // It's not typically good to expose member variables publically.
-  // They're normally accessed via a "getter" method.
-  // Reason: if the variable is public, anyone outside the class could change it without the subsystem knowing about it.
-  // I'll change "elevatorPos" as an example:
   private double elevatorPos = 0;  // height from bottom elevtor position to bottom of shuttle slide
+  public double shuttlePos = 0; // from bottom of shuttle slide to **TBD**
+  public boolean elevatorIsHomed = false;
+  public boolean shuttleIsHomed = false;
 
-  @Logged(name = "Elevator Position Inches")
+  @Logged(name = "Elevator position inches")
   public double getElevatorPosition() {
     return elevatorPos;
   }
-
-  @Logged(name = "Shuttle Position Inches")
-  public double shuttlePos = 0; // from bottom of shuttle slide to **TBD**
-  @Logged(name = "Elevator Homed")
-  public boolean elevatorIsHomed = false;
-  @Logged(name = "Shuttle Homed")
-  public boolean shuttleIsHomed = false;
+  @Logged(name = "Shuttle position inches")
+  public double getShuttlePosition(){
+    return shuttlePos;
+  }
+  @Logged(name = "Is elevator homed")
+  public boolean getElevatorIsHomed(){
+    return elevatorIsHomed;
+  }
+  @Logged(name = "Is shuttle homed")
+  public boolean getShuttleIsHomed(){
+    return shuttleIsHomed;
+  }
 
   /** Creates a new Elevator. */
   public Elevator() {
@@ -96,16 +98,9 @@ public class Elevator extends SubsystemBase {
   }
 
   /* HOMING */
-  // Very nice methods and commands here!
-  private void afterElevatorHomed(){
-    elevatorMotor.set(0);
-    elevatorRelativeEncoder.setPosition(0);
-    elevatorIsHomed = true;
-  }
 
   public Command homeElevator(){
-    // Instead of having separate methods, you could put the statements inline:
-    return run(() -> elevatorMotor.set(-0.05)).raceWith(Commands.waitUntil(this::isHomedLimitE))
+    return run(() -> elevatorMotor.set(-0.05)).raceWith(Commands.waitUntil(this::isElevatorAtLimit))
       .andThen(run(() -> {
         elevatorMotor.set(0);
         elevatorRelativeEncoder.setPosition(0);
@@ -113,46 +108,37 @@ public class Elevator extends SubsystemBase {
       }));
   }
 
-  // Try not to abbreviate method names too much.
-  // "isElevatorAtLimit" would be a good name.
-  // I would recommend having this return a boolean and not a supplier to make it easier to read.
-  // ...or just call the "isPressed" method directly in the command.
-  private boolean isHomedLimitE(){
+  private boolean isElevatorAtLimit(){
     return elevatorMotor.getReverseLimitSwitch().isPressed();
   }
 
-  private void afterShuttleHomed(){
-    shuttleMotor.set(0);
-    shuttleRelativeEncoder.setPosition(0);
-    shuttleIsHomed = true;
-  }
-
   public Command homeShuttle(){
-    return run(() -> shuttleMotor.set(-0.05)).raceWith(Commands.waitUntil(isHomedLimitS())).andThen(run(() -> afterShuttleHomed()));
+    return run(() -> shuttleMotor.set(-0.05)).raceWith(Commands.waitUntil(this::isShuttleAtLimit))
+      .andThen(run(() -> {
+        shuttleMotor.set(0);
+        shuttleRelativeEncoder.setPosition(0);
+        shuttleIsHomed = true;
+      }));
   }
 
-  private BooleanSupplier isHomedLimitS(){
-    return (() -> shuttleMotor.getReverseLimitSwitch().isPressed());
+  private boolean isShuttleAtLimit(){
+    return shuttleMotor.getReverseLimitSwitch().isPressed();
   }
 
   /* SETTING POSITION */
   private void setElevatorPosition(double pos){
     if (pos >= ElevatorConstants.ELEVATOR_MAX_HEIGHT_INCHES || pos < 0) return;
     pos /= ElevatorConstants.ELEVATOR_TICKS_PER_INCH;
-    // elevatorController.setReference(height, ControlType.kPosition);
     elevatorMotor.set(profElevatorController.calculate(elevatorRelativeEncoder.getPosition(), pos) + ElevatorConstants.ELEVATOR_FEEDFORWARD);
   }
 
   private void setShuttlePosition(double pos){
     if (pos >= ElevatorConstants.SHUTTLE_LENGTH_INCHES || pos < 0) return;
     pos /= ElevatorConstants.SHUTTLE_TICKS_PER_INCH;
-    // elevatorController.setReference(height, ControlType.kPosition);
     shuttleMotor.set(profShuttleController.calculate(shuttleRelativeEncoder.getPosition(), pos) + ElevatorConstants.SHUTTLE_FEEDFORWARD);
   }
 
   public Command dynamicElevatorSetPosition(DoubleSupplier height) {
-    // Minor comment:
-    // instead of calculating the ratio twice, you can do it once and use it in both locations:
     double heightRatio = ((height.getAsDouble() - ElevatorConstants.GROUND_TO_ELEVATOR_BOTTOM_INCHES)/ElevatorConstants.ELEVATOR_TOTAL_MAX_HEIGHT_INCHES);
     double shuttleTargetHeightInches = heightRatio * ElevatorConstants.SHUTTLE_LENGTH_INCHES;
     double elevatorTargetHeightInches = heightRatio * ElevatorConstants.ELEVATOR_MAX_HEIGHT_INCHES;
