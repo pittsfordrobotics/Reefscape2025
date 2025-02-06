@@ -3,7 +3,7 @@ package frc.robot.logging;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.epilogue.Logged;
-
+/* 
 public class SparkMaxLogger {
     private final SparkMax sparkMax;
 
@@ -46,4 +46,4 @@ public class SparkMaxLogger {
     public boolean isAtForwarLimit() {
         return sparkMax.getForwardLimitSwitch().isPressed();
     }
-}
+} */
