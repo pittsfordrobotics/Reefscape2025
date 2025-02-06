@@ -49,12 +49,19 @@
       "Epilogue": {
         "Stats": {
           "open": true
-        }
+        },
+        "open": true
       },
       "Robot Data": {
         "RobotContainer": {
           "Intake Subsystem": {
             "IntakeMotor": {
+              "open": true
+            },
+            "open": true
+          },
+          "PDH": {
+            "double[]##v_Robot Data/RobotContainer/PDH/All PDH Currents": {
               "open": true
             },
             "open": true

@@ -12,10 +12,14 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Coral;
 import frc.robot.subsystems.Intake;
 
+import frc.robot.logging.PDHLogger;
+
 import java.io.File;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -39,6 +43,9 @@ public class RobotContainer {
   private final Coral coral;
   private final Swerve swerve;
 
+  @Logged(name = "PDH")
+  private final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
@@ -50,6 +57,8 @@ public class RobotContainer {
     algae = new Algae();
     climber = new Climber();
     elevator = new Elevator();
+
+
     SmartDashboard.putNumber("Intake Speed", -0.25);
     SmartDashboard.putNumber("Algae Speed", 0.25);
 
