@@ -1,0 +1,22 @@
+package frc.robot.logging;
+
+import edu.wpi.first.epilogue.Logged;
+
+import edu.wpi.frist.wpilibj.PowerDistribution;
+
+@CustomLoggerFor(PowerDistribution.class)
+public class PowerDistributionLogger extends ClassSpecificLogger<PowerDistribution> {
+  public PowerDistributionLogger() {
+    super(PowerDistribution.class);
+  }
+
+  @Override
+  public void update(EpilogueBackend backend, PowerDistribution pdh) {
+    backend.log("PDH Voltage (Volts)", pdh.getVoltage());
+    backend.log("PDH Current (Amps)", pdh.getOutputCurrent());
+    backend.log("PDH Temperature (Degrees Celsius)", pdh.getTemperature());
+    backend.log("All PDH Currents", pdh.getAllCurrents());
+
+  }
+
+}
