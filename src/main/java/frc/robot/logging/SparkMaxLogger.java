@@ -19,8 +19,8 @@ public class SparkMaxLogger extends ClassSpecificLogger<SparkMax> {
         backend.log("SparkMax ID", sparkMax.getDeviceId());
         backend.log("Motor Temperature (Degrees Celsius)", sparkMax.getMotorTemperature());
         backend.log("Output Current", sparkMax.getOutputCurrent());
-        backend.log("Encoder Position", sparkMax.getAlternateEncoder().getPosition());
-        backend.log("Encoder Velocity", sparkMax.getAlternateEncoder().getVelocity());
+        backend.log("Encoder Position", sparkMax.getEncoder().getPosition());
+        backend.log("Encoder Velocity", sparkMax.getEncoder().getVelocity());
         
     }
 }

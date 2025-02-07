@@ -59,12 +59,16 @@
             "IntakeMotor": {
               "open": true
             },
+            "intakeMotor": {
+              "open": true
+            },
             "open": true
           },
           "PDH": {
             "double[]##v_Robot Data/RobotContainer/PDH/All PDH Currents": {
               "open": true
-            }
+            },
+            "open": true
           },
           "open": true
         },
@@ -80,8 +84,5 @@
         "open": true
       }
     }
-  },
-  "NetworkTables Info": {
-    "visible": true
   }
 }
