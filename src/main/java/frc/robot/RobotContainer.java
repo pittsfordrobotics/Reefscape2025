@@ -35,12 +35,21 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //private final Swerve swerve;
-  @Logged(name = "Intake Subsystem")
+  @Logged(name = "Coral Intake Subsystem")
   private final Intake intake;
+
+  @Logged(name = "Algae Subsystem")
   private final Algae algae;
+
+  @Logged(name = "Climber Subsystem")
   private final Climber climber;
+
+  @Logged(name = "Elevator Subsystem")
   private final Elevator elevator;
+
+  @Logged(name = "Coral Output Subsystem")
   private final Coral coral;
+  
   private final Swerve swerve;
 
   @Logged(name = "PDH")

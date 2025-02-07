@@ -3,10 +3,8 @@ package frc.robot.logging;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.epilogue.CustomLoggerFor;
-import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.logging.ClassSpecificLogger;
 import edu.wpi.first.epilogue.logging.EpilogueBackend;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 
 @CustomLoggerFor(SparkMax.class)
 public class SparkMaxLogger extends ClassSpecificLogger<SparkMax> {
@@ -17,10 +15,11 @@ public class SparkMaxLogger extends ClassSpecificLogger<SparkMax> {
     @Override
     public void update(EpilogueBackend backend, SparkMax sparkMax) {
         backend.log("SparkMax ID", sparkMax.getDeviceId());
-        backend.log("Motor Temperature (Degrees Celsius)", sparkMax.getMotorTemperature());
+        backend.log("Motor Temperature (C)", sparkMax.getMotorTemperature());
         backend.log("Output Current", sparkMax.getOutputCurrent());
         backend.log("Encoder Position", sparkMax.getEncoder().getPosition());
         backend.log("Encoder Velocity", sparkMax.getEncoder().getVelocity());
+        backend.log("Applied Output", sparkMax.getAppliedOutput());
         
     }
 }

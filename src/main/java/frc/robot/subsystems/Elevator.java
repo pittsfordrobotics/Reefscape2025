@@ -29,6 +29,7 @@ import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
   // ELEVATOR
+  @Logged(name = "Elevator Motor")
   private SparkMax elevatorMotor = new SparkMax(ElevatorConstants.CAN_ELEVATOR_MOTOR, MotorType.kBrushless);
   private ProfiledPIDController profElevatorController = new ProfiledPIDController(
     ElevatorConstants.ELEVATOR_Kp, ElevatorConstants.ELEVATOR_Ki, ElevatorConstants.ELEVATOR_Kd,

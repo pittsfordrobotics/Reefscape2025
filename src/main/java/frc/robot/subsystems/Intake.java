@@ -22,7 +22,7 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.logging.SparkMaxLogger;
 
 public class Intake extends SubsystemBase {
-  @Logged(name="intakeMotor")
+  @Logged(name="Coral Intake Motor")
   private final SparkMax intakeMotor = new SparkMax(IntakeConstants.CAN_INTAKE_MOTOR, MotorType.kBrushless);
   
   private final SparkMaxLogger intakeLogger = new SparkMaxLogger();

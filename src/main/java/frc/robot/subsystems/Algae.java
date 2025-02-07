@@ -20,6 +20,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -31,7 +32,9 @@ import frc.robot.Constants.AlgaeConstants;
 import frc.robot.Constants.IntakeConstants;
 
 public class Algae extends SubsystemBase {
+  @Logged(name = "Algae Pickup Motor")
   private SparkMax algaePickupMotor = new SparkMax(AlgaeConstants.CAN_ALGAE_PICKUP_MOTOR, MotorType.kBrushless);
+  @Logged(name = "Algae Pivot Motor")
   private SparkMax algaePivotMotor = new SparkMax(AlgaeConstants.CAN_ALGAE_PIVOT_MOTOR, MotorType.kBrushless);
   
   private SparkClosedLoopController algaePivotController = algaePivotMotor.getClosedLoopController();

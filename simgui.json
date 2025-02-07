@@ -55,6 +55,18 @@
       },
       "Robot Data": {
         "RobotContainer": {
+          "Algae Subsystem": {
+            "Algae Pickup Motor": {
+              "open": true
+            },
+            "open": true
+          },
+          "Coral Intake Subsystem": {
+            "intakeMotor": {
+              "open": true
+            },
+            "open": true
+          },
           "Intake Subsystem": {
             "IntakeMotor": {
               "open": true
@@ -67,8 +79,7 @@
           "PDH": {
             "double[]##v_Robot Data/RobotContainer/PDH/All PDH Currents": {
               "open": true
-            },
-            "open": true
+            }
           },
           "open": true
         },
@@ -84,5 +95,8 @@
         "open": true
       }
     }
+  },
+  "NetworkTables Info": {
+    "visible": true
   }
 }
