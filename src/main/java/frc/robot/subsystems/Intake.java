@@ -25,6 +25,8 @@ public class Intake extends SubsystemBase {
   private final SparkMax intakeMotor = new SparkMax(IntakeConstants.CAN_INTAKE_MOTOR, MotorType.kBrushless);
   
   @Logged(name="IntakeMotor")
+  private final SparkMaxLogger intakeLogger = new SparkMaxLogger();
+  
   //public final SparkMaxLogger intakeMotorLogger = new SparkMaxLogger(intakeMotor);
 
   DigitalInput coralSensor = new DigitalInput(0);

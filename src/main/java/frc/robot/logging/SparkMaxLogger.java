@@ -21,7 +21,7 @@ public class SparkMaxLogger extends ClassSpecificLogger<SparkMax> {
         backend.log("Output Current", sparkMax.getOutputCurrent());
         backend.log("Encoder Position", sparkMax.getAlternateEncoder().getPosition());
         backend.log("Encoder Velocity", sparkMax.getAlternateEncoder().getVelocity());
-
+        
     }
 }
 

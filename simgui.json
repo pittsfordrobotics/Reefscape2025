@@ -23,7 +23,8 @@
       "/SmartDashboard/JSON": "Alerts",
       "/SmartDashboard/Motors": "Alerts",
       "/SmartDashboard/Pigeon 2 (v6) [0]": "Gyro",
-      "/SmartDashboard/Swerve Drive": "Alerts"
+      "/SmartDashboard/Swerve Drive": "Alerts",
+      "Robot Data/RobotContainer/Intake Subsystem/IntakeMotor": "Digital Input"
     },
     "windows": {
       "/Shuffleboard/Config/Zero swerve offsets": {
@@ -63,8 +64,7 @@
           "PDH": {
             "double[]##v_Robot Data/RobotContainer/PDH/All PDH Currents": {
               "open": true
-            },
-            "open": true
+            }
           },
           "open": true
         },
