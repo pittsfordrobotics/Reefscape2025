@@ -11,7 +11,9 @@ import frc.robot.subsystems.Intake;
 
 import java.io.File;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -26,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Swerve swerve;
+  @Logged(name = "Intake Subsystem")
   private final Intake intake;
   private final Algae algae;
 
@@ -39,7 +42,19 @@ public class RobotContainer {
     intake = new Intake();
     algae = new Algae();
 
+    Command enhancedHeadingSteeringCommand = swerve.enhancedHeadingDriveCommand(
+        () -> -driverController.getLeftY(),
+        () -> -driverController.getLeftX(),
+        () -> -driverController.getRightY(),
+        () -> -driverController.getRightX(),
+        driverController::getLeftTriggerAxis,
+        driverController::getRightTriggerAxis);
+    swerve.setDefaultCommand(enhancedHeadingSteeringCommand);
+
     SmartDashboard.putNumber("speed", 0.25);
+    Shuffleboard.getTab("Config").add("Zero swerve offsets", swerve.runOnce(() -> swerve.setSwerveOffsets()).ignoringDisable(true));
+    Shuffleboard.getTab("Config").add("Set offsets to 0", swerve.runOnce(() -> swerve.zeroSwerveOffsets()).ignoringDisable(true));
+    Shuffleboard.getTab("Config").add("Zero gyro", swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));
     // Configure the trigger bindings
     configureBindings();
   }
@@ -69,6 +84,10 @@ public class RobotContainer {
     //Drive Algae pickup:
     driverController.a().whileTrue(algae.dynamicAlgaePickup(() -> SmartDashboard.getNumber("Algae Speed", 0.25)));
     //
+
+    //Drive Swerve forward and backward:
+    driverController.povUp().whileTrue(swerve.driveForward(0.2));
+    driverController.povDown().whileTrue(swerve.driveForward(-0.2));
 
   }
 
