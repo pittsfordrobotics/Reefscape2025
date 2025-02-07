@@ -33,13 +33,12 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class Vision extends SubsystemBase {
 
-    // Initializatio
+    // Initialization
     private boolean useVision = true;
     private Consumer<VisionData> visionDataConsumer;
     private Supplier<Rotation2d> gyroangle;
     private Supplier<Double> robotRotationalVelocity;
     private double xyStdDev = 200;
-    private double swervesGyro = 12.2;
 
     private final VisionIO[] io;
     private final Map<Integer, Double> lastTagDetectionTimes = new HashMap<>();
@@ -48,12 +47,12 @@ public class Vision extends SubsystemBase {
     StructArrayPublisher<Pose2d> visionPoseArrayPublisher = NetworkTableInstance.getDefault()
             .getStructArrayTopic("Vision Poses", Pose2d.struct).publish();
 
-    public Vision(VisionIO ioLimelight1, VisionIO ioLimelight2, Supplier<Rotation2d> gyroangle,
+    public Vision(VisionIO ioLimelightLeft, VisionIO ioLimelightRight,VisionIO ioLimeLightBack, Supplier<Rotation2d> gyroangle,
             Supplier<Double> robotRotationalVelocity, Consumer<VisionData> visionDataConsumer) {
         this.visionDataConsumer = visionDataConsumer;
         this.gyroangle = gyroangle;
         this.robotRotationalVelocity = robotRotationalVelocity;
-        io = new VisionIO[] { ioLimelight1, ioLimelight2 };
+        io = new VisionIO[] {ioLimelightLeft, ioLimelightRight, ioLimeLightBack};
         FieldConstants.aprilTags.getTags().forEach((AprilTag tag) -> lastTagDetectionTimes.put(tag.ID, 0.0));
 
         Shuffleboard.getTab("Vision").addBoolean("Is Vison Being Used?", this::usingVision);
@@ -64,7 +63,8 @@ public class Vision extends SubsystemBase {
             Shuffleboard.getTab("Vision").addDouble(i + "/AvgTagDist", () -> this.inputs[number].avgTagDist);
             Shuffleboard.getTab("Vision").addInteger(i + "/NumTags", () -> this.inputs[number].tagCount);
             Shuffleboard.getTab("Vision").addDoubleArray(i + "/TagDistances", () -> this.inputs[number].tagDistances);
-            Shuffleboard.getTab("Vision").addString(i + "/TagIDs", () -> Arrays.toString(this.inputs[number].tagIDs)); // why
+            Shuffleboard.getTab("Vision").addString(i + "/TagIDs", () -> Arrays.toString(this.inputs[number].tagIDs)); 
+            // // why
             // // are
             // // ints
             // // dumb
@@ -74,7 +74,6 @@ public class Vision extends SubsystemBase {
                     () -> this.inputs[number].pose.getRotation().getDegrees());
         }
         Shuffleboard.getTab("Vision").addDouble("XY_std", this::getXYstdDev);
-        Shuffleboard.getTab("Vision").addDouble("Swerves Gyro", this::getSwervesGyro);
     }
 
     private final VisionIO.VisionIOInputs[] inputs = new VisionIO.VisionIOInputs[] { new VisionIO.VisionIOInputs(),
@@ -100,10 +99,6 @@ public class Vision extends SubsystemBase {
         return xyStdDev;
     }
 
-    public double getSwervesGyro() {
-        return swervesGyro;
-    }
-
     @Override
     public void periodic() {
         if (!useVision) {
@@ -119,7 +114,7 @@ public class Vision extends SubsystemBase {
             io[i].setPipeline(pipeline);
         }
 
-        swervesGyro = gyroangle.get().getDegrees();
+      
         List<Pose2d> allRobotPoses = new ArrayList<>();
 
         // Pose estimation
