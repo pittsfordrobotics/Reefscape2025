@@ -151,6 +151,7 @@ public class Elevator extends SubsystemBase {
 
   /* SETTING POSITION */
   private void setElevatorPosition(double pos){
+    elevatorIsHomed = false;
     if (pos >= ElevatorConstants.ELEVATOR_MAX_HEIGHT_INCHES || pos < 0) return;
     pos /= ElevatorConstants.ELEVATOR_TICKS_PER_INCH;
     elevatorController.setReference(pos, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, ElevatorConstants.ELEVATOR_FEEDFORWARD);
@@ -159,6 +160,7 @@ public class Elevator extends SubsystemBase {
   }
 
   private void setShuttlePosition(double pos){
+    shuttleIsHomed = false;
     if (pos >= ElevatorConstants.SHUTTLE_LENGTH_INCHES || pos < 0) return;
     pos /= ElevatorConstants.SHUTTLE_TICKS_PER_INCH;
     shuttleController.setReference(pos, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, ElevatorConstants.SHUTTLE_FEEDFORWARD);
@@ -166,11 +168,13 @@ public class Elevator extends SubsystemBase {
   }
 
   public Command dynamicElevatorSetPosition(DoubleSupplier height) {
-    double heightRatio = ((height.getAsDouble() - ElevatorConstants.GROUND_TO_ELEVATOR_BOTTOM_INCHES)/ElevatorConstants.ELEVATOR_TOTAL_MAX_HEIGHT_INCHES);
-    double shuttleTargetHeightInches = heightRatio * ElevatorConstants.SHUTTLE_LENGTH_INCHES;
-    double elevatorTargetHeightInches = heightRatio * ElevatorConstants.ELEVATOR_MAX_HEIGHT_INCHES;
-    
-    return Commands.parallel(run(() -> setShuttlePosition(shuttleTargetHeightInches)), run(() -> setElevatorPosition(elevatorTargetHeightInches)));
+    return run(() -> {
+      double heightRatio = ((height.getAsDouble() - ElevatorConstants.GROUND_TO_ELEVATOR_BOTTOM_INCHES)/ElevatorConstants.ELEVATOR_TOTAL_MAX_HEIGHT_INCHES);
+      double shuttleTargetHeightInches = heightRatio * ElevatorConstants.SHUTTLE_LENGTH_INCHES;
+      double elevatorTargetHeightInches = heightRatio * ElevatorConstants.ELEVATOR_MAX_HEIGHT_INCHES;
+      setShuttlePosition(shuttleTargetHeightInches);
+      setElevatorPosition(elevatorTargetHeightInches);
+    });
   }
 
   /* TELEMETRY */
