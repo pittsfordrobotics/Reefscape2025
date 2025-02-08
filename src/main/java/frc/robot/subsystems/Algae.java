@@ -41,12 +41,7 @@ public class Algae extends SubsystemBase {
   @Logged(name = "Algae Pivot Motor")
   private SparkMax algaePivotMotor = new SparkMax(AlgaeConstants.CAN_ALGAE_PIVOT_MOTOR, MotorType.kBrushless);
 
-  @Logged(name="AlgaePickupMotor")
-  public final SparkMaxLogger algaePickupMotorLogger = new SparkMaxLogger(algaePickupMotor);
-
-  @Logged(name="AlgaePivotMotor")
-  public final SparkMaxLogger algaePivotMotorLogger = new SparkMaxLogger(algaePivotMotor);
-
+  @Logged(name = "Algae Sensor")
   DigitalInput algaeSensor = new DigitalInput(AlgaeConstants.ALGAE_SENSOR_CHANNEL);
   
   private SparkClosedLoopController algaePivotController = algaePivotMotor.getClosedLoopController();
@@ -89,7 +84,7 @@ public class Algae extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  @Logged(name = "IsAlgaelDetected")
+  @Logged(name = "IsAlgaeDetected")
   public boolean isAlgaeDetected() {
     return algaeSensor.get();
   }
