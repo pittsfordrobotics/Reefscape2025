@@ -12,6 +12,7 @@ import frc.robot.subsystems.Intake;
 import java.io.File;
 
 import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -99,5 +100,9 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return new Command() {};
+  }
+
+  public void setInitialRobotPose(Pose2d pose) {
+    swerve.setPose(pose);
   }
 }
