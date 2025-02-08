@@ -18,6 +18,7 @@
       "/Shuffleboard/Config/Zero gyro": "Command",
       "/Shuffleboard/Config/Zero swerve offsets": "Command",
       "/SmartDashboard/Alerts": "Alerts",
+      "/SmartDashboard/Auto Chooser": "String Chooser",
       "/SmartDashboard/Encoders": "Alerts",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/IMU": "Alerts",
@@ -55,11 +56,17 @@
         "open": true
       },
       "SmartDashboard": {
+        "Auto Chooser": {
+          "open": true
+        },
         "open": true
       }
     }
   },
   "NetworkTables Info": {
     "visible": true
+  },
+  "NetworkTables View": {
+    "visible": false
   }
 }

@@ -6,12 +6,13 @@ package frc.robot;
 
 import java.io.File;
 
-import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -33,6 +34,7 @@ public class RobotContainer {
   @Logged(name = "Intake Subsystem")
   private final Intake intake;
   private final Algae algae;
+  private final SendableChooser<Command> autoChooser;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
@@ -60,8 +62,12 @@ public class RobotContainer {
     Shuffleboard.getTab("Config").add("Zero gyro", swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));
     // Configure the trigger bindings
     configureBindings();
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+
   }
 
+  
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
@@ -100,8 +106,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return new PathPlannerAuto("Start(Placeholder)");
+    return autoChooser.getSelected();
+    /**Selects all autonomous paths; selectable from smart dashboard*/
   }
 
   public void setInitialRobotPose(Pose2d pose) {
