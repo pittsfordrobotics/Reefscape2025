@@ -26,18 +26,31 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.constraint.MaxVelocityConstraint;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AlgaeConstants;
 import frc.robot.Constants.IntakeConstants;
+
+import edu.wpi.first.epilogue.Logged;
+import frc.robot.logging.SparkMaxLogger;
 
 public class Algae extends SubsystemBase {
   @Logged(name = "Algae Pickup Motor")
   private SparkMax algaePickupMotor = new SparkMax(AlgaeConstants.CAN_ALGAE_PICKUP_MOTOR, MotorType.kBrushless);
   @Logged(name = "Algae Pivot Motor")
   private SparkMax algaePivotMotor = new SparkMax(AlgaeConstants.CAN_ALGAE_PIVOT_MOTOR, MotorType.kBrushless);
+
+  @Logged(name="AlgaePickupMotor")
+  public final SparkMaxLogger algaePickupMotorLogger = new SparkMaxLogger(algaePickupMotor);
+
+  @Logged(name="AlgaePivotMotor")
+  public final SparkMaxLogger algaePivotMotorLogger = new SparkMaxLogger(algaePivotMotor);
+
+  DigitalInput algaeSensor = new DigitalInput(AlgaeConstants.ALGAE_SENSOR_CHANNEL);
   
   private SparkClosedLoopController algaePivotController = algaePivotMotor.getClosedLoopController();
+  
 
   private SparkAbsoluteEncoder pivotEncoder;
 
@@ -74,6 +87,11 @@ public class Algae extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+  @Logged(name = "IsAlgaelDetected")
+  public boolean isAlgaeDetected() {
+    return algaeSensor.get();
   }
 
   private void setAlgaePivotPosition(double degrees) {

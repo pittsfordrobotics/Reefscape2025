@@ -17,10 +17,14 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CoralConstants;
+import frc.robot.logging.SparkMaxLogger;
 
 public class Coral extends SubsystemBase {
   @Logged(name = "Coral Output Motor")
   private SparkMax coralMotor = new SparkMax(CoralConstants.CAN_CORAL_MOTOR, MotorType.kBrushless);
+
+  @Logged(name="CoralMotor")
+  public final SparkMaxLogger coralMotorLogger = new SparkMaxLogger(coralMotor);
 
   /** Creates a new Coral. */
   public Coral() {
