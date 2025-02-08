@@ -12,11 +12,14 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Coral;
 import frc.robot.subsystems.Intake;
 
+import frc.robot.logging.PDHLogger;
+
 import java.io.File;
-import java.security.Key;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,13 +35,25 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //private final Swerve swerve;
-  @Logged(name = "Intake Subsystem")
+  @Logged(name = "Coral Intake Subsystem")
   private final Intake intake;
+
+  @Logged(name = "Algae Subsystem")
   private final Algae algae;
+
+  @Logged(name = "Climber Subsystem")
   private final Climber climber;
+
+  @Logged(name = "Elevator Subsystem")
   private final Elevator elevator;
+
+  @Logged(name = "Coral Output Subsystem")
   private final Coral coral;
+  
   private final Swerve swerve;
+
+  @Logged(name = "PDH")
+  private final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
@@ -51,6 +66,8 @@ public class RobotContainer {
     algae = new Algae();
     climber = new Climber();
     elevator = new Elevator();
+
+
     SmartDashboard.putNumber("Intake Speed", -0.25);
     SmartDashboard.putNumber("Algae Speed", 0.25);
 
@@ -88,6 +105,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("speed", 0.25);
     Shuffleboard.getTab("Config").add("Zero swerve offsets", swerve.runOnce(() -> swerve.setSwerveOffsets()).ignoringDisable(true));
     Shuffleboard.getTab("Config").add("Set offsets to 0", swerve.runOnce(() -> swerve.zeroSwerveOffsets()).ignoringDisable(true));
+    Shuffleboard.getTab("Config").add("Zero gyro", swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));
     // Configure the trigger bindings
     configureBindings();
   }
@@ -138,7 +156,7 @@ public class RobotContainer {
     driverController.povDown().whileTrue(swerve.driveForward(-0.2));
 
     //Drive Climber:
-    driverController.leftTrigger().whileTrue(climber.climbToPosition(
+    driverController.leftBumper().whileTrue(climber.climbToPosition(
       () -> SmartDashboard.getNumber(("Climb Active Angle"), 0.25)))
       .whileFalse(climber.climbToPosition(
         () -> SmartDashboard.getNumber("Angle Default Angle", 0)));

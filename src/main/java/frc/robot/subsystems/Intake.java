@@ -19,9 +19,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.logging.SparkMaxLogger;
 
 public class Intake extends SubsystemBase {
-  private SparkMax intakeMotor = new SparkMax(IntakeConstants.CAN_INTAKE_MOTOR, MotorType.kBrushless);
+  @Logged(name="Coral Intake Motor")
+  private final SparkMax intakeMotor = new SparkMax(IntakeConstants.CAN_INTAKE_MOTOR, MotorType.kBrushless);
+  
+  private final SparkMaxLogger intakeLogger = new SparkMaxLogger();
 
   DigitalInput coralSensor = new DigitalInput(0);
   
@@ -38,16 +42,16 @@ public class Intake extends SubsystemBase {
   
   @Override
   public void periodic() {
-
+    // This method will be called once per scheduler run
+  }
+  
+  @Logged(name = "IsCoralDetected")
+  public boolean isCoralDetected() {
+    return coralSensor.get();
   }
 
   private void setIntake(double speed) {
     intakeMotor.set(speed);
-    
-  }
-  @Logged(name = "IsCoralDetected")
-  public boolean isCoralDetected() {
-    return coralSensor.get();
   }
 
   public Command dynamicDriveIntake(DoubleSupplier speed){

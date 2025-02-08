@@ -17,13 +17,16 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
 
 public class Climber extends SubsystemBase {
+  @Logged(name = "Climb Motor 1")
   private SparkMax climbMotor1 = new SparkMax(ClimberConstants.CAN_CLIMBER_1, MotorType.kBrushless);
+  @Logged(name = "Climb Motor 2")
   private SparkMax climbMotor2 = new SparkMax(ClimberConstants.CAN_CLIMBER_2, MotorType.kBrushless);
   private SparkClosedLoopController climbClosedLoopController = climbMotor1.getClosedLoopController();
   /** Creates a new Climber. */

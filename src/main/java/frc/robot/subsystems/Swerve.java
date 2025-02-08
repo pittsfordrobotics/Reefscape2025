@@ -73,6 +73,7 @@ public class Swerve extends SubsystemBase {
         }
         swerveDrive.setHeadingCorrection(false); // Heading correction should only be used while controlling the robot
                                                  // via angle.
+        // swerveDrive.chassisVelocityCorrection = false;
 
             for(int i = 0; i < swerveDrive.getModules().length; i++) {
             // Lower the kS to reduce wobble?
