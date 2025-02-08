@@ -11,6 +11,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathConstraints;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -520,5 +521,10 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         // This method will be called once per scheduler run
         swerveDrive.updateOdometry();
+    }
+
+    public Command driveToPoseFlipped(Pose2d pose) {
+        PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
+        return AutoBuilder.pathfindToPoseFlipped(pose, constraints);
     }
 }

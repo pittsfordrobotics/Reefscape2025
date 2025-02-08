@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Algae;
 import frc.robot.subsystems.Intake;
@@ -101,7 +102,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new PathPlannerAuto("Start(Placeholder)");
+    // return new PathPlannerAuto("Start(Placeholder)");
+    return swerve.driveToPoseFlipped(FieldConstants.reefLocation(3, false));
   }
 
   public void setInitialRobotPose(Pose2d pose) {
