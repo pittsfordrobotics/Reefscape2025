@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems.objectiveTracker;
 
-import org.ejml.dense.row.decomposition.eig.SwitchingEigenDecomposition_FDRM;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.MoveDirection;
@@ -46,33 +44,29 @@ public class ObjectiveTracker extends SubsystemBase {
     int newIndex = selectorInputs.selectedIndex;
     
     switch (direction) {
-      case UP:
+      case UP -> {
         newIndex -= 2;
-        if (newIndex < 0)  {
+        if (newIndex < 0) {
           newIndex += 8;
         }
-        break;
-      case DOWN:
+      } case DOWN -> {
         newIndex += 2;
         if (newIndex > 7) {
           newIndex -= 8;
         }
-        break;
-      case LEFT:
+      } case LEFT -> {
         newIndex -= 1;
         if ((newIndex + 1) % 2 == 0) {
           newIndex += 2;
         }
-        break;
-      case RIGHT:
+      } case RIGHT -> {
         newIndex += 1;
         if (newIndex % 2 == 0) {
           newIndex -= 2;
         }
-        break;
-      default:
+      } default -> {
         // Unknown direction
-        break;
+      }
     }
 
     objectiveSelector.setIndex(newIndex);

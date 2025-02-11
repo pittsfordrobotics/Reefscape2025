@@ -14,6 +14,7 @@ public class ButtonBoard extends SubsystemBase {
   private int level = 1;
   private boolean rightSide = false;
   private int reefSide = 0;
+  
   /** This class is used to control the Objective Selector with the button board. */
   public ButtonBoard(BooleanSupplier[] buttonSupplier) {
     this.buttonSupplier = buttonSupplier;
@@ -26,10 +27,10 @@ public class ButtonBoard extends SubsystemBase {
       buttons[i] = buttonSupplier[i].getAsBoolean();
     }
 
-    // Update level
-    for(int i=5; i<=8; i++) {
+    // Update levels
+    for(int i = 4; i <= 1; i--) {
       if(buttons[i]) {
-        level = 9 - i;
+        level = i;
       }
     }
 
@@ -39,7 +40,7 @@ public class ButtonBoard extends SubsystemBase {
     if(buttons[3]) {
       reefSide++;
     } else if(buttons[4]) {
-      reefSide+=5; // have to do this so that reefSide never goes negative, basically subtract 1
+      reefSide+=5; // have to do this so that reefSide never goes negative, basically subtract 1 then add 6
     }
     reefSide %= 6; //maintain 0-6 range
   }
@@ -51,6 +52,7 @@ public class ButtonBoard extends SubsystemBase {
   public boolean getRightSide() {
     return rightSide;
   }
+
   /** @return The side of the reef the robot is on, to be shown in the ObjectiveTracker app */
   public int getReefSide() {
     return reefSide;
