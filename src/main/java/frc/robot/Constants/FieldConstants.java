@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * Contains various field dimensions and useful reference points. Dimensions are
@@ -30,6 +31,15 @@ public class FieldConstants {
   public static double fieldWidth = Units.inchesToMeters(317);
 
   private static double reefLocationBackupDistance = Units.inchesToMeters(16);
+
+  public static HashMap<Integer, Integer> tagNoToReefSide = new HashMap<>() {{
+    put(7, 1);   put(18, 1);
+    put(8, 2);   put(17, 2);
+    put(9, 3);   put(22, 3);
+    put(10, 4);  put(21, 4);
+    put(11, 5);  put(20, 5);
+    put(6, 6);   put(19, 6);
+  }};
 
   /**
    * Returns the pose that the robot should pathfind to for a particular reef side on the left or right
