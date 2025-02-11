@@ -173,8 +173,8 @@ public class Swerve extends SubsystemBase {
         if (DriverStation.getAlliance().isPresent()) {
             currentAlliance = DriverStation.getAlliance().get();
         } else {
-            currentAlliance = Alliance.Blue;
-            System.out.println("No alliance, setting to blue");
+          currentAlliance = Alliance.Blue;
+          //System.out.println("No alliance, setting to blue");
         }
         return currentAlliance;
     }

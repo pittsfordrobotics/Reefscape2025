@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import frc.robot.subsystems.objectiveTracker.ObjectiveSelecterIONetworkTables;
+import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
+import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.MoveDirection;
+
 import java.io.File;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -34,6 +38,7 @@ public class RobotContainer {
   @Logged(name = "Intake Subsystem")
   private final Intake intake;
   private final Algae algae;
+  private final ObjectiveTracker objectiveTracker;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
@@ -46,6 +51,9 @@ public class RobotContainer {
     algae = new Algae();
   
 
+    ObjectiveSelecterIONetworkTables objectiveSelecterIOImpl = new ObjectiveSelecterIONetworkTables();
+    objectiveTracker = new ObjectiveTracker(objectiveSelecterIOImpl);
+    
     Command enhancedHeadingSteeringCommand = swerve.enhancedHeadingDriveCommand(
         () -> -driverController.getLeftY(),
         () -> -driverController.getLeftX(),
@@ -55,12 +63,15 @@ public class RobotContainer {
         driverController::getRightTriggerAxis);
     swerve.setDefaultCommand(enhancedHeadingSteeringCommand);
     swerve.setupPathPlanner();
+    
     SmartDashboard.putNumber("speed", 0.25);
     Shuffleboard.getTab("Config").add("Zero swerve offsets", swerve.runOnce(() -> swerve.setSwerveOffsets()).ignoringDisable(true));
     Shuffleboard.getTab("Config").add("Set offsets to 0", swerve.runOnce(() -> swerve.zeroSwerveOffsets()).ignoringDisable(true));
     Shuffleboard.getTab("Config").add("Zero gyro", swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));
     // Configure the trigger bindings
     configureBindings();
+
+    Shuffleboard.getTab("Debug").addString("Selected Node", objectiveTracker::getObjectiveString);
   }
 
   /**
@@ -87,12 +98,18 @@ public class RobotContainer {
     
     //Drive Algae pickup:
     driverController.a().whileTrue(algae.dynamicAlgaePickup(() -> SmartDashboard.getNumber("Algae Speed", 0.25)));
+
+    //restate after merge
+//     driverController.povUp().onTrue(objectiveTracker.moveIndex(MoveDirection.UP));
+//     driverController.povDown().onTrue(objectiveTracker.moveIndex(MoveDirection.DOWN));
+//     driverController.povRight().onTrue(objectiveTracker.moveIndex(MoveDirection.RIGHT));
+//     driverController.povLeft().onTrue(objectiveTracker.moveIndex(MoveDirection.LEFT));
+
     //
 
     //Drive Swerve forward and backward:
     driverController.povUp().whileTrue(swerve.driveForward(0.2));
     driverController.povDown().whileTrue(swerve.driveForward(-0.2));
-
   }
 
   /**
