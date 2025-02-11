@@ -1,12 +1,11 @@
 // Thank You 6328 Mechanical Advantage for the field constants!!!
 package frc.robot.Constants;
 
-import static edu.wpi.first.apriltag.AprilTagFields.k2024Crescendo;
+import static edu.wpi.first.apriltag.AprilTagFields.k2025Reefscape;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import java.io.IOException;
 
@@ -26,8 +25,53 @@ import java.io.IOException;
  * Width refers to the <i>y</i> direction (as described by wpilib)
  */
 public class FieldConstants {
-  public static double fieldLength = Units.inchesToMeters(651.223);
-  public static double fieldWidth = Units.inchesToMeters(323.277);
+  //most of this is out of date. todo: update everything
+  public static double fieldLength = Units.inchesToMeters(690.876);
+  public static double fieldWidth = Units.inchesToMeters(317);
+
+  /**
+   * Returns the pose that the robot should pathfind to for a particular reef side on the left or right
+   * @param reefSide goes from 1 to 6, starting from the side closest to the alliance station and going counterclockwise
+   * @param isRightSide is true if we're on the right side of the specified reef side
+   * @return a Pose2d representing the location and orientation of the robot if facing the reef on the specified 
+   */
+  public static Pose2d reefLocation(int reefSide, boolean isRightSide) {
+
+    int poseCode = (1 <= reefSide && reefSide <= 6) ? (reefSide * 2 + (isRightSide ? 1 : 0)) : -1;
+    Rotation2d angle = Rotation2d.fromDegrees(switch(poseCode) {
+      case 2, 3 -> 0;
+      case 4, 5 -> 60;
+      case 6, 7 -> 120;
+      case 8, 9 -> 180;
+      case 10, 11 -> 240;
+      case 12, 13 -> 300;
+      default -> 0;
+    });
+
+    double[] pos = switch(poseCode) {
+      case 2  -> new double[] { 158.00, 164.94 };
+      case 3  -> new double[] { 158.00, 152.06 };
+      case 4  -> new double[] { 168.80, 133.36 };
+      case 5  -> new double[] { 179.95, 126.92 };
+      case 6  -> new double[] { 201.55, 126.92 };
+      case 7  -> new double[] { 212.70, 133.36 };
+      case 8  -> new double[] { 223.50, 152.06 };
+      case 9  -> new double[] { 223.50, 164.94 };
+      case 10 -> new double[] { 212.70, 183.64 };
+      case 11 -> new double[] { 201.55, 190.08 };
+      case 12 -> new double[] { 179.95, 190.08 };
+      case 13 -> new double[] { 168.80, 183.64 };
+      default -> new double[] { 0, 0 };
+    };
+
+    Pose2d pose = new Pose2d(Units.inchesToMeters(pos[0]), Units.inchesToMeters(pos[1]), angle);
+
+    //back up pose by 16" so it's not overlapping the reef
+    pose.transformBy(new Transform2d(new Translation2d(-Units.inchesToMeters(16), 0), new Rotation2d()));
+
+    return pose;
+  }
+
   public static double wingX = Units.inchesToMeters(229.201);
   public static double podiumX = Units.inchesToMeters(126.75);
   public static double startingLineX = Units.inchesToMeters(74.111);
@@ -58,6 +102,8 @@ public class FieldConstants {
 
     public static Translation2d[] centerlineTranslations = new Translation2d[5];
     public static Translation2d[] spikeTranslations = new Translation2d[3];
+
+
 
     static {
       for (int i = 0; i < centerlineTranslations.length; i++) {
@@ -103,7 +149,7 @@ public class FieldConstants {
 
   static {
     try {
-      aprilTags = AprilTagFieldLayout.loadFromResource(k2024Crescendo.m_resourceFile);
+      aprilTags = AprilTagFieldLayout.loadFromResource(k2025Reefscape.m_resourceFile);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

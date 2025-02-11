@@ -4,22 +4,27 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.objectiveTracker.ObjectiveSelecterIONetworkTables;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.MoveDirection;
-import frc.robot.subsystems.Algae;
-import frc.robot.subsystems.Intake;
 
 import java.io.File;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
+import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.Algae;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Swerve;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -30,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Swerve swerve;
+  @Logged(name = "Intake Subsystem")
   private final Intake intake;
   private final Algae algae;
   private final ObjectiveTracker objectiveTracker;
@@ -43,11 +49,25 @@ public class RobotContainer {
     swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve"));
     intake = new Intake();
     algae = new Algae();
+  
 
     ObjectiveSelecterIONetworkTables objectiveSelecterIOImpl = new ObjectiveSelecterIONetworkTables();
     objectiveTracker = new ObjectiveTracker(objectiveSelecterIOImpl);
-
+    
+    Command enhancedHeadingSteeringCommand = swerve.enhancedHeadingDriveCommand(
+        () -> -driverController.getLeftY(),
+        () -> -driverController.getLeftX(),
+        () -> -driverController.getRightY(),
+        () -> -driverController.getRightX(),
+        driverController::getLeftTriggerAxis,
+        driverController::getRightTriggerAxis);
+    swerve.setDefaultCommand(enhancedHeadingSteeringCommand);
+    swerve.setupPathPlanner();
+    
     SmartDashboard.putNumber("speed", 0.25);
+    Shuffleboard.getTab("Config").add("Zero swerve offsets", swerve.runOnce(() -> swerve.setSwerveOffsets()).ignoringDisable(true));
+    Shuffleboard.getTab("Config").add("Set offsets to 0", swerve.runOnce(() -> swerve.zeroSwerveOffsets()).ignoringDisable(true));
+    Shuffleboard.getTab("Config").add("Zero gyro", swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));
     // Configure the trigger bindings
     configureBindings();
 
@@ -78,11 +98,18 @@ public class RobotContainer {
     
     //Drive Algae pickup:
     driverController.a().whileTrue(algae.dynamicAlgaePickup(() -> SmartDashboard.getNumber("Algae Speed", 0.25)));
-    
-    driverController.povUp().onTrue(objectiveTracker.moveIndex(MoveDirection.UP));
-    driverController.povDown().onTrue(objectiveTracker.moveIndex(MoveDirection.DOWN));
-    driverController.povRight().onTrue(objectiveTracker.moveIndex(MoveDirection.RIGHT));
-    driverController.povLeft().onTrue(objectiveTracker.moveIndex(MoveDirection.LEFT));
+
+    //restate after merge
+//     driverController.povUp().onTrue(objectiveTracker.moveIndex(MoveDirection.UP));
+//     driverController.povDown().onTrue(objectiveTracker.moveIndex(MoveDirection.DOWN));
+//     driverController.povRight().onTrue(objectiveTracker.moveIndex(MoveDirection.RIGHT));
+//     driverController.povLeft().onTrue(objectiveTracker.moveIndex(MoveDirection.LEFT));
+
+    //
+
+    //Drive Swerve forward and backward:
+    driverController.povUp().whileTrue(swerve.driveForward(0.2));
+    driverController.povDown().whileTrue(swerve.driveForward(-0.2));
   }
 
   /**
@@ -92,6 +119,11 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new Command() {};
+    // return new PathPlannerAuto("Start(Placeholder)");
+    return swerve.driveToPoseFlipped(FieldConstants.reefLocation(3, false));
+  }
+
+  public void setInitialRobotPose(Pose2d pose) {
+    swerve.setPose(pose);
   }
 }
