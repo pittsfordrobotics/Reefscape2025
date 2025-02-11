@@ -29,6 +29,8 @@ public class FieldConstants {
   public static double fieldLength = Units.inchesToMeters(690.876);
   public static double fieldWidth = Units.inchesToMeters(317);
 
+  private static double reefLocationBackupDistance = Units.inchesToMeters(16);
+
   /**
    * Returns the pose that the robot should pathfind to for a particular reef side on the left or right
    * @param reefSide goes from 1 to 6, starting from the side closest to the alliance station and going counterclockwise
@@ -67,7 +69,7 @@ public class FieldConstants {
     Pose2d pose = new Pose2d(Units.inchesToMeters(pos[0]), Units.inchesToMeters(pos[1]), angle);
 
     //back up pose by 16" so it's not overlapping the reef
-    pose.transformBy(new Transform2d(new Translation2d(-Units.inchesToMeters(16), 0), new Rotation2d()));
+    pose.transformBy(new Transform2d(new Translation2d(-reefLocationBackupDistance, 0), new Rotation2d()));
 
     return pose;
   }
