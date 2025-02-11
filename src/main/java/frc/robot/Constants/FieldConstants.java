@@ -38,13 +38,13 @@ public class FieldConstants {
   public static Pose2d reefLocation(int reefSide, boolean isRightSide) {
 
     int poseCode = (1 <= reefSide && reefSide <= 6) ? (reefSide * 2 + (isRightSide ? 1 : 0)) : -1;
-    Rotation2d angle = Rotation2d.fromDegrees(switch(poseCode) {
-      case 2, 3 -> 0;
-      case 4, 5 -> 60;
-      case 6, 7 -> 120;
-      case 8, 9 -> 180;
-      case 10, 11 -> 240;
-      case 12, 13 -> 300;
+    Rotation2d angle = Rotation2d.fromDegrees(switch(reefSide) {
+      case 1 -> 0;
+      case 2 -> 60;
+      case 3 -> 120;
+      case 4 -> 180;
+      case 5 -> 240;
+      case 6 -> 300;
       default -> 0;
     });
 
