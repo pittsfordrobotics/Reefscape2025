@@ -36,6 +36,10 @@ public class ObjectiveTracker extends SubsystemBase {
     return selectorInputs.selectedIndex;
   }
 
+  public boolean isRightSide() {
+    return selectorInputs.selectedIndex % 2 == 1;
+  }
+
   public Command moveIndex(MoveDirection direction) {
     return this.runOnce(() -> moveIndexInternal(direction)).ignoringDisable(true);
   }
