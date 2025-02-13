@@ -67,18 +67,6 @@ public class RobotContainer {
     climber = new Climber();
     elevator = new Elevator();
 
-
-    SmartDashboard.putNumber("Intake Speed", -0.25);
-    SmartDashboard.putNumber("Algae Speed", 0.25);
-
-    SmartDashboard.putNumber("Algae Pivot Speed", 0.25);
-    SmartDashboard.putNumber("Algae Angle 1", 0);
-    SmartDashboard.putNumber("Algae Angle 2", 0);
-    
-    SmartDashboard.putNumber("Climb Speed", 0.25);
-    SmartDashboard.putNumber("Climb Default Angle", 0);
-    SmartDashboard.putNumber("Climb Active Angle", 0);
-
     swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve"));
     coral = new Coral();
 
