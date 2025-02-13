@@ -130,18 +130,6 @@ public class RobotContainer {
     
     //Pivot Algae arm:
     driverController.rightTrigger().onTrue(algae.dynamicAlgaeSetPivot(
-      () -> SmartDashboard.getNumber("Algae Angle 1", 0)))
-      .onFalse((algae.dynamicAlgaeSetPivot(
-        () -> SmartDashboard.getNumber("Algae Angle 2", 0))));
-
-      //The below input can be removed if needed to free up inputs vvv
-    driverController.y().whileTrue(intake.dynamicDriveIntake(
-      () -> -1 * SmartDashboard.getNumber("Intake Speed", -0.25)))
-        .onFalse(intake.stopIntake());
-        // ^^^
-    
-    //Pivot Algae arm:
-    driverController.rightTrigger().onTrue(algae.dynamicAlgaeSetPivot(
       () -> SmartDashboard.getNumber("Algae Active Angle", 0)))
       .onFalse((algae.dynamicAlgaeSetPivot(
         () -> SmartDashboard.getNumber("Algae Default Angle", 0))));
