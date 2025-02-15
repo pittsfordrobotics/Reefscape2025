@@ -61,6 +61,7 @@ public class RobotContainer {
 
     ObjectiveSelecterIONetworkTables objectiveSelecterIOImpl = new ObjectiveSelecterIONetworkTables();
     objectiveTracker = new ObjectiveTracker(objectiveSelecterIOImpl);
+    objectiveTracker.setDefaultCommand(objectiveTracker.updateReefSide(swerve::getPose));
 
     Command enhancedHeadingSteeringCommand = swerve.enhancedHeadingDriveCommand(
         () -> -driverController.getLeftY(),

@@ -8,6 +8,7 @@
 import { NT4_Client } from "./NT4.js";
 
 const selectedIndexTopic = "/objectiveTracker/currentIndex";
+const selectedSideTopic = "/objectiveTracker/currentSide";
 const numElements = 8;
 
 const timeout = 250;
@@ -21,6 +22,9 @@ function displayTarget(index) {
   if (index !== null) {
     document.getElementsByTagName("td")[index].classList.add("active");
   }
+}
+function updateReefSide(side) {
+  document.getElementsByTagName("hexagon")[side - 1].classList.add("highlighted");
 }
 
 let client = new NT4_Client(
@@ -40,6 +44,9 @@ let client = new NT4_Client(
       displayTarget(value);
       lastIndex = value;
     }
+    if (topic.name === selectedSideTopic) {
+      updateReefSide(value);
+    }
   },
   () => {
     // Connected
@@ -54,6 +61,7 @@ let client = new NT4_Client(
 window.addEventListener("load", () => {
   // Start NT connection
   client.subscribe([selectedIndexTopic], false, false, 0.02);
+  client.subscribe([selectedSideTopic], false, false, 0.02);
   client.connect();
 
   addEventListener("contextmenu", (event) => {

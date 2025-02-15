@@ -234,6 +234,10 @@ public class Swerve extends SubsystemBase {
         swerveDrive.resetOdometry(pose);
     }
 
+    public Pose2d getPose() {
+        return swerveDrive.getPose();
+    }
+
     /**
      * Sets the current angle of the gyro (Field Relative). If the robot reaches the
      * same angle, the

@@ -3,6 +3,7 @@ package frc.robot.subsystems.objectiveTracker;
 public interface ObjectiveSelectorIO {
     class ObjectiveSelectorInputs {
         public int selectedIndex = 0;
+        public int reefSide = 0;
     }
 
     enum MoveDirection {
@@ -12,4 +13,5 @@ public interface ObjectiveSelectorIO {
     default void updateInputs(ObjectiveSelectorInputs inputs) {}
 
     default void setIndex(int newIndex) {}
+    default void setReefSide(int newReefSide) {}
 }

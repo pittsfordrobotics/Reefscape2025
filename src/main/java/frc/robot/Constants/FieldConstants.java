@@ -94,7 +94,7 @@ public class FieldConstants {
    */
   public static int findNearestReefSide(Pose2d robotPose) {
     Translation2d robotTranslation = robotPose.getTranslation();
-    double minDistance = aprilTags.getTagPose(7).get().toPose2d().getTranslation().getDistance(robotPose.getTranslation());
+    double minDistance = Double.MAX_VALUE;
     int nearestReefSide = -1;
 
     for(int tagID : tagNoToReefSide.keySet()) {
