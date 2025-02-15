@@ -1,7 +1,7 @@
 // Thank You 6328 Mechanical Advantage for the field constants!!!
 package frc.robot.Constants;
 
-import static edu.wpi.first.apriltag.AprilTagFields.k2025Reefscape;
+import static edu.wpi.first.apriltag.AprilTagFields.k2025ReefscapeWelded;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.*;
@@ -172,7 +172,7 @@ public class FieldConstants {
 
   static {
     try {
-      aprilTags = AprilTagFieldLayout.loadFromResource(k2025Reefscape.m_resourceFile);
+      aprilTags = AprilTagFieldLayout.loadFromResource(k2025ReefscapeWelded.m_resourceFile);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
