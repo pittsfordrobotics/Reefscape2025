@@ -16,13 +16,22 @@ import frc.robot.subsystems.Intake;
 import java.io.File;
 import java.util.function.BooleanSupplier;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.Algae;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Swerve;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -33,10 +42,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Swerve swerve;
+  @Logged(name = "Intake Subsystem")
   private final Intake intake;
   private final Algae algae;
   private final ObjectiveTracker objectiveTracker;
   private ButtonBoard buttonBoard;
+  private final SendableChooser<Command> autoChooser;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
@@ -50,23 +61,38 @@ public class RobotContainer {
     swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve"));
     intake = new Intake();
     algae = new Algae();
+  
 
     ObjectiveSelecterIONetworkTables objectiveSelecterIOImpl = new ObjectiveSelecterIONetworkTables();
     objectiveTracker = new ObjectiveTracker(objectiveSelecterIOImpl);
-
     for (int i = 1; i <= 9; i++) {
       final int index = i;
       buttonSupplier[index] = () -> buttonBoardController.getRawButton(index);
     }
     buttonBoard = new ButtonBoard(buttonSupplier);
 
+    Command enhancedHeadingSteeringCommand = swerve.enhancedHeadingDriveCommand(
+        () -> -driverController.getLeftY(),
+        () -> -driverController.getLeftX(),
+        () -> -driverController.getRightY(),
+        () -> -driverController.getRightX(),
+        driverController::getLeftTriggerAxis,
+        driverController::getRightTriggerAxis);
+    swerve.setDefaultCommand(enhancedHeadingSteeringCommand);
+    swerve.setupPathPlanner();
     SmartDashboard.putNumber("speed", 0.25);
+    Shuffleboard.getTab("Config").add("Zero swerve offsets", swerve.runOnce(() -> swerve.setSwerveOffsets()).ignoringDisable(true));
+    Shuffleboard.getTab("Config").add("Zero gyro", swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));
     // Configure the trigger bindings
     configureBindings();
 
     Shuffleboard.getTab("Debug").addString("Selected Node", objectiveTracker::getObjectiveString);
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+
   }
 
+  
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
@@ -104,7 +130,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return new Command() {};
+    return autoChooser.getSelected();
+    /**Selects all autonomous paths; selectable from smart dashboard*/
+  }
+
+  public void setInitialRobotPose(Pose2d pose) {
+    swerve.setPose(pose);
   }
 }
