@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -42,13 +43,13 @@ import frc.robot.subsystems.Swerve;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  //private final Swerve swerve;
-  @Logged(name = "Coral Intake Subsystem")
-  private final Intake intake;
+  // private final Swerve swerve;
+  // @Logged(name = "Coral Intake Subsystem")
+  // private final Intake intake;
 
   @Logged(name = "Algae Subsystem")
   private final Algae algae;
-  private final SendableChooser<Command> autoChooser;
+  // private final SendableChooser<Command> autoChooser;
 
   @Logged(name = "Climber Subsystem")
   private final Climber climber;
@@ -59,7 +60,7 @@ public class RobotContainer {
   @Logged(name = "Coral Output Subsystem")
   private final Coral coral;
   
-  private final Swerve swerve;
+  // private final Swerve swerve;
 
   @Logged(name = "PDH")
   private final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
@@ -71,16 +72,18 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     //swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve/maxSwerve"));
-    intake = new Intake();
+    // intake = new Intake();
     algae = new Algae();
     climber = new Climber();
     elevator = new Elevator();
 
-    swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve"));
+    // swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve"));
     coral = new Coral();
 
     SmartDashboard.putNumber("Intake Speed", -0.25);
     SmartDashboard.putNumber("Algae Speed", 0.25);
+
+    SmartDashboard.putNumber("Coral Speed", -0.26);
 
     SmartDashboard.putNumber("Algae Pivot Speed", 0.25);
     SmartDashboard.putNumber("Algae Active Angle", 0);
@@ -90,23 +93,23 @@ public class RobotContainer {
     SmartDashboard.putNumber("Climb Default Angle", 0);
     SmartDashboard.putNumber("Climb Active Angle", 0);
 
-    Command enhancedHeadingSteeringCommand = swerve.enhancedHeadingDriveCommand(
-        () -> -driverController.getLeftY(),
-        () -> -driverController.getLeftX(),
-        () -> -driverController.getRightY(),
-        () -> -driverController.getRightX(),
-        driverController::getLeftTriggerAxis,
-        driverController::getRightTriggerAxis);
-    swerve.setDefaultCommand(enhancedHeadingSteeringCommand);
-    swerve.setupPathPlanner();
-    SmartDashboard.putNumber("speed", 0.25);
-    Shuffleboard.getTab("Config").add("Zero swerve offsets", swerve.runOnce(() -> swerve.setSwerveOffsets()).ignoringDisable(true));
-    Shuffleboard.getTab("Config").add("Set offsets to 0", swerve.runOnce(() -> swerve.zeroSwerveOffsets()).ignoringDisable(true));
-    Shuffleboard.getTab("Config").add("Zero gyro", swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));
+    // Command enhancedHeadingSteeringCommand = swerve.enhancedHeadingDriveCommand(
+    //     () -> -driverController.getLeftY(),
+    //     () -> -driverController.getLeftX(),
+    //     () -> -driverController.getRightY(),
+    //     () -> -driverController.getRightX(),
+    //     driverController::getLeftTriggerAxis,
+    //     driverController::getRightTriggerAxis);
+    // swerve.setDefaultCommand(enhancedHeadingSteeringCommand);
+    // swerve.setupPathPlanner();
+    // SmartDashboard.putNumber("speed", 0.25);
+    // Shuffleboard.getTab("Config").add("Zero swerve offsets", swerve.runOnce(() -> swerve.setSwerveOffsets()).ignoringDisable(true));
+    // Shuffleboard.getTab("Config").add("Set offsets to 0", swerve.runOnce(() -> swerve.zeroSwerveOffsets()).ignoringDisable(true));
+    // Shuffleboard.getTab("Config").add("Zero gyro", swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));
     // Configure the trigger bindings
     configureBindings();
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    // autoChooser = AutoBuilder.buildAutoChooser();
+    // SmartDashboard.putData("Auto Chooser", autoChooser);
 
   }
 
@@ -122,27 +125,32 @@ public class RobotContainer {
    */
   private void configureBindings() {
     //Drive Intake:
-    driverController.b().onTrue(intake.intakeCoralWithSensor())
-      .onFalse(intake.stopIntake());
+    // driverController.b().onTrue(intake.intakeCoralWithSensor())
+    //   .onFalse(intake.stopIntake());
 
-      driverController.y().whileTrue(intake.dynamicDriveIntake(
-        () -> -1 * SmartDashboard.getNumber("Intake Speed", -0.25)))
-        .onFalse(intake.stopIntake());
+    //   driverController.y().whileTrue(intake.dynamicDriveIntake(
+    //     () -> -1 * SmartDashboard.getNumber("Intake Speed", -0.25)))
+    //     .onFalse(intake.stopIntake());
     
     //Pivot Algae arm:
-    driverController.rightTrigger().onTrue(algae.dynamicAlgaeSetPivot(
-      () -> SmartDashboard.getNumber("Algae Active Angle", 0)))
-      .onFalse((algae.dynamicAlgaeSetPivot(
-        () -> SmartDashboard.getNumber("Algae Default Angle", 0))));
+    // driverController.rightTrigger().onTrue(algae.dynamicAlgaeSetPivot(
+    //   () -> SmartDashboard.getNumber("Algae Active Angle", 0)))
+    //   .onFalse((algae.dynamicAlgaeSetPivot(
+    //     () -> SmartDashboard.getNumber("Algae Default Angle", 0))));
+
+    // driverController.rightTrigger().whileTrue(algae.dynamicAlgaeSpeedPivot(() -> SmartDashboard.getNumber("Algae Pivot Speed", 0.25)));
     
     //Drive Coral output:
+    // driverController.leftTrigger().whileTrue(Commands.print("" + SmartDashboard.getNumber("Coral Speed", 0)));
     driverController.leftTrigger().whileTrue(coral.dynamicDriveCoral(
-      () -> SmartDashboard.getNumber("Coral Speed", 0.25)))
+      () -> SmartDashboard.getNumber("Coral Speed", -0.25)))
         .onFalse(coral.stopCoral());
     
     //Drive Swerve forward and backward:
-    driverController.povUp().whileTrue(swerve.driveForward(0.2));
-    driverController.povDown().whileTrue(swerve.driveForward(-0.2));
+    // driverController.povUp().whileTrue(swerve.driveForward(0.2));
+    // driverController.povDown().whileTrue(swerve.driveForward(-0.2));
+
+    driverController.povLeft().whileTrue(algae.dynamicAlgaePickup(() -> SmartDashboard.getNumber("Algae Speed", 0.25)));
 
     //Drive Climber:
     driverController.leftBumper().whileTrue(climber.climbToPosition(
@@ -158,11 +166,12 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    return null;
+    // return autoChooser.getSelected();
     /**Selects all autonomous paths; selectable from smart dashboard*/
   }
 
   public void setInitialRobotPose(Pose2d pose) {
-    swerve.setPose(pose);
+    // swerve.setPose(pose);
   }
 }
