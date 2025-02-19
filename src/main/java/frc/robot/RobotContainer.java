@@ -89,6 +89,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("Climb Speed", 0.25);
     SmartDashboard.putNumber("Climb Default Angle", 0);
     SmartDashboard.putNumber("Climb Active Angle", 0);
+    
 
     Command enhancedHeadingSteeringCommand = swerve.enhancedHeadingDriveCommand(
         () -> -driverController.getLeftY(),
@@ -103,6 +104,14 @@ public class RobotContainer {
     Shuffleboard.getTab("Config").add("Zero swerve offsets", swerve.runOnce(() -> swerve.setSwerveOffsets()).ignoringDisable(true));
     Shuffleboard.getTab("Config").add("Set offsets to 0", swerve.runOnce(() -> swerve.zeroSwerveOffsets()).ignoringDisable(true));
     Shuffleboard.getTab("Config").add("Zero gyro", swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));
+    
+    SmartDashboard.putNumber("Algae Motor Speed", 0.25);
+    Shuffleboard.getTab("testing").add("Algae Motor Speed", 0.25);
+    Shuffleboard.getTab("testing").add("Algae Motor", algae.run(() -> algae.dynamicAlgaePickup(
+      () -> SmartDashboard.getNumber("Algae Motor Speed", 0.25)
+    )).withTimeout(1).finallyDo(algae::stopAlgaePickup));
+    Shuffleboard.getTab("testing").add("Algae Pivot", algae.run(() -> algae.dynamicAlgaeSpeedPivot(() -> .1)).withTimeout(1).finallyDo(algae::stopAlgaePivot));
+    Shuffleboard.getTab("testing").add("Coral Intake", coral.run(() -> coral.dynamicDriveCoral(() -> .2)).withTimeout(1).finallyDo(coral::stopCoral));
     // Configure the trigger bindings
     configureBindings();
     autoChooser = AutoBuilder.buildAutoChooser();
