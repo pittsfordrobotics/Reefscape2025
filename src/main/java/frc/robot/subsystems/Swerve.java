@@ -7,10 +7,13 @@ package frc.robot.subsystems;
 import java.io.File;
 import java.util.function.DoubleSupplier;
 
+import javax.sound.midi.Patch;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathConstraints;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -473,7 +476,10 @@ public class Swerve extends SubsystemBase {
             System.out.println("raw ap:" + module.getRawAbsolutePosition());
         }
     }
-
+    public Command driveToPoint (Pose2d pointLocation){
+        PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
+        return AutoBuilder.pathfindToPoseFlipped(pointLocation, constraints);
+    }
     public void setSwerveOffsets() {
         Rotation2d[] currentOffsets = new Rotation2d[4];
         Rotation2d[] newOffsets = new Rotation2d[4];

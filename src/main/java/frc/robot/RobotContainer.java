@@ -10,6 +10,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -91,7 +92,7 @@ public class RobotContainer {
     //Drive Swerve forward and backward:
     driverController.povUp().whileTrue(swerve.driveForward(0.2));
     driverController.povDown().whileTrue(swerve.driveForward(-0.2));
-
+    driverController.b().onTrue(swerve.driveToPoint(new Pose2d(5.5,5.5,Rotation2d.fromDegrees(45))));
   }
 
   /**
