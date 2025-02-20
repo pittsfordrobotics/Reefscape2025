@@ -62,7 +62,7 @@ public class Climber extends SubsystemBase {
   }
 
   public Command dynamicDriveClimb(DoubleSupplier speed){
-    return run(() -> setClimbSpeed(speed.getAsDouble()));
+    return run(() -> setClimbSpeed(speed.getAsDouble())).finallyDo(() -> setClimbSpeed(0));
   }
 
   private void setClimbPosition(double degrees) {
