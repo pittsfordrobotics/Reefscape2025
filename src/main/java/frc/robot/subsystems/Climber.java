@@ -34,8 +34,8 @@ public class Climber extends SubsystemBase {
     SparkMaxConfig climbConfig1 = new SparkMaxConfig();
     SparkMaxConfig climbConfig2 = new SparkMaxConfig();
 
-    climbConfig1.smartCurrentLimit(20, 20);
-    climbConfig2.smartCurrentLimit(20, 20);
+    climbConfig1.smartCurrentLimit(40, 40);
+    climbConfig2.smartCurrentLimit(40, 40);
     
     climbConfig1.idleMode(IdleMode.kBrake);
     climbConfig2.idleMode(IdleMode.kBrake);
@@ -46,9 +46,8 @@ public class Climber extends SubsystemBase {
       ClimberConstants.CLIMBER_PID_D);
 
     climbConfig2.follow(climbMotor1);
-    climbConfig2.inverted(true);
 
-    climbMotor1.configure(climbConfig2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    climbMotor1.configure(climbConfig1, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     climbMotor2.configure(climbConfig2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
