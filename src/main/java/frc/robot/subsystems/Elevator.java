@@ -177,6 +177,14 @@ public class Elevator extends SubsystemBase {
     });
   }
 
+  public Command dynamicElevatorSetSpeed(DoubleSupplier speed){
+    return run(() -> elevatorMotor.set(speed.getAsDouble()));
+  }
+
+  public Command stopElevator() {
+    return run(() -> elevatorMotor.set(0));
+  }
+
   /* TELEMETRY */
   @Logged(name = "Elevator applied output (V)")
   public double getElevatorAppliedCurrent(){

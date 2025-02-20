@@ -104,14 +104,28 @@ public class RobotContainer {
     Shuffleboard.getTab("Config").add("Zero swerve offsets", swerve.runOnce(() -> swerve.setSwerveOffsets()).ignoringDisable(true));
     Shuffleboard.getTab("Config").add("Set offsets to 0", swerve.runOnce(() -> swerve.zeroSwerveOffsets()).ignoringDisable(true));
     Shuffleboard.getTab("Config").add("Zero gyro", swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));
+
+    SmartDashboard.putNumber("Algae Intake Motor Speed", 0.25);
+    SmartDashboard.putNumber("Algae Pivot Speed", 0.25);
+    SmartDashboard.putNumber("Coral Outtake Speed", -0.25);
+    SmartDashboard.putNumber("Elevator Motor Speed", 0.25);
+    SmartDashboard.putNumber("Elevator Sled Speed", 0.25);
     
-    SmartDashboard.putNumber("Algae Motor Speed", 0.25);
     Shuffleboard.getTab("testing").add("Algae Motor Speed", 0.25);
-    Shuffleboard.getTab("testing").add("Algae Motor", algae.run(() -> algae.dynamicAlgaePickup(
-      () -> SmartDashboard.getNumber("Algae Motor Speed", 0.25)
-    )).withTimeout(1).finallyDo(algae::stopAlgaePickup));
-    Shuffleboard.getTab("testing").add("Algae Pivot", algae.run(() -> algae.dynamicAlgaeSpeedPivot(() -> .1)).withTimeout(1).finallyDo(algae::stopAlgaePivot));
-    Shuffleboard.getTab("testing").add("Coral Intake", coral.run(() -> coral.dynamicDriveCoral(() -> .2)).withTimeout(1).finallyDo(coral::stopCoral));
+    Shuffleboard.getTab("testing").add("Algae Motor", algae.dynamicAlgaePickup(
+      () -> SmartDashboard.getNumber("Algae Intake Motor Speed", 0.25)
+      ).finallyDo(algae::stopAlgaePickup));
+    Shuffleboard.getTab("testing").add("Algae Pivot", algae.dynamicAlgaeSpeedPivot(
+      () -> SmartDashboard.getNumber("Algae Pivot Speed", 0.25)
+      ).finallyDo(algae::stopAlgaePivot));
+    Shuffleboard.getTab("testing").add("Coral Outtake", coral.dynamicDriveCoral(
+      () -> SmartDashboard.getNumber("Coral Outtake Speed", -0.25)
+      ).finallyDo(coral::stopCoral));
+    Shuffleboard.getTab("testing").add("Elevator Motor", elevator.dynamicElevatorSetSpeed(
+      () -> SmartDashboard.getNumber("Elevator Motor Speed", 0.25)
+      ).finallyDo(elevator::stopElevator));
+
+
     // Configure the trigger bindings
     configureBindings();
     autoChooser = AutoBuilder.buildAutoChooser();
