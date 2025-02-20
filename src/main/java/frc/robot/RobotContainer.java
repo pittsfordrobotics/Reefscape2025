@@ -113,17 +113,15 @@ public class RobotContainer {
     
     Shuffleboard.getTab("testing").add("Algae Motor Speed", 0.25);
     Shuffleboard.getTab("testing").add("Algae Motor", algae.dynamicAlgaePickup(
-      () -> SmartDashboard.getNumber("Algae Intake Motor Speed", 0.25)
-      ).finallyDo(algae::stopAlgaePickup));
+      () -> SmartDashboard.getNumber("Algae Intake Motor Speed", 0.25)));
     Shuffleboard.getTab("testing").add("Algae Pivot", algae.dynamicAlgaeSpeedPivot(
-      () -> SmartDashboard.getNumber("Algae Pivot Speed", 0.25)
-      ).finallyDo(algae::stopAlgaePivot));
+      () -> SmartDashboard.getNumber("Algae Pivot Speed", 0.25)));
     Shuffleboard.getTab("testing").add("Coral Outtake", coral.dynamicDriveCoral(
-      () -> SmartDashboard.getNumber("Coral Outtake Speed", -0.25)
-      ).finallyDo(coral::stopCoral));
+      () -> SmartDashboard.getNumber("Coral Outtake Speed", -0.25)));
     Shuffleboard.getTab("testing").add("Elevator Motor", elevator.dynamicElevatorSetSpeed(
-      () -> SmartDashboard.getNumber("Elevator Motor Speed", 0.25)
-      ).finallyDo(elevator::stopElevator));
+      () -> SmartDashboard.getNumber("Elevator Motor Speed", 0.25)));
+    Shuffleboard.getTab("testing").add("Shuttle Motor", elevator.dynamicShuttleSetSpeed(
+      () -> SmartDashboard.getNumber("Elevator Sled Speed", 0.25)));
 
 
     // Configure the trigger bindings

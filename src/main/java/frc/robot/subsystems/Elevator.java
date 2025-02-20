@@ -178,11 +178,19 @@ public class Elevator extends SubsystemBase {
   }
 
   public Command dynamicElevatorSetSpeed(DoubleSupplier speed){
-    return run(() -> elevatorMotor.set(speed.getAsDouble()));
+    return run(() -> elevatorMotor.set(speed.getAsDouble())).finallyDo(() -> elevatorMotor.set(0));
   }
 
   public Command stopElevator() {
     return run(() -> elevatorMotor.set(0));
+  }
+
+  public Command dynamicShuttleSetSpeed(DoubleSupplier speed){
+    return run(() -> shuttleMotor.set(speed.getAsDouble())).finallyDo(() -> shuttleMotor.set(0));
+  }
+
+  public Command stopShuttle() {
+    return run(() -> shuttleMotor.set(0));
   }
 
   /* TELEMETRY */

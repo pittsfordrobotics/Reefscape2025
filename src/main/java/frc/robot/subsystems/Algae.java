@@ -96,7 +96,7 @@ public class Algae extends SubsystemBase {
   }
 
   public Command dynamicAlgaePickup(DoubleSupplier speed){
-    return run(() -> algaePickupMotor.set(speed.getAsDouble()));
+    return run(() -> algaePickupMotor.set(speed.getAsDouble())).finallyDo(() -> algaePickupMotor.set(0));
   }
 
   public Command dynamicAlgaeSetPivot(DoubleSupplier degrees){
@@ -104,7 +104,7 @@ public class Algae extends SubsystemBase {
   }
 
   public Command dynamicAlgaeSpeedPivot(DoubleSupplier speed){
-    return run(() -> algaePivotMotor.set(speed.getAsDouble()));
+    return run(() -> algaePivotMotor.set(speed.getAsDouble())).finallyDo(() -> algaePivotMotor.set(0));
   }
 
   public Command stopAlgaePickup(){

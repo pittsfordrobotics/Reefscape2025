@@ -46,7 +46,7 @@ public class Coral extends SubsystemBase {
   }
 
   public Command dynamicDriveCoral(DoubleSupplier speed) {
-    return run(() -> setCoral(speed.getAsDouble()));
+    return run(() -> setCoral(speed.getAsDouble())).finallyDo(() -> setCoral(0));
   }
 
   public Command stopCoral() {
