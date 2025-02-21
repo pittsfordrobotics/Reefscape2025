@@ -5,7 +5,9 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Vision.Vision;
 import frc.robot.subsystems.Algae;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Elevator;
@@ -29,10 +31,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.Algae;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Swerve;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -60,6 +59,7 @@ public class RobotContainer {
   private final Coral coral;
   
   private final Swerve swerve;
+  private final Vision vision;
 
   @Logged(name = "PDH")
   private final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
@@ -75,9 +75,16 @@ public class RobotContainer {
     algae = new Algae();
     climber = new Climber();
     elevator = new Elevator();
+    coral = new Coral();
 
     swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve"));
-    coral = new Coral();
+    vision = new Vision(
+      VisionConstants.LIMELIGHT_LEFT,
+      VisionConstants.LIMELIGHT_RIGHT,
+      VisionConstants.LIMELIGHT_BACK,
+      swerve::getGyroAngle,
+      swerve::getAngularVelocityRad_Sec,
+      swerve::addVisionData);
 
     SmartDashboard.putNumber("Intake Speed", -0.25);
     SmartDashboard.putNumber("Algae Speed", 0.25);

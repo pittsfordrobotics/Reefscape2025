@@ -254,6 +254,10 @@ public class Swerve extends SubsystemBase {
         swerveDrive.setGyro(new Rotation3d(0, 0, currentAngle.getRadians()));
     }
 
+    public Rotation2d getGyroAngle(){
+        return swerveDrive.getYaw();
+    }
+
     public double getAngularVelocityRad_Sec() {
         return swerveDrive.getRobotVelocity().omegaRadiansPerSecond;
     }
