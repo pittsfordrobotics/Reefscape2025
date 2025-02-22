@@ -67,6 +67,8 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
+  private final CommandXboxController operatorController =
+      new CommandXboxController(OperatorConstants.OPERATOR_CONTROLLER_PORT);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -86,7 +88,6 @@ public class RobotContainer {
       swerve::getAngularVelocityRad_Sec,
       swerve::addVisionData);
 
-    SmartDashboard.putNumber("Intake Speed", -0.25);
     SmartDashboard.putNumber("Algae Speed", 0.25);
 
     SmartDashboard.putNumber("Algae Pivot Speed", 0.25);
@@ -118,6 +119,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("Elevator Motor Speed", 0.25);
     SmartDashboard.putNumber("Elevator Sled Speed", 0.25);
     SmartDashboard.putNumber("Climber Speed", 0.25);
+    SmartDashboard.putNumber("Intake Motor Speed", 0.25);
     
     Shuffleboard.getTab("testing").add("Algae Motor Speed", 0.25);
     Shuffleboard.getTab("testing").add("Algae Motor", algae.dynamicAlgaePickup(
@@ -132,6 +134,8 @@ public class RobotContainer {
       () -> SmartDashboard.getNumber("Elevator Sled Speed", 0.25)));
     Shuffleboard.getTab("testing").add("Climber Motor", climber.dynamicDriveClimb(
       () -> SmartDashboard.getNumber("Climber Speed", 0.25)));
+    Shuffleboard.getTab("testing").add("Intake Motor", intake.dynamicDriveIntake(
+      () -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)));
 
 
     // Configure the trigger bindings
@@ -152,24 +156,27 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    /**
+     * Isaac's requested bindings:
+     * left trigger: hold to climb
+     * right trigger: coral output
+     * "menu" button (third tiny button in the middle): elevator to ground
+     * dpad: move node selector
+     * Y: algae output (arm up & run motor reverse)
+     * X: algae arm up
+     * B: run coral intake
+     * A: algae intake (arm down & run motor)
+     */
+
     //Drive Intake:
     driverController.b().onTrue(intake.intakeCoralWithSensor())
       .onFalse(intake.stopIntake());
-
-      driverController.y().whileTrue(intake.dynamicDriveIntake(
-        () -> -1 * SmartDashboard.getNumber("Intake Speed", -0.25)))
-        .onFalse(intake.stopIntake());
     
     //Pivot Algae arm:
     driverController.rightTrigger().onTrue(algae.dynamicAlgaeSetPivot(
       () -> SmartDashboard.getNumber("Algae Active Angle", 0)))
       .onFalse((algae.dynamicAlgaeSetPivot(
         () -> SmartDashboard.getNumber("Algae Default Angle", 0))));
-    
-    //Drive Coral output:
-    driverController.leftTrigger().whileTrue(coral.dynamicDriveCoral(
-      () -> SmartDashboard.getNumber("Coral Speed", 0.25)))
-        .onFalse(coral.stopCoral());
     
     //Drive Swerve forward and backward:
     driverController.povUp().whileTrue(swerve.driveForward(0.2));
@@ -180,6 +187,14 @@ public class RobotContainer {
       () -> SmartDashboard.getNumber(("Climb Active Angle"), 0.25)))
       .whileFalse(climber.climbToPosition(
         () -> SmartDashboard.getNumber("Angle Default Angle", 0)));
+    
+    //operator controls
+    operatorController.b().whileTrue(intake.dynamicDriveIntake(
+      () -> SmartDashboard.getNumber("Intake Motor Speed", -0.25)))
+      .onFalse(intake.stopIntake());
+    operatorController.rightTrigger().whileTrue(coral.dynamicDriveCoral(
+      () -> SmartDashboard.getNumber("Coral Outtake Speed", -0.25)))
+      .onFalse(coral.stopCoral());
 
   }
 

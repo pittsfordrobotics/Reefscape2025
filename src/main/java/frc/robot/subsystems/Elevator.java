@@ -38,6 +38,7 @@ public class Elevator extends SubsystemBase {
   // private SparkMax elevatorFollowingMotor = new SparkMax(ElevatorConstants.CAN_FOLLOW_ELEVATOR_MOTOR, MotorType.kBrushless);
 
   // SHUTTLE
+  @Logged(name = "Shuttle Motor")
   private SparkMax shuttleMotor = new SparkMax(ElevatorConstants.CAN_SHUTTLE_MOTOR, MotorType.kBrushless);
   private SparkClosedLoopController shuttleController = shuttleMotor.getClosedLoopController();
   private RelativeEncoder shuttleRelativeEncoder = shuttleMotor.getEncoder();
