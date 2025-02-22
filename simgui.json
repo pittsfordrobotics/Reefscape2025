@@ -17,6 +17,14 @@
       "/Shuffleboard/Config/Set offsets to 0": "Command",
       "/Shuffleboard/Config/Zero gyro": "Command",
       "/Shuffleboard/Config/Zero swerve offsets": "Command",
+      "/Shuffleboard/Vision/UseVisionToggle": "Command",
+      "/Shuffleboard/testing/Algae Motor": "Command",
+      "/Shuffleboard/testing/Algae Pivot": "Command",
+      "/Shuffleboard/testing/Climber Motor": "Command",
+      "/Shuffleboard/testing/Coral Outtake": "Command",
+      "/Shuffleboard/testing/Elevator Motor": "Command",
+      "/Shuffleboard/testing/Intake Motor": "Command",
+      "/Shuffleboard/testing/Shuttle Motor": "Command",
       "/SmartDashboard/Alerts": "Alerts",
       "/SmartDashboard/Auto Chooser": "String Chooser",
       "/SmartDashboard/Encoders": "Alerts",
@@ -26,6 +34,7 @@
       "/SmartDashboard/Motors": "Alerts",
       "/SmartDashboard/Pigeon 2 (v6) [0]": "Gyro",
       "/SmartDashboard/Swerve Drive": "Alerts",
+      "Robot Data/RobotContainer/Algae Subsystem/Algae Sensor": "Digital Input",
       "Robot Data/RobotContainer/Intake Subsystem/IntakeMotor": "Digital Input"
     },
     "windows": {

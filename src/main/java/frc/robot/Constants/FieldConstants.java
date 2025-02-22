@@ -45,49 +45,6 @@ public class FieldConstants {
     put(6, 6);   put(19, 6);
   }};
 
-  /**
-   * Returns the pose that the robot should pathfind to for a particular reef side on the left or right. Reef side can be returned by findNearestReefSide
-   * @param reefSide goes from 1 to 6, starting from the side closest to the alliance station and going counterclockwise
-   * @param isRightSide is true if we're on the right side of the specified reef side
-   * @return a Pose2d representing the location and orientation of the robot if facing the reef on the specified 
-   */
-  public static Pose2d reefLocation(int reefSide, boolean isRightSide) {
-
-    int poseCode = (1 <= reefSide && reefSide <= 6) ? (reefSide * 2 + (isRightSide ? 1 : 0)) : -1;
-    Rotation2d angle = Rotation2d.fromDegrees(switch(reefSide) {
-      case 1 -> 0;
-      case 2 -> 60;
-      case 3 -> 120;
-      case 4 -> 180;
-      case 5 -> 240;
-      case 6 -> 300;
-      default -> 0;
-    });
-
-    double[] pos = switch(poseCode) {
-      case 2  -> new double[] { 158.00, 164.94 };
-      case 3  -> new double[] { 158.00, 152.06 };
-      case 4  -> new double[] { 168.80, 133.36 };
-      case 5  -> new double[] { 179.95, 126.92 };
-      case 6  -> new double[] { 201.55, 126.92 };
-      case 7  -> new double[] { 212.70, 133.36 };
-      case 8  -> new double[] { 223.50, 152.06 };
-      case 9  -> new double[] { 223.50, 164.94 };
-      case 10 -> new double[] { 212.70, 183.64 };
-      case 11 -> new double[] { 201.55, 190.08 };
-      case 12 -> new double[] { 179.95, 190.08 };
-      case 13 -> new double[] { 168.80, 183.64 };
-      default -> new double[] { 0, 0 };
-    };
-
-    Pose2d pose = new Pose2d(Units.inchesToMeters(pos[0]), Units.inchesToMeters(pos[1]), angle);
-
-    //back up pose by 16" so it's not overlapping the reef
-    pose.transformBy(new Transform2d(new Translation2d(-reefLocationBackupDistance, 0), new Rotation2d()));
-
-    return pose;
-  }
-
   /** 
    * @param robotPose the pose of the robot
    * @return the reef side number that the robot is closest to
