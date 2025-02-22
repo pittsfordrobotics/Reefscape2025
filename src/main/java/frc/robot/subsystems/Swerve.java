@@ -5,25 +5,25 @@
 package frc.robot.subsystems;
 
 import java.io.File;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.PathConstraints;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -31,21 +31,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
-import frc.robot.Robot;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.lib.AllDeadbands;
 import frc.robot.lib.VisionData;
 import frc.robot.lib.util.AllianceFlipUtil;
-import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
 import swervelib.SwerveModule;
-import swervelib.imu.SwerveIMU;
-import swervelib.math.SwerveMath;
-import swervelib.motors.SwerveMotor;
-import swervelib.parser.SwerveControllerConfiguration;
-import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveModuleConfiguration;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
@@ -173,8 +166,8 @@ public class Swerve extends SubsystemBase {
         if (DriverStation.getAlliance().isPresent()) {
             currentAlliance = DriverStation.getAlliance().get();
         } else {
-            currentAlliance = Alliance.Blue;
-            System.out.println("No alliance, setting to blue");
+          currentAlliance = Alliance.Blue;
+          //System.out.println("No alliance, setting to blue");
         }
         return currentAlliance;
     }
@@ -242,6 +235,10 @@ public class Swerve extends SubsystemBase {
      */
     public void setPose(Pose2d pose) {
         swerveDrive.resetOdometry(pose);
+    }
+
+    public Pose2d getPose() {
+        return swerveDrive.getPose();
     }
 
     /**
@@ -371,6 +368,11 @@ public class Swerve extends SubsystemBase {
             swerveDrive.resetOdometry(pose);
             System.out.println("Vision pose was invalid and not caught");
         }
+    }
+
+    public Command driveToReef(BooleanSupplier isRightSide) {
+        int reefSide = FieldConstants.findNearestReefSide(swerveDrive.getPose());
+        return driveToPoseFlipped(FieldConstants.reefLocation(reefSide, isRightSide.getAsBoolean()));
     }
 
     // Takes a point and returns the desired heading for the swerve to be pointing
@@ -530,5 +532,10 @@ public class Swerve extends SubsystemBase {
     @Logged(name = "Rotation Degrees")
     public double getRotationDegrees() {
         return swerveDrive.getYaw().getDegrees();
+    }
+    /** Drive to a pose, flipped if on red alliance */
+    public Command driveToPoseFlipped(Pose2d pose) {
+        PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
+        return AutoBuilder.pathfindToPoseFlipped(pose, constraints);
     }
 }

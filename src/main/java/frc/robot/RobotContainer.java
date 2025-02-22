@@ -15,7 +15,9 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Coral;
 import frc.robot.subsystems.Intake;
 
-import frc.robot.logging.PDHLogger;
+import frc.robot.subsystems.objectiveTracker.ObjectiveSelecterIONetworkTables;
+import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
+import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.MoveDirection;
 
 import java.io.File;
 
@@ -33,11 +35,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import frc.robot.Constants.FieldConstants;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
@@ -49,6 +55,7 @@ public class RobotContainer {
   @Logged(name = "Algae Subsystem")
   private final Algae algae;
   private final SendableChooser<Command> autoChooser;
+  private final ObjectiveTracker objectiveTracker;
 
   @Logged(name = "Climber Subsystem")
   private final Climber climber;
@@ -72,7 +79,9 @@ public class RobotContainer {
   private final CommandXboxController operatorController =
       new CommandXboxController(OperatorConstants.OPERATOR_CONTROLLER_PORT);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
     //swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve/maxSwerve"));
     intake = new Intake();
@@ -101,6 +110,10 @@ public class RobotContainer {
     SmartDashboard.putNumber("Climb Active Angle", 0);
     
 
+    ObjectiveSelecterIONetworkTables objectiveSelecterIOImpl = new ObjectiveSelecterIONetworkTables();
+    objectiveTracker = new ObjectiveTracker(objectiveSelecterIOImpl);
+    objectiveTracker.setDefaultCommand(objectiveTracker.updateReefSide(swerve::getPose));
+
     Command enhancedHeadingSteeringCommand = swerve.enhancedHeadingDriveCommand(
         () -> -driverController.getLeftY(),
         () -> -driverController.getLeftX(),
@@ -110,9 +123,12 @@ public class RobotContainer {
         driverController::getRightTriggerAxis);
     swerve.setDefaultCommand(enhancedHeadingSteeringCommand);
     swerve.setupPathPlanner();
+
     SmartDashboard.putNumber("speed", 0.25);
-    Shuffleboard.getTab("Config").add("Zero swerve offsets", swerve.runOnce(() -> swerve.setSwerveOffsets()).ignoringDisable(true));
-    Shuffleboard.getTab("Config").add("Set offsets to 0", swerve.runOnce(() -> swerve.zeroSwerveOffsets()).ignoringDisable(true));
+    Shuffleboard.getTab("Config").add("Zero swerve offsets",
+        swerve.runOnce(() -> swerve.setSwerveOffsets()).ignoringDisable(true));
+    Shuffleboard.getTab("Config").add("Set offsets to 0",
+        swerve.runOnce(() -> swerve.zeroSwerveOffsets()).ignoringDisable(true));
     Shuffleboard.getTab("Config").add("Zero gyro", swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));
 
     SmartDashboard.putNumber("Algae Intake Motor Speed", 0.25);
@@ -145,16 +161,23 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
+
+    Shuffleboard.getTab("Debug").addString("Selected Node", objectiveTracker::getObjectiveString);
   }
 
   
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * Use this method to define your trigger->command mappings. Triggers can be
+   * created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+   * an arbitrary
    * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+   * {@link
+   * CommandXboxController
+   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or
+   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
   private void configureBindings() {
@@ -170,10 +193,6 @@ public class RobotContainer {
      * A: algae intake (arm down & run motor)
      */
     
-    //Drive Swerve forward and backward:
-    driverController.povUp().whileTrue(swerve.driveForward(0.2));
-    driverController.povDown().whileTrue(swerve.driveForward(-0.2));
-    
     //operator controls
     operatorController.b().whileTrue(intake.dynamicDriveIntake(
       () -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)))
@@ -182,11 +201,33 @@ public class RobotContainer {
       () -> SmartDashboard.getNumber("Coral Outtake Speed", 0.25)))
       .onFalse(coral.stopCoral());
 
-    operatorController.povUp().onTrue(elevator.setElevatorLevel(ElevatorLevels.INTAKE));
-    operatorController.povLeft().onTrue(elevator.setElevatorLevel(ElevatorLevels.L2));
-    operatorController.povDown().onTrue(elevator.setElevatorLevel(ElevatorLevels.L3));
-    operatorController.povRight().onTrue(elevator.setElevatorLevel(ElevatorLevels.L4));
+      // operator controls moved to the objective tracker
+    // operatorController.povUp().onTrue(elevator.setElevatorLevel(ElevatorLevels.INTAKE));
+    // operatorController.povLeft().onTrue(elevator.setElevatorLevel(ElevatorLevels.L2));
+    // operatorController.povDown().onTrue(elevator.setElevatorLevel(ElevatorLevels.L3));
+    // operatorController.povRight().onTrue(elevator.setElevatorLevel(ElevatorLevels.L4));
+    // Drive to reef:
+    driverController.x().onTrue(swerve.driveToReef(objectiveTracker::isRightSide));
+    // Drive Intake:
+    driverController.b().whileTrue(intake.dynamicDriveIntake(
+        () -> SmartDashboard.getNumber("Intake Speed", 0.25)));
 
+    // Pivot Algae arm:
+    // Pos 1
+    driverController.rightTrigger().onTrue(algae.dynamicAlgaeSpeedPivot(
+        () -> SmartDashboard.getNumber("Algae Angle 1", 0)));
+    // Pos 2
+    driverController.rightBumper().onTrue(algae.dynamicAlgaeSpeedPivot(
+        () -> SmartDashboard.getNumber("Algae Angle 2", 0)));
+
+    // Drive Algae pickup:
+    driverController.a().whileTrue(algae.dynamicAlgaePickup(() -> SmartDashboard.getNumber("Algae Speed", 0.25)));
+
+    // enhanced controls through objective tracker
+    operatorController.povUp().onTrue(objectiveTracker.moveIndex(MoveDirection.UP));
+    operatorController.povDown().onTrue(objectiveTracker.moveIndex(MoveDirection.DOWN));
+    operatorController.povRight().onTrue(objectiveTracker.moveIndex(MoveDirection.RIGHT));
+    operatorController.povLeft().onTrue(objectiveTracker.moveIndex(MoveDirection.LEFT));
   }
 
   /**
