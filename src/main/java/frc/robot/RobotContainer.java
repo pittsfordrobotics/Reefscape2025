@@ -59,6 +59,7 @@ public class RobotContainer {
   @Logged(name = "Coral Output Subsystem")
   private final Coral coral;
   
+  @Logged(name = "Swerve Subsystem")
   private final Swerve swerve;
   private final Vision vision;
 

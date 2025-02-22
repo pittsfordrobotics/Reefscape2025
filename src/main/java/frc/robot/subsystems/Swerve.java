@@ -15,6 +15,7 @@ import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -340,7 +341,7 @@ public class Swerve extends SubsystemBase {
         Pose2d swervePose = swerveDrive.getPose();
         double previousx = swervePose.getX();
         double previousy = swervePose.getY();
-        Rotation2d previousTheta = swervePose.getRotation();
+        Rotation2d previousTheta = swerveDrive.getYaw();
         if (Double.isNaN(previousy) || Double.isNaN(previousx)) {
             hadbadreading = true;
             previousx = 0;
@@ -360,7 +361,7 @@ public class Swerve extends SubsystemBase {
         // Add Vision Measurement if it passes the checks, but without taking into
         // account vision yaw.
         swerveDrive.addVisionMeasurement(
-                new Pose2d(visionData.visionPose().getTranslation(), swerveDrive.getOdometryHeading()),
+                new Pose2d(visionData.visionPose().getTranslation(), swerveDrive.getYaw()),
                 visionData.time(),
                 visionData.visionReliability());
         Pose2d newPose = swerveDrive.getPose();
@@ -524,5 +525,10 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         // This method will be called once per scheduler run
         swerveDrive.updateOdometry();
+    }
+
+    @Logged(name = "Rotation Degrees")
+    public double getRotationDegrees() {
+        return swerveDrive.getYaw().getDegrees();
     }
 }
