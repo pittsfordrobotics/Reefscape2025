@@ -74,12 +74,13 @@ public class Elevator extends SubsystemBase {
   public Elevator() {
     SparkMaxConfig elevatorConfig = new SparkMaxConfig();
     elevatorConfig.smartCurrentLimit(40, 40);
-    elevatorConfig.idleMode(IdleMode.kBrake);
+    elevatorConfig.idleMode(IdleMode.kBrake)
+    .closedLoopRampRate(0.15);
    
   
     elevatorConfig.closedLoop.maxMotion
-      .maxVelocity(2)
-      .maxAcceleration(1.5);
+      .maxVelocity(5000)
+      .maxAcceleration(20000);
     elevatorConfig.closedLoop
       .pid(ElevatorConstants.ELEVATOR_Kp, ElevatorConstants.ELEVATOR_Ki, ElevatorConstants.ELEVATOR_Kd);
     
@@ -87,7 +88,7 @@ public class Elevator extends SubsystemBase {
   
 
     SparkMaxConfig shuttleConfig = new SparkMaxConfig();
-    shuttleConfig.smartCurrentLimit(20, 20);
+    shuttleConfig.smartCurrentLimit(20);
     shuttleConfig.idleMode(IdleMode.kBrake);
    
 
@@ -152,19 +153,23 @@ public class Elevator extends SubsystemBase {
 
   /* SETTING POSITION */
   private void setElevatorPosition(double pos){
+    /*
+     * coral encoder for shuttle (elevator @ bottom): -436
+     * coral L2 encoder for elevator (shuttle @ previous pos): 62
+     * L3: 109
+     * L4: max elevator, shuttle @ -266, robot back ~6"
+     */
     elevatorIsHomed = false;
-    if (pos >= ElevatorConstants.ELEVATOR_MAX_HEIGHT_INCHES || pos < 0) return;
-    pos /= ElevatorConstants.ELEVATOR_TICKS_PER_INCH;
-    elevatorController.setReference(pos, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, ElevatorConstants.ELEVATOR_FEEDFORWARD);
+    // if (pos >= ElevatorConstants.ELEVATOR_MAX_HEIGHT || pos < 0) return;
+    elevatorController.setReference(pos, ControlType.kPosition, ClosedLoopSlot.kSlot0, ElevatorConstants.ELEVATOR_FEEDFORWARD);
 
     //elevatorMotor.set(profElevatorController.calculate(elevatorRelativeEncoder.getPosition(), pos) + ElevatorConstants.ELEVATOR_FEEDFORWARD);
   }
 
   private void setShuttlePosition(double pos){
     shuttleIsHomed = false;
-    if (pos >= ElevatorConstants.SHUTTLE_LENGTH_INCHES || pos < 0) return;
-    pos /= ElevatorConstants.SHUTTLE_TICKS_PER_INCH;
-    shuttleController.setReference(pos, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, ElevatorConstants.SHUTTLE_FEEDFORWARD);
+    // if (pos <= ElevatorConstants.SHUTTLE_MAX_HEIGHT || pos > 0) return;
+    // shuttleController.setReference(pos, ControlType.kPosition, ClosedLoopSlot.kSlot0, 0); //don't worry about feedforward for the shuttle
     //shuttleMotor.set(profShuttleController.calculate(shuttleRelativeEncoder.getPosition(), pos) + ElevatorConstants.SHUTTLE_FEEDFORWARD);
   }
 
@@ -178,8 +183,30 @@ public class Elevator extends SubsystemBase {
     });
   }
 
+  /**
+   * Sets the position of the elevator and shuttle, based on an elevator level
+   */
+  public Command setElevatorLevel(ElevatorLevels level) {
+    Command elevatorCommand;
+    switch (level) {
+      case INTAKE -> {
+        elevatorCommand = run(() -> {setElevatorPosition(0); setShuttlePosition(-436);});
+      } case L2 -> {
+        elevatorCommand = run(() -> {setElevatorPosition(62); setShuttlePosition(-436);});
+      } case L3 -> {
+        elevatorCommand = run(() -> {setElevatorPosition(109); setShuttlePosition(-436);});
+      } case L4 -> {
+        elevatorCommand = run(() -> {
+          setElevatorPosition(ElevatorConstants.ELEVATOR_MAX_HEIGHT);
+          setShuttlePosition(-266);
+        });
+      } default -> throw new IllegalArgumentException();
+    }
+    return elevatorCommand;
+  }
+
   public Command dynamicElevatorSetSpeed(DoubleSupplier speed){
-    return run(() -> elevatorMotor.set(speed.getAsDouble())).finallyDo(() -> elevatorMotor.set(0));
+    return run(() -> elevatorMotor.set(speed.getAsDouble())).finallyDo(() -> elevatorMotor.set(ElevatorConstants.ELEVATOR_FEEDFORWARD));
   }
 
   public Command stopElevator() {
@@ -227,5 +254,9 @@ public class Elevator extends SubsystemBase {
   @Logged(name = "Shuttle motor temperature (C)")
   public double getShuttleTemp(){
     return shuttleMotor.getMotorTemperature();
+  }
+
+  public enum ElevatorLevels {
+    INTAKE, L1, L2, L3, L4;
   }
 }

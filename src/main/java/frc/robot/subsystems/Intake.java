@@ -55,7 +55,7 @@ public class Intake extends SubsystemBase {
   }
 
   public Command dynamicDriveIntake(DoubleSupplier speed){
-    return run(() -> setIntake(speed.getAsDouble())).finallyDo(() -> setIntake(0));
+    return run(() -> setIntake(-speed.getAsDouble())).finallyDo(() -> setIntake(0));
   }
 
   public Command intakeCoralWithSensor() {

@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Elevator.ElevatorLevels;
 import frc.robot.subsystems.Vision.Vision;
 import frc.robot.subsystems.Algae;
 import frc.robot.subsystems.Climber;
@@ -115,7 +116,7 @@ public class RobotContainer {
 
     SmartDashboard.putNumber("Algae Intake Motor Speed", 0.25);
     SmartDashboard.putNumber("Algae Pivot Speed", 0.25);
-    SmartDashboard.putNumber("Coral Outtake Speed", -0.25);
+    SmartDashboard.putNumber("Coral Outtake Speed", 0.25);
     SmartDashboard.putNumber("Elevator Motor Speed", 0.25);
     SmartDashboard.putNumber("Elevator Sled Speed", 0.25);
     SmartDashboard.putNumber("Climber Speed", 0.25);
@@ -167,34 +168,23 @@ public class RobotContainer {
      * B: run coral intake
      * A: algae intake (arm down & run motor)
      */
-
-    //Drive Intake:
-    driverController.b().onTrue(intake.intakeCoralWithSensor())
-      .onFalse(intake.stopIntake());
-    
-    //Pivot Algae arm:
-    driverController.rightTrigger().onTrue(algae.dynamicAlgaeSetPivot(
-      () -> SmartDashboard.getNumber("Algae Active Angle", 0)))
-      .onFalse((algae.dynamicAlgaeSetPivot(
-        () -> SmartDashboard.getNumber("Algae Default Angle", 0))));
     
     //Drive Swerve forward and backward:
     driverController.povUp().whileTrue(swerve.driveForward(0.2));
     driverController.povDown().whileTrue(swerve.driveForward(-0.2));
-
-    //Drive Climber:
-    driverController.leftBumper().whileTrue(climber.climbToPosition(
-      () -> SmartDashboard.getNumber(("Climb Active Angle"), 0.25)))
-      .whileFalse(climber.climbToPosition(
-        () -> SmartDashboard.getNumber("Angle Default Angle", 0)));
     
     //operator controls
     operatorController.b().whileTrue(intake.dynamicDriveIntake(
-      () -> SmartDashboard.getNumber("Intake Motor Speed", -0.25)))
+      () -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)))
       .onFalse(intake.stopIntake());
     operatorController.rightTrigger().whileTrue(coral.dynamicDriveCoral(
-      () -> SmartDashboard.getNumber("Coral Outtake Speed", -0.25)))
+      () -> SmartDashboard.getNumber("Coral Outtake Speed", 0.25)))
       .onFalse(coral.stopCoral());
+
+    operatorController.povUp().onTrue(elevator.setElevatorLevel(ElevatorLevels.INTAKE));
+    operatorController.povLeft().onTrue(elevator.setElevatorLevel(ElevatorLevels.L2));
+    operatorController.povDown().onTrue(elevator.setElevatorLevel(ElevatorLevels.L3));
+    operatorController.povRight().onTrue(elevator.setElevatorLevel(ElevatorLevels.L4));
 
   }
 
