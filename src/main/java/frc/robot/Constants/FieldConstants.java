@@ -30,7 +30,7 @@ public class FieldConstants {
   public static double fieldLength = Units.inchesToMeters(690.876);
   public static double fieldWidth = Units.inchesToMeters(317);
 
-  private static double reefLocationBackupDistance = Units.inchesToMeters(16);
+  public static double reefLocationBackupDistance = Units.inchesToMeters(16);
 
   /** This hashmap maps tag numbers to the reef side they are on.<br></br>
    * key: tag number<br></br>
