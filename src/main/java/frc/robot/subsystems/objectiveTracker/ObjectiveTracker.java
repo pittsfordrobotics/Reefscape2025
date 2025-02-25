@@ -48,7 +48,7 @@ public class ObjectiveTracker extends SubsystemBase {
     return this.runOnce(() -> moveIndexInternal(direction)).ignoringDisable(true);
   }
   public Command updateReefSide(Supplier<Pose2d> currentPose) {
-    return this.run(() -> updateReefSide(currentPose)).ignoringDisable(true);
+    return this.run(() -> updateReefSideInternal(currentPose)).ignoringDisable(true);
   }
 
   private void moveIndexInternal(MoveDirection direction)

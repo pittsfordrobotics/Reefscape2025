@@ -8,7 +8,7 @@
 import { NT4_Client } from "./NT4.js";
 
 const selectedIndexTopic = "/objectiveTracker/currentIndex";
-const selectedSideTopic = "/objectiveTracker/currentSide";
+const selectedSideTopic = "/objectiveTracker/reefSide";
 const numElements = 8;
 
 const timeout = 250;
@@ -24,11 +24,14 @@ function displayTarget(index) {
   }
 }
 function updateReefSide(side) {
-  document.getElementByID("hex" + (side-1)).classList.add("highlighted");
+  Array.from(document.getElementsByClassName("hexagon")).forEach((element) => {
+    element.classList.remove("highlighted");
+  });
+  document.getElementById("hex" + side).classList.add("highlighted");
 }
 
 let client = new NT4_Client(
-  //"10.31.82.2",
+  //"10.31.81.2",
   "127.0.0.1",
   "NodeSelector",
   (topic) => {
