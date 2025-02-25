@@ -28,6 +28,8 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -51,6 +53,9 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class Swerve extends SubsystemBase {
 
+    private final StructPublisher<Pose2d> rightPose;
+    private final StructPublisher<Pose2d> leftPose;
+
     private final SwerveDrive swerveDrive;
     public double maximumSpeed = SwerveConstants.SWERVE_MAXIMUM_VELOCITY;
     public double maximumAngularSpeed = SwerveConstants.SWERVE_MAXIMUM_ANGULAR_VELOCITY;
@@ -59,6 +64,11 @@ public class Swerve extends SubsystemBase {
 
     /** Creates a new Swerve. */
     public Swerve(File config_dir) {
+
+        rightPose = NetworkTableInstance.getDefault()
+            .getStructTopic("ReefTargetPoses/right", Pose2d.struct).publish();
+        leftPose = NetworkTableInstance.getDefault()
+            .getStructTopic("ReefTargetPoses/left", Pose2d.struct).publish();
 
         // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary
         // objects being created.
@@ -576,6 +586,12 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         // This method will be called once per scheduler run
         swerveDrive.updateOdometry();
+        // Output Reef Poses - Remove this later!!! (Or else...)
+        Pose2d rightTarget = reefLocation(() -> true);
+        rightPose.set(rightTarget);
+
+        Pose2d leftTarget = reefLocation(() -> false);
+        leftPose.set(leftTarget);
     }
 
     @Logged(name = "Rotation Degrees")
