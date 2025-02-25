@@ -24,7 +24,7 @@ function displayTarget(index) {
   }
 }
 function updateReefSide(side) {
-  document.getElementsByTagName("hexagon")[side - 1].classList.add("highlighted");
+  document.getElementByID("hex" + (side-1)).classList.add("highlighted");
 }
 
 let client = new NT4_Client(
