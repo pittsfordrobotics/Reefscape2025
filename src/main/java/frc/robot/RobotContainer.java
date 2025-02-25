@@ -4,23 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.Elevator.ElevatorLevels;
-import frc.robot.subsystems.Vision.Vision;
-import frc.robot.subsystems.Algae;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Coral;
-import frc.robot.subsystems.Intake;
-
-
-import frc.robot.logging.PDHLogger;
-import frc.robot.subsystems.objectiveTracker.ObjectiveSelecterIONetworkTables;
-import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
-import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.MoveDirection;
-
 import java.io.File;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -37,8 +20,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
-import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.VisionConstants;
+import frc.robot.subsystems.Algae;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Coral;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Vision.Vision;
+import frc.robot.subsystems.objectiveTracker.ObjectiveSelecterIONetworkTables;
+import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.MoveDirection;
+import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -76,19 +69,6 @@ public class RobotContainer {
   @Logged(name = "PDH")
   private final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
 
-  @Logged(name = "Climber Subsystem")
-  private final Climber climber;
-
-  @Logged(name = "Elevator Subsystem")
-  private final Elevator elevator;
-
-  @Logged(name = "Coral Output Subsystem")
-  private final Coral coral;
-  
-  private final Swerve swerve;
-
-  @Logged(name = "PDH")
-  private final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
