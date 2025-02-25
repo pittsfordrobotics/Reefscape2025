@@ -38,37 +38,37 @@ public class Elevator extends SubsystemBase {
   // private SparkMax elevatorFollowingMotor = new SparkMax(ElevatorConstants.CAN_FOLLOW_ELEVATOR_MOTOR, MotorType.kBrushless);
 
   // SHUTTLE
-  @Logged(name = "Shuttle Motor")
-  private SparkMax shuttleMotor = new SparkMax(ElevatorConstants.CAN_SHUTTLE_MOTOR, MotorType.kBrushless);
-  private SparkClosedLoopController shuttleController = shuttleMotor.getClosedLoopController();
-  private RelativeEncoder shuttleRelativeEncoder = shuttleMotor.getEncoder();
-  private ProfiledPIDController profShuttleController = new ProfiledPIDController(
-    ElevatorConstants.SHUTTLE_Kp, ElevatorConstants.SHUTTLE_Ki, ElevatorConstants.SHUTTLE_Kd, 
-    new TrapezoidProfile.Constraints(2, 1.5));
+  // @Logged(name = "Shuttle Motor")
+  // private SparkMax shuttleMotor = new SparkMax(ElevatorConstants.CAN_SHUTTLE_MOTOR, MotorType.kBrushless);
+  // private SparkClosedLoopController shuttleController = shuttleMotor.getClosedLoopController();
+  // private RelativeEncoder shuttleRelativeEncoder = shuttleMotor.getEncoder();
+  // private ProfiledPIDController profShuttleController = new ProfiledPIDController(
+  //   ElevatorConstants.SHUTTLE_Kp, ElevatorConstants.SHUTTLE_Ki, ElevatorConstants.SHUTTLE_Kd, 
+  //   new TrapezoidProfile.Constraints(2, 1.5));
   
   // private ElevatorFeedforward shuttleFeedforward = new ElevatorFeedforward(0, 0, 0);
   
   private double elevatorPos = 0;  // height from bottom elevtor position to bottom of shuttle slide
-  public double shuttlePos = 0; // from bottom of shuttle slide to **TBD**
+  // public double shuttlePos = 0; // from bottom of shuttle slide to **TBD**
   public boolean elevatorIsHomed = false;
-  public boolean shuttleIsHomed = false;
+  // public boolean shuttleIsHomed = false;
 
   @Logged(name = "Elevator position inches")
   public double getElevatorPosition() {
     return elevatorPos;
   }
-  @Logged(name = "Shuttle position inches")
-  public double getShuttlePosition(){
-    return shuttlePos;
-  }
+  // @Logged(name = "Shuttle position inches")
+  // public double getShuttlePosition(){
+  //   return shuttlePos;
+  // }
   @Logged(name = "Is elevator homed")
   public boolean getElevatorIsHomed(){
     return elevatorIsHomed;
   }
-  @Logged(name = "Is shuttle homed")
-  public boolean getShuttleIsHomed(){
-    return shuttleIsHomed;
-  }
+  // @Logged(name = "Is shuttle homed")
+  // public boolean getShuttleIsHomed(){
+  //   return shuttleIsHomed;
+  // }
 
   /** Creates a new Elevator. */
   public Elevator() {
@@ -87,18 +87,18 @@ public class Elevator extends SubsystemBase {
     elevatorMotor.configure(elevatorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   
 
-    SparkMaxConfig shuttleConfig = new SparkMaxConfig();
-    shuttleConfig.smartCurrentLimit(20);
-    shuttleConfig.idleMode(IdleMode.kBrake);
+    // SparkMaxConfig shuttleConfig = new SparkMaxConfig();
+    // shuttleConfig.smartCurrentLimit(20);
+    // shuttleConfig.idleMode(IdleMode.kBrake);
    
 
-    shuttleConfig.closedLoop.maxMotion
-      .maxVelocity(2)
-      .maxAcceleration(1.5);
-    shuttleConfig.closedLoop
-      .pid(ElevatorConstants.SHUTTLE_Kp, ElevatorConstants.SHUTTLE_Ki, ElevatorConstants.SHUTTLE_Kd);
+    // shuttleConfig.closedLoop.maxMotion
+    //   .maxVelocity(2)
+    //   .maxAcceleration(1.5);
+    // shuttleConfig.closedLoop
+    //   .pid(ElevatorConstants.SHUTTLE_Kp, ElevatorConstants.SHUTTLE_Ki, ElevatorConstants.SHUTTLE_Kd);
 
-    shuttleMotor.configure(shuttleConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // shuttleMotor.configure(shuttleConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     // SparkMaxConfig elevatorFollowingMotorConfig = new SparkMaxConfig();
     // elevatorFollowingMotorConfig.smartCurrentLimit(20, 20);
@@ -111,12 +111,13 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     elevatorPos = elevatorRelativeEncoder.getPosition() / ElevatorConstants.ELEVATOR_TICKS_PER_INCH;
-    shuttlePos = shuttleRelativeEncoder.getPosition() / ElevatorConstants.SHUTTLE_TICKS_PER_INCH;
+    // shuttlePos = shuttleRelativeEncoder.getPosition() / ElevatorConstants.SHUTTLE_TICKS_PER_INCH;
   }
 
   @Logged(name = "Total Height Inches")
   public double getTotalHeightInches(){
-    return elevatorPos + shuttlePos + ElevatorConstants.GROUND_TO_ELEVATOR_BOTTOM_INCHES;
+    // return elevatorPos + shuttlePos + ElevatorConstants.GROUND_TO_ELEVATOR_BOTTOM_INCHES;
+    return elevatorPos + ElevatorConstants.GROUND_TO_ELEVATOR_BOTTOM_INCHES;
   }
 
   private boolean isAtHeight(double height){
@@ -138,18 +139,18 @@ public class Elevator extends SubsystemBase {
     return elevatorMotor.getReverseLimitSwitch().isPressed();
   }
 
-  public Command homeShuttle(){
-    return run(() -> shuttleMotor.set(-0.05)).raceWith(Commands.waitUntil(this::isShuttleAtLimit))
-      .andThen(run(() -> {
-        shuttleMotor.set(0);
-        shuttleRelativeEncoder.setPosition(0);
-        shuttleIsHomed = true;
-      }));
-  }
+  // public Command homeShuttle(){
+  //   return run(() -> shuttleMotor.set(-0.05)).raceWith(Commands.waitUntil(this::isShuttleAtLimit))
+  //     .andThen(run(() -> {
+  //       shuttleMotor.set(0);
+  //       shuttleRelativeEncoder.setPosition(0);
+  //       shuttleIsHomed = true;
+  //     }));
+  // }
 
-  private boolean isShuttleAtLimit(){
-    return shuttleMotor.getReverseLimitSwitch().isPressed();
-  }
+  // private boolean isShuttleAtLimit(){
+  //   return shuttleMotor.getReverseLimitSwitch().isPressed();
+  // }
 
   /* SETTING POSITION */
   private void setElevatorPosition(double pos){
@@ -166,19 +167,19 @@ public class Elevator extends SubsystemBase {
     //elevatorMotor.set(profElevatorController.calculate(elevatorRelativeEncoder.getPosition(), pos) + ElevatorConstants.ELEVATOR_FEEDFORWARD);
   }
 
-  private void setShuttlePosition(double pos){
-    shuttleIsHomed = false;
-    // if (pos <= ElevatorConstants.SHUTTLE_MAX_HEIGHT || pos > 0) return;
-    // shuttleController.setReference(pos, ControlType.kPosition, ClosedLoopSlot.kSlot0, 0); //don't worry about feedforward for the shuttle
-    //shuttleMotor.set(profShuttleController.calculate(shuttleRelativeEncoder.getPosition(), pos) + ElevatorConstants.SHUTTLE_FEEDFORWARD);
-  }
+  // private void setShuttlePosition(double pos){
+  //   shuttleIsHomed = false;
+  //   // if (pos <= ElevatorConstants.SHUTTLE_MAX_HEIGHT || pos > 0) return;
+  //   // shuttleController.setReference(pos, ControlType.kPosition, ClosedLoopSlot.kSlot0, 0); //don't worry about feedforward for the shuttle
+  //   //shuttleMotor.set(profShuttleController.calculate(shuttleRelativeEncoder.getPosition(), pos) + ElevatorConstants.SHUTTLE_FEEDFORWARD);
+  // }
 
   public Command dynamicElevatorSetPosition(DoubleSupplier height) {
     return run(() -> {
       double heightRatio = ((height.getAsDouble() - ElevatorConstants.GROUND_TO_ELEVATOR_BOTTOM_INCHES)/ElevatorConstants.ELEVATOR_TOTAL_MAX_HEIGHT_INCHES);
-      double shuttleTargetHeightInches = heightRatio * ElevatorConstants.SHUTTLE_LENGTH_INCHES;
+      // double shuttleTargetHeightInches = heightRatio * ElevatorConstants.SHUTTLE_LENGTH_INCHES;
       double elevatorTargetHeightInches = heightRatio * ElevatorConstants.ELEVATOR_MAX_HEIGHT_INCHES;
-      setShuttlePosition(shuttleTargetHeightInches);
+      // setShuttlePosition(shuttleTargetHeightInches);
       setElevatorPosition(elevatorTargetHeightInches);
     });
   }
@@ -190,16 +191,22 @@ public class Elevator extends SubsystemBase {
     Command elevatorCommand;
     switch (level) {
       case INTAKE -> {
-        elevatorCommand = run(() -> {setElevatorPosition(0); setShuttlePosition(-436);});
+        // elevatorCommand = run(() -> {setElevatorPosition(0); setShuttlePosition(-436);});
+        elevatorCommand = run(() -> setElevatorPosition(0));
       } case L2 -> {
-        elevatorCommand = run(() -> {setElevatorPosition(62); setShuttlePosition(-436);});
+        // elevatorCommand = run(() -> {setElevatorPosition(62); setShuttlePosition(-436);});
+        elevatorCommand = run(() -> setElevatorPosition(62));
       } case L3 -> {
-        elevatorCommand = run(() -> {setElevatorPosition(109); setShuttlePosition(-436);});
+        // elevatorCommand = run(() -> {setElevatorPosition(109); setShuttlePosition(-436);});
+        elevatorCommand = run(() -> setElevatorPosition(109));
       } case L4 -> {
+        // elevatorCommand = run(() -> {
+        //   setElevatorPosition(ElevatorConstants.ELEVATOR_MAX_HEIGHT);
+        //   setShuttlePosition(-266);
+        // });
         elevatorCommand = run(() -> {
-          setElevatorPosition(ElevatorConstants.ELEVATOR_MAX_HEIGHT);
-          setShuttlePosition(-266);
-        });
+            setElevatorPosition(ElevatorConstants.ELEVATOR_MAX_HEIGHT);
+          });
       } default -> throw new IllegalArgumentException();
     }
     return elevatorCommand;
@@ -213,13 +220,13 @@ public class Elevator extends SubsystemBase {
     return run(() -> elevatorMotor.set(0));
   }
 
-  public Command dynamicShuttleSetSpeed(DoubleSupplier speed){
-    return run(() -> shuttleMotor.set(speed.getAsDouble())).finallyDo(() -> shuttleMotor.set(0));
-  }
+  // public Command dynamicShuttleSetSpeed(DoubleSupplier speed){
+  //   return run(() -> shuttleMotor.set(speed.getAsDouble())).finallyDo(() -> shuttleMotor.set(0));
+  // }
 
-  public Command stopShuttle() {
-    return run(() -> shuttleMotor.set(0));
-  }
+  // public Command stopShuttle() {
+  //   return run(() -> shuttleMotor.set(0));
+  // }
 
   /* TELEMETRY */
   @Logged(name = "Elevator applied output (V)")
@@ -239,22 +246,22 @@ public class Elevator extends SubsystemBase {
     return elevatorMotor.getMotorTemperature();
   }
 
-  @Logged(name = "Shuttle applied output (V)")
-  public double getShuttleAppliedCurrent(){
-    return shuttleMotor.getAppliedOutput();
-  }
-  @Logged(name = "Shuttle output current (A)")
-  public double getShuttleOutputCurrent(){
-    return shuttleMotor.getOutputCurrent();
-  }
-  @Logged(name = "Shuttle encoder velocity")
-  public double getShuttleEncoderVelocity(){
-    return shuttleRelativeEncoder.getVelocity();
-  }
-  @Logged(name = "Shuttle motor temperature (C)")
-  public double getShuttleTemp(){
-    return shuttleMotor.getMotorTemperature();
-  }
+  // @Logged(name = "Shuttle applied output (V)")
+  // public double getShuttleAppliedCurrent(){
+  //   return shuttleMotor.getAppliedOutput();
+  // }
+  // @Logged(name = "Shuttle output current (A)")
+  // public double getShuttleOutputCurrent(){
+  //   return shuttleMotor.getOutputCurrent();
+  // }
+  // @Logged(name = "Shuttle encoder velocity")
+  // public double getShuttleEncoderVelocity(){
+  //   return shuttleRelativeEncoder.getVelocity();
+  // }
+  // @Logged(name = "Shuttle motor temperature (C)")
+  // public double getShuttleTemp(){
+  //   return shuttleMotor.getMotorTemperature();
+  // }
 
   public enum ElevatorLevels {
     INTAKE, L1, L2, L3, L4;
