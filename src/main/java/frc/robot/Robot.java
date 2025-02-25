@@ -20,11 +20,12 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
+@Logged
 public class Robot extends TimedRobot {
   private Command autonomousCommand;
 
   @Logged(name = "RobotContainer")
-  public RobotContainer robotContainer;
+  private RobotContainer robotContainer;
 
   public Robot() {
     Epilogue.configure(config -> {
