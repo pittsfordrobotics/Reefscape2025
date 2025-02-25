@@ -386,7 +386,6 @@ public class Swerve extends SubsystemBase {
     //back up pose by 16" so it's not overlapping the reef
     pose = pose.transformBy(new Transform2d(new Translation2d(-FieldConstants.reefLocationBackupDistance, 0), new Rotation2d()));
 
-    System.out.println(pose.toString());
     return pose;
   }
 
