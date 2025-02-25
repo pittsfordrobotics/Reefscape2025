@@ -1,8 +1,11 @@
 package frc.robot.subsystems.Vision;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import frc.robot.lib.util.LimelightHelpers;
 import frc.robot.lib.util.LimelightHelpers.PoseEstimate;
 import frc.robot.lib.util.LimelightHelpers.RawFiducial;
@@ -12,10 +15,19 @@ public class VisionIOLimelight implements VisionIO {
 
     private final String cameraName;
 
+    private final StructPublisher<Pose2d> mt1Publisher;
+    private final StructPublisher<Pose2d> mt2Publisher;
+
     public VisionIOLimelight(String cameraName) {
         this.cameraName = cameraName;
         setLEDs(LED.OFF, cameraName);
         setPipeline(Pipelines.Test);
+
+        mt1Publisher = NetworkTableInstance.getDefault()
+            .getStructTopic("LimelightPoses/" + cameraName + "/MT1", Pose2d.struct).publish();
+
+        mt2Publisher = NetworkTableInstance.getDefault()
+            .getStructTopic("LimelightPoses/" + cameraName + "/MT2", Pose2d.struct).publish();
     }
 
     // Uses limelight lib and network tables to get the values from the limelight
@@ -24,6 +36,19 @@ public class VisionIOLimelight implements VisionIO {
         LimelightHelpers.SetRobotOrientation(cameraName, gyroAngle, 0, 0, 0, 0, 0 );
         // Gets the needed data from the networktables
         PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(cameraName);
+        mt2Publisher.set(botPoseEstimate == null ? new Pose2d() : botPoseEstimate.pose);
+        PoseEstimate botPoseEstimateMt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
+        mt1Publisher.set(botPoseEstimate == null ? new Pose2d() : botPoseEstimateMt1.pose);
+
+        if (botPoseEstimate == null) {
+            // BotPoseEstimate is null if the limelight data can't be found in NetworkTables
+            inputs.connected = false;
+            inputs.hasTarget = false;
+            inputs.tagCount = 0;
+            inputs.tagIDs = new int[0];
+         
+            return;
+        }
 
         // Latency (Pipeline + Capture)
         double latency = botPoseEstimate.latency;
