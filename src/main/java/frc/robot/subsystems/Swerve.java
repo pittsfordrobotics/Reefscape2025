@@ -129,51 +129,7 @@ public class Swerve extends SubsystemBase {
             this // Reference to this subsystem to set requirements
     );
   }
-    /**
-     * Setup AutoBuilder for PathPlanner.
-     */
-    /*
-     * public void setupPathPlanner() {
-     * AutoBuilder.configureHolonomic(
-     * swerveDrive::getPose, // Robot pose supplier
-     * swerveDrive::resetOdometry, // Method to reset odometry (will be called if
-     * your auto has a starting pose)
-     * swerveDrive::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT
-     * RELATIVE
-     * swerveDrive::drive, // Method that will drive the robot given ROBOT RELATIVE
-     * ChassisSpeeds
-     * new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should
-     * likely live in your
-     * // Constants class
-     * new PIDConstants(0.65, 0.0, 0.0),
-     * // Translation PID constants
-     * new PIDConstants(2,
-     * 0,
-     * 0.05), // TODO: TUNE THIS, NOT SURE IF SHOULD BE 0.005 PER OLD COMMENT
-     * // Rotation PID constants
-     * 4.5,
-     * // Max module speed, in m/s
-     * swerveDrive.swerveDriveConfiguration.getDriveBaseRadiusMeters(),
-     * // Drive base radius in meters. Distance from robot center to furthest
-     * module.
-     * new ReplanningConfig()
-     * // Default path replanning config. See the API for the options here
-     * ),
-     * () -> {
-     * // Boolean supplier that controls when the path will be mirrored for the red
-     * // alliance
-     * // This will flip the path being followed to the red side of the field.
-     * // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-     * var alliance = DriverStation.getAlliance();
-     * return alliance.isPresent() && (alliance.get() ==
-     * DriverStation.Alliance.Red);
-     * },
-     * this // Reference to this subsystem to set requirements
-     * );
-     * 
-     * 
-     * }
-     */
+
 
     /** Gets the current alliance, defaulting to blue */
     public Alliance getAllianceDefaultBlue() {
@@ -434,54 +390,6 @@ public class Swerve extends SubsystemBase {
     return pose;
   }
 
-    // Takes a point and returns the desired heading for the swerve to be pointing
-    // at the given point using the curent pose
-    private double getAngleToPoint(Pose2d targetPoint) {
-        Pose2d currentPose = swerveDrive.getPose();
-        double desired_heading_rad = Math.atan2(targetPoint.getY() - currentPose.getY(),
-                targetPoint.getX() - currentPose.getX());
-        return desired_heading_rad;
-    }
-
-    // needs to be called repeatedly
-    public Command pointAtVisionTarget(Pose2d targetPoint) {
-        return new InstantCommand(() -> {
-            double desired_heading_deg = getAngleToPoint(targetPoint);
-            Rotation2d desired_heading = Rotation2d.fromDegrees(desired_heading_deg);
-            swerveDrive.setHeadingCorrection(true);
-            setTargetAngle(desired_heading);
-        });
-    }
-
-    /**
-     * <h2>Vision Targeting</h2>
-     * Drives field oriented with translation X, Y, and points at the given target
-     * point
-     * 
-     * @param translationX Supplier of translation in X axis
-     * @param translationY Supplier of translation in Y axis
-     * @param targetPoint  Supplier of target point
-     * @return A RunCommand that drives the swerve drive with given translation and
-     *         rotation
-     */
-    public Command driveTranslationAndPointAtTarget(DoubleSupplier translationX, DoubleSupplier translationY,
-            Pose2d targetPoint) {
-        return run(() -> {
-            double desiredHeadingRad = getAngleToPoint(
-                    AllianceFlipUtil.apply(targetPoint));
-            Rotation2d desired_heading = Rotation2d.fromRadians(desiredHeadingRad);
-            swerveDrive.setHeadingCorrection(true);
-            double rawXInput = translationX.getAsDouble();
-            double rawYInput = translationY.getAsDouble();
-            double[] scaledDeadbandTranslationInputs = AllDeadbands
-                    .applyScaledSquaredCircularDeadband(new double[] { rawXInput, rawYInput }, 0.1);
-            double xInput = scaledDeadbandTranslationInputs[0];
-            double yInput = scaledDeadbandTranslationInputs[1];
-            // Make the robot move
-            setTargetAngle(desired_heading);
-            driveAllianceRelative(xInput, yInput, desiredHeadingRad, true);
-        });
-    }
 
     /**
      * Command to characterize the robot drive motors using SysId
@@ -515,12 +423,7 @@ public class Swerve extends SubsystemBase {
         return !hadbadreading;
     }
 
-    /**
-     * Add a fake vision reading for testing purposes.
-     */
-    public void addFakeVisionReading() {
-        swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
-    }
+
 
     /**
      * Set the hardware zero point of the angle motor's absolute encoder to the
