@@ -4,6 +4,8 @@
 
 package frc.robot.lib.util;
 
+import static edu.wpi.first.units.Units.Rotation;
+
 import java.util.HashMap;
 import java.util.function.BooleanSupplier;
 
@@ -49,7 +51,7 @@ public class FieldHelpers {
         }
     };
 
-    // Decides which alliance's apriltags to use.
+    /** Decides which alliance's apriltags to use. */
     public static HashMap<Integer, Integer> tagNoToReefSide() {
         return DriverStation.getAlliance().orElseGet(() -> Alliance.Blue).equals(Alliance.Blue) ? tagNoToReefSideBlue
                 : tagNoToReefSideRed;
@@ -59,7 +61,7 @@ public class FieldHelpers {
      * @param robotPose the pose of the robot
      * @return the reef side number that the robot is closest to
      */
-    public static int findNearestReefSide(Pose2d robotPose) {
+    public static int findNearestReefSide(Pose2d robotPose) { // TODO: Pose2d.nearest() exists...
         Translation2d robotTranslation = robotPose.getTranslation();
         double minDistance = Double.MAX_VALUE;
         int nearestReefSide = -1;
@@ -76,61 +78,29 @@ public class FieldHelpers {
         return nearestReefSide;
     }
 
-    /**
-     * Returns the pose that the robot should pathfind to for a particular reef side
-     * on the left or right. Reef side can be returned by findNearestReefSide
-     * 
-     * @param reefSide    goes from 1 to 6, starting from the side closest to the
-     *                    alliance station and going counterclockwise
-     * @param isRightSide is true if we're on the right side of the specified reef
-     *                    side
-     * @return a Pose2d representing the location and orientation of the robot if
-     *         facing the reef on the specified
-     */
-    public static Pose2d reefLocation(int reefSide, BooleanSupplier isRightSideSupplier) {
+    public static int findNearestReefAprilTag(Pose2d robotPose) {
+        Translation2d robotTranslation = robotPose.getTranslation();
+        double minDistance = Double.MAX_VALUE;
+        int nearestTag = -1;
 
-        int poseCode = (1 <= reefSide && reefSide <= 6) ? (reefSide * 2 + (isRightSideSupplier.getAsBoolean() ? 1 : 0))
-                : -1;
-        Rotation2d angle = Rotation2d.fromDegrees(switch (reefSide) {
-            case 1 -> 0;
-            case 2 -> 60;
-            case 3 -> 120;
-            case 4 -> 180;
-            case 5 -> 240;
-            case 6 -> 300;
-            default -> 0;
-        });
-
-        double[] pos = switch (poseCode) {
-            case 2 -> new double[] { 158.00, 164.94 };
-            case 3 -> new double[] { 158.00, 152.06 };
-            case 4 -> new double[] { 168.80, 133.36 };
-            case 5 -> new double[] { 179.95, 126.92 };
-            case 6 -> new double[] { 201.55, 126.92 };
-            case 7 -> new double[] { 212.70, 133.36 };
-            case 8 -> new double[] { 223.50, 152.06 };
-            case 9 -> new double[] { 223.50, 164.94 };
-            case 10 -> new double[] { 212.70, 183.64 };
-            case 11 -> new double[] { 201.55, 190.08 };
-            case 12 -> new double[] { 179.95, 190.08 };
-            case 13 -> new double[] { 168.80, 183.64 };
-            default -> new double[] { 0, 0 };
-        };
-
-        Pose2d pose = new Pose2d(Units.inchesToMeters(pos[0]), Units.inchesToMeters(pos[1]), angle);
-
-        // back up pose by 16" so it's not overlapping the reef
-        pose = pose.transformBy(
-                new Transform2d(new Translation2d(-FieldConstants.reefLocationBackupDistance, 0), new Rotation2d()));
-
-        return pose;
+        for (int tagID : tagNoToReefSide().keySet()) {
+            Pose2d tagPose = aprilTags.getTagPose(tagID).get().toPose2d();
+            Translation2d tagTranslation = tagPose.getTranslation();
+            double distance = tagTranslation.getDistance(robotTranslation);
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestTag = tagID;
+            }
+        }
+        return nearestTag;
     }
 
     /**
      * Returns the pose that the robot should pathfind to for a particular reef side
      * on the left or right. Reef side can be returned by findNearestReefSide
      * 
-     * @param robotPose    current pose of the robot, used to determine closest reef side
+     * @param robotPose   current pose of the robot, used to determine closest reef
+     *                    side
      * @param isRightSide is true if we're on the right side of the specified reef
      *                    side
      * @return a Pose2d representing the location and orientation of the robot if
@@ -138,6 +108,46 @@ public class FieldHelpers {
      */
     public static Pose2d reefLocation(Pose2d robotPose, BooleanSupplier isRightSideSupplier) {
         int reefSide = findNearestReefSide(robotPose);
-        return reefLocation(reefSide, isRightSideSupplier);
+        // Rotation2d angle = Rotation2d.fromDegrees(switch (reefSide) {
+        // case 1 -> 0;
+        // case 2 -> 60;
+        // case 3 -> 120;
+        // case 4 -> 180;
+        // case 5 -> 240;
+        // case 6 -> 300;
+        // default -> 0;
+        // });
+        Pose2d pose = aprilTags.getTagPose(findNearestReefAprilTag(robotPose)).get().toPose2d();
+        pose = pose.transformBy(new Transform2d(new Translation2d(), Rotation2d.fromDegrees(180)));
+
+        // int poseCode = (1 <= reefSide && reefSide <= 6) ? (reefSide * 2 +
+        // (isRightSideSupplier.getAsBoolean() ? 1 : 0))
+        // : -1;
+        // Pose2d[] pose = switch (poseCode) {
+        // case 2 -> new double[] { 158.00, 164.94 };
+        // case 3 -> new double[] { 158.00, 152.06 };
+        // case 4 -> new double[] { 168.80, 133.36 };
+        // case 5 -> new double[] { 179.95, 126.92 };
+        // case 6 -> new double[] { 201.55, 126.92 };
+        // case 7 -> new double[] { 212.70, 133.36 };
+        // case 8 -> new double[] { 223.50, 152.06 };
+        // case 9 -> new double[] { 223.50, 164.94 };
+        // case 10 -> new double[] { 212.70, 183.64 };
+        // case 11 -> new double[] { 201.55, 190.08 };
+        // case 12 -> new double[] { 179.95, 190.08 };
+        // case 13 -> new double[] { 168.80, 183.64 };
+        // default -> new double[] { 0, 0 };
+        // };
+
+        // Pose2d pose = new Pose2d(Units.inchesToMeters(pos[0]),
+        // Units.inchesToMeters(pos[1]), angle);
+
+        // back up pose by 16" so it's not overlapping the reef
+        pose = pose.transformBy(
+                new Transform2d(new Translation2d(-FieldConstants.reefLocationBackupDistance,
+                        (isRightSideSupplier.getAsBoolean() ? 1 : -1) * FieldConstants.reefLocationLeftRightDistance),
+                        new Rotation2d()));
+
+        return pose;
     }
 }
