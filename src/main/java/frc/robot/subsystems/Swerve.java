@@ -17,17 +17,13 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -35,14 +31,14 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
+import frc.robot.Robot;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.lib.AllDeadbands;
 import frc.robot.lib.VisionData;
-import frc.robot.lib.util.AllianceFlipUtil;
+import frc.robot.lib.util.FieldHelpers;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
 import swervelib.SwerveModule;
@@ -342,53 +338,8 @@ public class Swerve extends SubsystemBase {
     }
 
     public Command driveToReef(BooleanSupplier isRightSideSupplier) {
-        return driveToPoseFlipped(() -> reefLocation(isRightSideSupplier)).finallyDo(() -> setTargetAngle(reefLocation(isRightSideSupplier).getRotation()));
+        return driveToPoseFlipped(() -> FieldHelpers.reefLocation(getPose(), isRightSideSupplier)).finallyDo(() -> setTargetAllianceRelAngle(FieldHelpers.reefLocation(getPose(), isRightSideSupplier).getRotation()));
     }
-
-    /**
-   * Returns the pose that the robot should pathfind to for a particular reef side on the left or right. Reef side can be returned by findNearestReefSide
-   * @param reefSide goes from 1 to 6, starting from the side closest to the alliance station and going counterclockwise
-   * @param isRightSide is true if we're on the right side of the specified reef side
-   * @return a Pose2d representing the location and orientation of the robot if facing the reef on the specified 
-   */
-  public Pose2d reefLocation(BooleanSupplier isRightSideSupplier) {
-    int reefSide = FieldConstants.findNearestReefSide(swerveDrive.getPose());
-
-    int poseCode = (1 <= reefSide && reefSide <= 6) ? (reefSide * 2 + (isRightSideSupplier.getAsBoolean() ? 1 : 0)) : -1;
-    Rotation2d angle = Rotation2d.fromDegrees(switch(reefSide) {
-      case 1 -> 0;
-      case 2 -> 60;
-      case 3 -> 120;
-      case 4 -> 180;
-      case 5 -> 240;
-      case 6 -> 300;
-      default -> 0;
-    });
-
-    double[] pos = switch(poseCode) {
-      case 2  -> new double[] { 158.00, 164.94 };
-      case 3  -> new double[] { 158.00, 152.06 };
-      case 4  -> new double[] { 168.80, 133.36 };
-      case 5  -> new double[] { 179.95, 126.92 };
-      case 6  -> new double[] { 201.55, 126.92 };
-      case 7  -> new double[] { 212.70, 133.36 };
-      case 8  -> new double[] { 223.50, 152.06 };
-      case 9  -> new double[] { 223.50, 164.94 };
-      case 10 -> new double[] { 212.70, 183.64 };
-      case 11 -> new double[] { 201.55, 190.08 };
-      case 12 -> new double[] { 179.95, 190.08 };
-      case 13 -> new double[] { 168.80, 183.64 };
-      default -> new double[] { 0, 0 };
-    };
-
-    Pose2d pose = new Pose2d(Units.inchesToMeters(pos[0]), Units.inchesToMeters(pos[1]), angle);
-
-    //back up pose by 16" so it's not overlapping the reef
-    pose = pose.transformBy(new Transform2d(new Translation2d(-FieldConstants.reefLocationBackupDistance, 0), new Rotation2d()));
-
-    return pose;
-  }
-
 
     /**
      * Command to characterize the robot drive motors using SysId
@@ -486,15 +437,21 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
+        swerveDrive.field.getObject("Target pose right").setPose(FieldHelpers.reefLocation(getPose(), () -> true));
+        swerveDrive.field.getObject("Target pose left").setPose(FieldHelpers.reefLocation(getPose(), () -> false));
         // This method will be called once per scheduler run
         swerveDrive.updateOdometry();
+        if(!Robot.isReal()) {
+            swerveDrive.addVisionMeasurement(swerveDrive.field.getRobotPose(), Timer.getFPGATimestamp());
+        }
         // Output Reef Poses - Remove this later!!! (Or else...)
-        Pose2d rightTarget = reefLocation(() -> true);
+        Pose2d rightTarget = FieldHelpers.reefLocation(getPose(), () -> true);
         rightPose.set(rightTarget);
 
-        Pose2d leftTarget = reefLocation(() -> false);
+        Pose2d leftTarget = FieldHelpers.reefLocation(getPose(), () -> false);
         leftPose.set(leftTarget);
     }
+
 
     @Logged(name = "Rotation Degrees")
     public double getRotationDegrees() {

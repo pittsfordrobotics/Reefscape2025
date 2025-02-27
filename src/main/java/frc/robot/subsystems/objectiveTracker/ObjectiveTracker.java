@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.lib.util.FieldHelpers;
 import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.MoveDirection;
 import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.ObjectiveSelectorInputs;
 
@@ -89,7 +90,7 @@ public class ObjectiveTracker extends SubsystemBase {
     objectiveSelector.setIndex(newIndex);
   }
   private void updateReefSideInternal(Supplier<Pose2d> currentPose) {
-    int reefSide = FieldConstants.findNearestReefSide(currentPose.get());
+    int reefSide = FieldHelpers.findNearestReefSide(currentPose.get());
     objectiveSelector.setReefSide(reefSide);
   }
 }
