@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+
 import java.io.File;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
@@ -24,7 +25,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,8 +34,8 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.lib.AllDeadbands;
 import frc.robot.lib.VisionData;
+import frc.robot.lib.util.FieldHelpers;
 import swervelib.SwerveDrive;
-import swervelib.SwerveDriveTest;
 import swervelib.SwerveModule;
 import swervelib.parser.SwerveModuleConfiguration;
 import swervelib.parser.SwerveParser;
@@ -43,9 +44,6 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class Swerve extends SubsystemBase {
 
-    private final StructPublisher<Pose2d> rightPose;
-    private final StructPublisher<Pose2d> leftPose;
-
     private final SwerveDrive swerveDrive;
     public double maximumSpeed = SwerveConstants.SWERVE_MAXIMUM_VELOCITY;
     public double maximumAngularSpeed = SwerveConstants.SWERVE_MAXIMUM_ANGULAR_VELOCITY;
@@ -53,12 +51,6 @@ public class Swerve extends SubsystemBase {
 
     /** Creates a new Swerve. */
     public Swerve(File config_dir) {
-
-        rightPose = NetworkTableInstance.getDefault()
-            .getStructTopic("ReefTargetPoses/right", Pose2d.struct).publish();
-        leftPose = NetworkTableInstance.getDefault()
-            .getStructTopic("ReefTargetPoses/left", Pose2d.struct).publish();
-
         // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary
         // objects being created.
         SwerveDriveTelemetry.verbosity = TelemetryVerbosity.POSE;
@@ -341,27 +333,16 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
+        // Emit the left/right reef poses to the field object for debugging purposes.
         swerveDrive.field.getObject("Target pose right").setPose(FieldHelpers.reefLocation(getPose(), () -> true));
         swerveDrive.field.getObject("Target pose left").setPose(FieldHelpers.reefLocation(getPose(), () -> false));
         // This method will be called once per scheduler run
         swerveDrive.updateOdometry();
+
         if(!Robot.isReal()) {
             swerveDrive.addVisionMeasurement(swerveDrive.field.getRobotPose(), Timer.getFPGATimestamp());
         }
-        // Output Reef Poses - Remove this later!!! (Or else...)
-        Pose2d rightTarget = FieldHelpers.reefLocation(getPose(), () -> true);
-        rightPose.set(rightTarget);
-
-        Pose2d leftTarget = FieldHelpers.reefLocation(getPose(), () -> false);
-        leftPose.set(leftTarget);
     }
-
-    /** Drive to a pose, flipped if on red alliance */
-    public Command driveToPoseFlipped(Supplier<Pose2d> poseSupplier) {
-        PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
-        return Commands.defer(() -> AutoBuilder.pathfindToPoseFlipped(poseSupplier.get(), constraints), Set.of(this));
-    }
-
 
     /** Drive to a pose, flipped if on red alliance */
     public Command driveToPoseFlipped(Supplier<Pose2d> poseSupplier) {
@@ -392,7 +373,6 @@ public class Swerve extends SubsystemBase {
     public Command driveToAlgaeCollector(){
         return driveToPoseFlipped(() -> FieldConstants.algaeProcessorPos);
     }
-	
 
     // *******************
     // Logging methods
