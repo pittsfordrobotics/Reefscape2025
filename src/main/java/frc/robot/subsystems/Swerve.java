@@ -274,7 +274,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Command driveToReef(BooleanSupplier isRightSideSupplier) {
-        return driveToPoseFlipped(() -> FieldHelpers.reefLocation(getPose(), isRightSideSupplier));
+        return driveToPose(() -> FieldHelpers.reefLocation(getPose(), isRightSideSupplier));
     }
 
     /**
@@ -342,6 +342,12 @@ public class Swerve extends SubsystemBase {
         if(!Robot.isReal()) {
             swerveDrive.addVisionMeasurement(swerveDrive.field.getRobotPose(), Timer.getFPGATimestamp());
         }
+    }
+
+    /** Drive to a pose, NOT flipped if on red alliance */
+    public Command driveToPose(Supplier<Pose2d> poseSupplier) {
+        PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
+        return Commands.defer(() -> AutoBuilder.pathfindToPose(poseSupplier.get(), constraints).finallyDo(() -> setTargetAllianceRelAngle(poseSupplier.get().getRotation())), Set.of(this));
     }
 
     /** Drive to a pose, flipped if on red alliance */
