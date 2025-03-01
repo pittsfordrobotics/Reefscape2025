@@ -4,10 +4,13 @@
 
 package frc.robot.subsystems;
 
+import com.fasterxml.jackson.databind.deser.std.NullifyingDeserializer;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
+
+import static edu.wpi.first.units.Units.Degrees;
 
 import java.security.PublicKey;
 import java.util.function.DoubleSupplier;
@@ -28,6 +31,8 @@ import edu.wpi.first.math.trajectory.constraint.MaxVelocityConstraint;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AlgaeConstants;
 import frc.robot.Constants.IntakeConstants;
@@ -104,7 +109,19 @@ public class Algae extends SubsystemBase {
   }
 
   public Command dynamicAlgaeSpeedPivot(DoubleSupplier speed){
-    return run(() -> algaePivotMotor.set(-speed.getAsDouble())).finallyDo(() -> algaePivotMotor.set(0));
+    return run(() -> algaePivotMotor.set(-speed.getAsDouble())).finallyDo(() -> stopAlgaePivot());
+  }
+
+  public Command startStopDriveAlgae(DoubleSupplier speed) {
+    return startEnd(
+      () -> algaePickupMotor.set(speed.getAsDouble()),
+       () -> stopAlgaePickup());
+  }
+
+  public Command startStopAlgaePivot(DoubleSupplier degrees) {
+    return startEnd(
+      () -> setAlgaePivotPosition(degrees.getAsDouble()),
+       () -> setAlgaePivotPosition(0));
   }
 
   public Command stopAlgaePickup(){
@@ -114,4 +131,17 @@ public class Algae extends SubsystemBase {
   public Command stopAlgaePivot(){
     return run(() -> algaePivotMotor.set(0));
   }
+
+  public Command dualAlgaePickup(DoubleSupplier degrees, DoubleSupplier speed){
+    return startEnd(
+      () -> dynamicAlgaeSetPivot(degrees),
+       () -> startStopDriveAlgae(speed));
+  }
+
+  public Command dualAlgaeOutput(DoubleSupplier degrees, DoubleSupplier speed){
+    return startEnd(
+      () -> dynamicAlgaeSetPivot(degrees),
+       () -> startStopDriveAlgae(speed));
+  }
+  
 }

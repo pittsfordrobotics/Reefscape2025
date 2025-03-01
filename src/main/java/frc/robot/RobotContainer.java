@@ -103,8 +103,8 @@ public class RobotContainer {
     SmartDashboard.putNumber("Algae Speed", 0.25);
 
     SmartDashboard.putNumber("Algae Pivot Speed", 0.25);
-    SmartDashboard.putNumber("Algae Active Angle", 0);
-    SmartDashboard.putNumber("Algae Default Angle", 0);
+    SmartDashboard.putNumber("Algae Up Angle", 0);
+    SmartDashboard.putNumber("Algae Down Angle", 0);
     
     SmartDashboard.putNumber("Climb Speed", 0.25);
     SmartDashboard.putNumber("Climb Default Angle", 0);
@@ -183,10 +183,10 @@ public class RobotContainer {
    */
   private void configureBindings() {
     /*
-     * Isaac's requested bindings:
+     * Operator Bindings:
      * left trigger: hold to climb
      * right trigger: coral output
-     * "menu" button (third tiny button in the middle): elevator to ground
+     * "menu" button: elevator to ground
      * dpad: move node selector
      * Y: algae output (arm up & run motor reverse)
      * X: algae arm up
@@ -194,38 +194,46 @@ public class RobotContainer {
      * A: algae intake (arm down & run motor)
      */
 
-    //operator controls
-    // operatorController.b().whileTrue(intake.dynamicDriveIntake(
-    //   () -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)))
-    //   .onFalse(intake.stopIntake());
-    operatorController.b().whileTrue(intake.startStopIntake(() -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)));
-    // operatorController.rightTrigger().whileTrue(coral.dynamicDriveCoral(
-    //   () -> SmartDashboard.getNumber("Coral Outtake Speed", 0.25)))
-    //   .onFalse(coral.stopCoral());
-    operatorController.rightTrigger().whileTrue(coral.startStopCoral(() -> SmartDashboard.getNumber("Coral Outtake Speed", 0.25)));
+    //Operator Controls --------------------------------------------------------
+    //Coral Inputs
+    operatorController.b().whileTrue(intake.startStopIntake(
+      () -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)));
 
-    // Drive to reef:
-    driverController.x().onTrue(swerve.driveToReef(objectiveTracker::isRightSide));
-    // Drive Intake:
-    driverController.b().whileTrue(intake.dynamicDriveIntake(
-        () -> SmartDashboard.getNumber("Intake Speed", 0.25)));
+    operatorController.rightTrigger().whileTrue(coral.startStopCoral(
+      () -> SmartDashboard.getNumber("Coral Outtake Speed", 0.25)));
 
-    // Pivot Algae arm:
-    // Pos 1
-    driverController.rightTrigger().onTrue(algae.dynamicAlgaeSpeedPivot(
-        () -> SmartDashboard.getNumber("Algae Angle 1", 0)));
-    // Pos 2
-    driverController.rightBumper().onTrue(algae.dynamicAlgaeSpeedPivot(
-        () -> SmartDashboard.getNumber("Algae Angle 2", 0)));
+    //Algae Arm Inputs:
+    operatorController.x().whileTrue(algae.startStopAlgaePivot(
+      () -> SmartDashboard.getNumber("Algae Active Angle", 0)));
 
-    // Drive Algae pickup:
-    driverController.a().whileTrue(algae.dynamicAlgaePickup(() -> SmartDashboard.getNumber("Algae Speed", 0.25)));
+    operatorController.a().whileTrue(algae.dualAlgaePickup(
+      () -> SmartDashboard.getNumber("Algae Up Angle", 0),
+       () -> SmartDashboard.getNumber("Algae Speed", 0.25)));
+
+    operatorController.y().whileTrue(algae.dualAlgaeOutput(
+      () -> SmartDashboard.getNumber("Algae Down Angle", 0),
+       () -> SmartDashboard.getNumber("Algae Speed", 0.25) * -1));
+
+    //Elevator Inputs:
+    operatorController.back().onTrue(elevator.homeElevator());
+
+    //Climber Inputs:
+    operatorController.leftTrigger().whileTrue(climber.startStopClimb(
+        () -> SmartDashboard.getNumber("Climber Active Angle", 0)))
+      .onFalse(climber.startStopClimb(
+        () -> SmartDashboard.getNumber("Climber Default Angle", 0)));
 
     // enhanced controls through objective tracker
     operatorController.povUp().onTrue(objectiveTracker.moveIndex(MoveDirection.UP));
     operatorController.povDown().onTrue(objectiveTracker.moveIndex(MoveDirection.DOWN));
     operatorController.povRight().onTrue(objectiveTracker.moveIndex(MoveDirection.RIGHT));
     operatorController.povLeft().onTrue(objectiveTracker.moveIndex(MoveDirection.LEFT));
+
+    //Driver Controls ----------------------------------------------------------
+    // Drive to reef:
+    driverController.x().onTrue(swerve.driveToReef(objectiveTracker::isRightSide));
+
+    
   }
 
   /**

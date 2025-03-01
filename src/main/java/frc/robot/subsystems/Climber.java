@@ -68,11 +68,16 @@ public class Climber extends SubsystemBase {
     climbClosedLoopController.setReference(degrees, ControlType.kPosition);
   }
 
-  public Command climbToPosition(DoubleSupplier degrees){
+  public Command climbToPosition(DoubleSupplier degrees) {
     return run(() -> setClimbPosition(degrees.getAsDouble()));
   }
 
   public Command stopClimb(){
     return run(() -> setClimbSpeed(0));
+  }
+
+  public Command startStopClimb(DoubleSupplier degrees) {
+    return startEnd(() -> climbToPosition(degrees),
+     () -> stopClimb());
   }
 }
