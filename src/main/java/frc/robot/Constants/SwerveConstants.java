@@ -12,6 +12,11 @@ public class SwerveConstants {
     public static double SWERVE_MAXIMUM_VELOCITY = 5.5;
     public static double SWERVE_MAXIMUM_ANGULAR_VELOCITY = 13.6;
 
+    public static final int FRONT_LEFT_MODULE_INDEX = 0;
+    public static final int FRONT_RIGHT_MODULE_INDEX = 1;
+    public static final int BACK_LEFT_MODULE_INDEX = 2;
+    public static final int BACK_RIGHT_MODULE_INDEX = 3;
+
     // public class BACK_LEFT {
     //     public static final double drive_kS = 0.26965;
     //     public static final double drive_kV = 2.6011;
