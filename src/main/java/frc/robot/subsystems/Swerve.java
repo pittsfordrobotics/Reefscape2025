@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import java.io.File;
+import java.security.spec.ECPublicKeySpec;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -466,5 +467,19 @@ public class Swerve extends SubsystemBase {
     public Command driveToPoseFlipped(Supplier<Pose2d> poseSupplier) {
         PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
         return Commands.defer(() -> AutoBuilder.pathfindToPoseFlipped(poseSupplier.get(), constraints), Set.of(this));
+    }
+
+    private Pose2d getNearestCoralStation(){
+        if ((Math.pow(getPose().getX() - FieldConstants.coralStationBottomPos.getX(), 2) + Math.pow(getPose().getY() - FieldConstants.coralStationBottomPos.getY(), 2)) 
+            > (Math.pow(getPose().getX() - FieldConstants.coralStationTopPos.getX(), 2) + Math.pow(getPose().getY() - FieldConstants.coralStationTopPos.getY(), 2)))
+        {
+            return FieldConstants.coralStationTopPos;
+        } else{
+            return FieldConstants.coralStationBottomPos;
+        }
+    }
+
+    public Command driveToNearestCoralStation(){
+        return driveToPoseFlipped(() -> getNearestCoralStation());
     }
 }

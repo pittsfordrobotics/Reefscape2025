@@ -211,6 +211,8 @@ public class RobotContainer {
     // Drive Intake:
     driverController.b().whileTrue(intake.dynamicDriveIntake(
         () -> SmartDashboard.getNumber("Intake Speed", 0.25)));
+    // Drive to nearest coral station
+    driverController.y().onTrue(swerve.driveToNearestCoralStation());
 
     // Pivot Algae arm:
     // Pos 1
