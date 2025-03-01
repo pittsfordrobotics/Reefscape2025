@@ -106,10 +106,6 @@ public class Elevator extends SubsystemBase {
     return elevatorPos + ElevatorConstants.GROUND_TO_ELEVATOR_BOTTOM_INCHES;
   }
 
-  private boolean isAtHeight(double height){
-    return (height == getTotalHeightInches());
-  }
-
   /* HOMING */
 
   public Command homeElevator(){
