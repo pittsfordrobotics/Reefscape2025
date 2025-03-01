@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -102,8 +103,8 @@ public class RobotContainer {
     SmartDashboard.putNumber("Algae Speed", 0.25);
 
     SmartDashboard.putNumber("Algae Pivot Speed", 0.25);
-    SmartDashboard.putNumber("Algae Active Angle", 0);
-    SmartDashboard.putNumber("Algae Default Angle", 0);
+    SmartDashboard.putNumber("Algae Up Angle", 0);
+    SmartDashboard.putNumber("Algae Down Angle", 0);
     
     SmartDashboard.putNumber("Climb Speed", 0.25);
     SmartDashboard.putNumber("Climb Default Angle", 0);
@@ -181,31 +182,54 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    /**
-     * Isaac's requested bindings:
+    /*
+     * Operator Bindings:
      * left trigger: hold to climb
      * right trigger: coral output
-     * "menu" button (third tiny button in the middle): elevator to ground
+     * "menu" button: elevator to ground
      * dpad: move node selector
      * Y: algae output (arm up & run motor reverse)
      * X: algae arm up
-     * B: run coral intake
+     * B: run coral intake :)
      * A: algae intake (arm down & run motor)
      */
     
-    //operator controls
-    operatorController.b().whileTrue(intake.dynamicDriveIntake(
-      () -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)))
-      .onFalse(intake.stopIntake());
-    operatorController.rightTrigger().whileTrue(coral.dynamicDriveCoral(
-      () -> SmartDashboard.getNumber("Coral Outtake Speed", 0.25)))
-      .onFalse(coral.stopCoral());
+    //Operator Controls --------------------------------------------------------
+    //Coral Inputs
+    operatorController.b().whileTrue(intake.startStopIntake(
+      () -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)));
 
-      // operator controls moved to the objective tracker
-    // operatorController.povUp().onTrue(elevator.setElevatorLevel(ElevatorLevels.INTAKE));
-    // operatorController.povLeft().onTrue(elevator.setElevatorLevel(ElevatorLevels.L2));
-    // operatorController.povDown().onTrue(elevator.setElevatorLevel(ElevatorLevels.L3));
-    // operatorController.povRight().onTrue(elevator.setElevatorLevel(ElevatorLevels.L4));
+    operatorController.rightTrigger().whileTrue(coral.startStopCoral(
+      () -> SmartDashboard.getNumber("Coral Outtake Speed", 0.25)));
+
+    //Algae Arm Inputs:
+    operatorController.x().whileTrue(algae.startStopAlgaePivot(
+      () -> SmartDashboard.getNumber("Algae Active Angle", 0)));
+
+    operatorController.a().whileTrue(algae.dualAlgaePickup(
+      () -> SmartDashboard.getNumber("Algae Up Angle", 0),
+       () -> SmartDashboard.getNumber("Algae Speed", 0.25)));
+
+    operatorController.y().whileTrue(algae.dualAlgaeOutput(
+      () -> SmartDashboard.getNumber("Algae Down Angle", 0),
+       () -> SmartDashboard.getNumber("Algae Speed", 0.25) * -1));
+
+    //Elevator Inputs:
+    operatorController.back().onTrue(elevator.homeElevator());
+
+    //Climber Inputs:
+    operatorController.leftTrigger().whileTrue(climber.startStopClimb(
+        () -> SmartDashboard.getNumber("Climber Active Angle", 0)))
+      .onFalse(climber.startStopClimb(
+        () -> SmartDashboard.getNumber("Climber Default Angle", 0)));
+
+    // enhanced controls through objective tracker
+    operatorController.povUp().onTrue(objectiveTracker.moveIndex(MoveDirection.UP));
+    operatorController.povDown().onTrue(objectiveTracker.moveIndex(MoveDirection.DOWN));
+    operatorController.povRight().onTrue(objectiveTracker.moveIndex(MoveDirection.RIGHT));
+    operatorController.povLeft().onTrue(objectiveTracker.moveIndex(MoveDirection.LEFT));
+
+    //Driver Controls ----------------------------------------------------------
     // Drive to reef:
     driverController.x().onTrue(swerve.driveToReef(objectiveTracker::isRightSide));
     // Drive Intake:
@@ -215,23 +239,7 @@ public class RobotContainer {
     driverController.y().onTrue(swerve.driveToNearestCoralStation());
     // Drive to algae processor:
     driverController.leftTrigger().onTrue(swerve.driveToAlgaeCollector());
-
-    // Pivot Algae arm:
-    // Pos 1
-    driverController.rightTrigger().onTrue(algae.dynamicAlgaeSpeedPivot(
-        () -> SmartDashboard.getNumber("Algae Angle 1", 0)));
-    // Pos 2
-    driverController.rightBumper().onTrue(algae.dynamicAlgaeSpeedPivot(
-        () -> SmartDashboard.getNumber("Algae Angle 2", 0)));
-
-    // Drive Algae pickup:
-    driverController.a().whileTrue(algae.dynamicAlgaePickup(() -> SmartDashboard.getNumber("Algae Speed", 0.25)));
-
-    // enhanced controls through objective tracker
-    operatorController.povUp().onTrue(objectiveTracker.moveIndex(MoveDirection.UP));
-    operatorController.povDown().onTrue(objectiveTracker.moveIndex(MoveDirection.DOWN));
-    operatorController.povRight().onTrue(objectiveTracker.moveIndex(MoveDirection.RIGHT));
-    operatorController.povLeft().onTrue(objectiveTracker.moveIndex(MoveDirection.LEFT));
+    
   }
 
   /**
