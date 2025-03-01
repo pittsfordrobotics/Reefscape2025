@@ -206,11 +206,11 @@ public class RobotContainer {
     operatorController.x().whileTrue(algae.startStopAlgaePivot(
       () -> SmartDashboard.getNumber("Algae Active Angle", 0)));
 
-    operatorController.a().whileTrue(algae.dualAlgaePickup(
+    operatorController.a().whileTrue(algae.dualAlgaeIntake(
       () -> SmartDashboard.getNumber("Algae Up Angle", 0),
        () -> SmartDashboard.getNumber("Algae Speed", 0.25)));
 
-    operatorController.y().whileTrue(algae.dualAlgaeOutput(
+    operatorController.y().whileTrue(algae.dualAlgaeIntake(
       () -> SmartDashboard.getNumber("Algae Down Angle", 0),
        () -> SmartDashboard.getNumber("Algae Speed", 0.25) * -1));
 

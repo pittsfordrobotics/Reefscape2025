@@ -109,39 +109,24 @@ public class Algae extends SubsystemBase {
   }
 
   public Command dynamicAlgaeSpeedPivot(DoubleSupplier speed){
-    return run(() -> algaePivotMotor.set(-speed.getAsDouble())).finallyDo(() -> stopAlgaePivot());
+    return run(() -> algaePivotMotor.set(-speed.getAsDouble())).finallyDo(() -> algaePivotMotor.set(0));
   }
 
   public Command startStopDriveAlgae(DoubleSupplier speed) {
     return startEnd(
       () -> algaePickupMotor.set(speed.getAsDouble()),
-       () -> stopAlgaePickup());
+       () -> algaePickupMotor.set(0));
   }
 
   public Command startStopAlgaePivot(DoubleSupplier degrees) {
     return startEnd(
       () -> setAlgaePivotPosition(degrees.getAsDouble()),
-       () -> setAlgaePivotPosition(0));
+       () -> algaePivotMotor.set(0));
   }
 
-  public Command stopAlgaePickup(){
-    return run(() -> algaePickupMotor.set(0));
-  }
-  
-  public Command stopAlgaePivot(){
-    return run(() -> algaePivotMotor.set(0));
-  }
+  public Command dualAlgaeIntake(DoubleSupplier degrees, DoubleSupplier speed){
+    return dynamicAlgaeSetPivot(degrees).andThen(startStopDriveAlgae(speed));
 
-  public Command dualAlgaePickup(DoubleSupplier degrees, DoubleSupplier speed){
-    return startEnd(
-      () -> dynamicAlgaeSetPivot(degrees),
-       () -> startStopDriveAlgae(speed));
-  }
-
-  public Command dualAlgaeOutput(DoubleSupplier degrees, DoubleSupplier speed){
-    return startEnd(
-      () -> dynamicAlgaeSetPivot(degrees),
-       () -> startStopDriveAlgae(speed));
   }
   
 }
