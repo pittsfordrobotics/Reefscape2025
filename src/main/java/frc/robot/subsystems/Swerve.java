@@ -24,7 +24,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,8 +33,8 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.lib.AllDeadbands;
 import frc.robot.lib.VisionData;
-import frc.robot.lib.util.FieldHelpers;
 import swervelib.SwerveDrive;
+import swervelib.SwerveDriveTest;
 import swervelib.SwerveModule;
 import swervelib.parser.SwerveModuleConfiguration;
 import swervelib.parser.SwerveParser;
@@ -356,11 +356,12 @@ public class Swerve extends SubsystemBase {
         leftPose.set(leftTarget);
     }
 
-
-    @Logged(name = "Rotation Degrees")
-    public double getRotationDegrees() {
-        return swerveDrive.getYaw().getDegrees();
+    /** Drive to a pose, flipped if on red alliance */
+    public Command driveToPoseFlipped(Supplier<Pose2d> poseSupplier) {
+        PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
+        return Commands.defer(() -> AutoBuilder.pathfindToPoseFlipped(poseSupplier.get(), constraints), Set.of(this));
     }
+
 
     /** Drive to a pose, flipped if on red alliance */
     public Command driveToPoseFlipped(Supplier<Pose2d> poseSupplier) {
@@ -390,5 +391,62 @@ public class Swerve extends SubsystemBase {
 
     public Command driveToAlgaeCollector(){
         return driveToPoseFlipped(() -> FieldConstants.algaeProcessorPos);
+    }
+	
+
+    // *******************
+    // Logging methods
+    // *******************
+    @Logged(name = "Rotation Degrees")
+    public double getRotationDegrees() {
+        return swerveDrive.getYaw().getDegrees();
+    }
+	
+	@Logged(name="FR Drive Motor")
+    public SparkMax getFrontRightDriveMotor() {
+        return getDriveMotor(SwerveConstants.FRONT_RIGHT_MODULE_INDEX);
+    }
+
+    @Logged(name="FR Angle Motor")
+    public SparkMax getFrontRightAngleMotor() {
+        return getAngleMotor(SwerveConstants.FRONT_RIGHT_MODULE_INDEX);
+    }
+
+    @Logged(name="FL Drive Motor")
+    public SparkMax getFrontLeftDriveMotor() {
+        return getDriveMotor(SwerveConstants.FRONT_LEFT_MODULE_INDEX);
+    }
+
+    @Logged(name="FL Angle Motor")
+    public SparkMax getFrontLeftAngleMotor() {
+        return getAngleMotor(SwerveConstants.FRONT_LEFT_MODULE_INDEX);
+    }
+
+    @Logged(name="BR Drive Motor")
+    public SparkMax getBackRightDriveMotor() {
+        return getDriveMotor(SwerveConstants.BACK_RIGHT_MODULE_INDEX);
+    }
+
+    @Logged(name="BR Angle Motor")
+    public SparkMax getBackRightAngleMotor() {
+        return getAngleMotor(SwerveConstants.BACK_RIGHT_MODULE_INDEX);
+    }
+
+    @Logged(name="BL Drive Motor")
+    public SparkMax getBackLeftDriveMotor() {
+        return getDriveMotor(SwerveConstants.BACK_LEFT_MODULE_INDEX);
+    }
+
+    @Logged(name="BL Angle Motor")
+    public SparkMax getBackLeftAngleMotor() {
+        return getAngleMotor(SwerveConstants.BACK_LEFT_MODULE_INDEX);
+    }
+
+    private SparkMax getDriveMotor(int swerveModuleIndex) {
+        return (SparkMax) swerveDrive.getModules()[swerveModuleIndex].getDriveMotor().getMotor();
+    }
+
+    private SparkMax getAngleMotor(int swerveModuleIndex) {
+        return (SparkMax) swerveDrive.getModules()[swerveModuleIndex].getAngleMotor().getMotor();
     }
 }

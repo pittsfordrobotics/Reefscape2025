@@ -7,7 +7,6 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.Elevator.ElevatorLevels;
 import frc.robot.subsystems.Vision.Vision;
 import frc.robot.subsystems.Algae;
 import frc.robot.subsystems.Climber;
@@ -35,8 +34,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
-import frc.robot.Constants.FieldConstants;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
