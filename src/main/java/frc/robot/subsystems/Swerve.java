@@ -496,13 +496,65 @@ public class Swerve extends SubsystemBase {
         leftPose.set(leftTarget);
     }
 
-    @Logged(name = "Rotation Degrees")
-    public double getRotationDegrees() {
-        return swerveDrive.getYaw().getDegrees();
-    }
     /** Drive to a pose, flipped if on red alliance */
     public Command driveToPoseFlipped(Supplier<Pose2d> poseSupplier) {
         PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
         return Commands.defer(() -> AutoBuilder.pathfindToPoseFlipped(poseSupplier.get(), constraints), Set.of(this));
+    }
+
+    // *******************
+    // Logging methods
+    // *******************
+    @Logged(name = "Rotation Degrees")
+    public double getRotationDegrees() {
+        return swerveDrive.getYaw().getDegrees();
+    }
+
+    @Logged(name="FR Drive Motor")
+    public SparkMax getFrontRightDriveMotor() {
+        return getDriveMotor(SwerveConstants.FRONT_RIGHT_MODULE_INDEX);
+    }
+
+    @Logged(name="FR Angle Motor")
+    public SparkMax getFrontRightAngleMotor() {
+        return getAngleMotor(SwerveConstants.FRONT_RIGHT_MODULE_INDEX);
+    }
+
+    @Logged(name="FL Drive Motor")
+    public SparkMax getFrontLeftDriveMotor() {
+        return getDriveMotor(SwerveConstants.FRONT_LEFT_MODULE_INDEX);
+    }
+
+    @Logged(name="FL Angle Motor")
+    public SparkMax getFrontLeftAngleMotor() {
+        return getAngleMotor(SwerveConstants.FRONT_LEFT_MODULE_INDEX);
+    }
+
+    @Logged(name="BR Drive Motor")
+    public SparkMax getBackRightDriveMotor() {
+        return getDriveMotor(SwerveConstants.BACK_RIGHT_MODULE_INDEX);
+    }
+
+    @Logged(name="BR Angle Motor")
+    public SparkMax getBackRightAngleMotor() {
+        return getAngleMotor(SwerveConstants.BACK_RIGHT_MODULE_INDEX);
+    }
+
+    @Logged(name="BL Drive Motor")
+    public SparkMax getBackLeftDriveMotor() {
+        return getDriveMotor(SwerveConstants.BACK_LEFT_MODULE_INDEX);
+    }
+
+    @Logged(name="BL Angle Motor")
+    public SparkMax getBackLeftAngleMotor() {
+        return getAngleMotor(SwerveConstants.BACK_LEFT_MODULE_INDEX);
+    }
+
+    private SparkMax getDriveMotor(int swerveModuleIndex) {
+        return (SparkMax) swerveDrive.getModules()[swerveModuleIndex].getDriveMotor().getMotor();
+    }
+
+    private SparkMax getAngleMotor(int swerveModuleIndex) {
+        return (SparkMax) swerveDrive.getModules()[swerveModuleIndex].getAngleMotor().getMotor();
     }
 }
