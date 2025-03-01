@@ -115,14 +115,14 @@ public class RobotContainer {
     objectiveTracker = new ObjectiveTracker(objectiveSelecterIOImpl);
     objectiveTracker.setDefaultCommand(objectiveTracker.updateReefSide(swerve::getPose));
 
-    Command enhancedHeadingSteeringCommand = swerve.enhancedHeadingDriveCommand(
+    Command headingSteeringCommand = swerve.headingDriveCommand(
         () -> -driverController.getLeftY(),
         () -> -driverController.getLeftX(),
         () -> -driverController.getRightY(),
         () -> -driverController.getRightX(),
         driverController::getLeftTriggerAxis,
         driverController::getRightTriggerAxis);
-    swerve.setDefaultCommand(enhancedHeadingSteeringCommand);
+    swerve.setDefaultCommand(headingSteeringCommand);
     swerve.setupPathPlanner();
 
     SmartDashboard.putNumber("speed", 0.25);
@@ -193,7 +193,7 @@ public class RobotContainer {
      * B: run coral intake :)
      * A: algae intake (arm down & run motor)
      */
-
+    
     //Operator Controls --------------------------------------------------------
     //Coral Inputs
     operatorController.b().whileTrue(intake.startStopIntake(
@@ -232,7 +232,13 @@ public class RobotContainer {
     //Driver Controls ----------------------------------------------------------
     // Drive to reef:
     driverController.x().onTrue(swerve.driveToReef(objectiveTracker::isRightSide));
-
+    // Drive Intake:
+    driverController.b().whileTrue(intake.dynamicDriveIntake(
+        () -> SmartDashboard.getNumber("Intake Speed", 0.25)));
+    // Drive to nearest coral station:
+    driverController.y().onTrue(swerve.driveToNearestCoralStation());
+    // Drive to algae processor:
+    driverController.leftTrigger().onTrue(swerve.driveToAlgaeCollector());
     
   }
 
