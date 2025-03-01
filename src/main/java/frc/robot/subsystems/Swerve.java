@@ -494,4 +494,8 @@ public class Swerve extends SubsystemBase {
     public Command driveToNearestCoralStation(){
         return driveToPoseFlipped(() -> getNearestCoralStation());
     }
+
+    public Command driveToAlgaeCollector(){
+        return driveToPoseFlipped(() -> FieldConstants.algaeProcessorPos);
+    }
 }

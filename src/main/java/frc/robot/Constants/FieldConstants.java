@@ -101,6 +101,9 @@ public class FieldConstants {
   public static Rotation2d coralStationTopRot = new Rotation2d(-45);
   public static Pose2d coralStationTopPos = new Pose2d(1.295, 7, coralStationBottomRot);
 
+  public static Rotation2d algaeProcessorRot = new Rotation2d(-90);
+  public static Pose2d algaeProcessorPos = new Pose2d(5.988, 0.41, algaeProcessorRot);
+
   static {
     try {
       aprilTags = AprilTagFieldLayout.loadFromResource(k2025ReefscapeWelded.m_resourceFile);
