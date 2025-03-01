@@ -130,6 +130,8 @@ public class RobotContainer {
     Shuffleboard.getTab("Config").add("Set offsets to 0",
         swerve.runOnce(() -> swerve.zeroSwerveOffsets()).ignoringDisable(true));
     Shuffleboard.getTab("Config").add("Zero gyro", swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));
+    Shuffleboard.getTab("Config").add("SysID Drive Motors", swerve.sysIdDriveMotorCommand());
+    Shuffleboard.getTab("Config").add("SysID Angle Motors", swerve.sysIdAngleMotorCommand());
 
     SmartDashboard.putNumber("Algae Intake Motor Speed", 0.25);
     SmartDashboard.putNumber("Algae Pivot Speed", 0.25);
