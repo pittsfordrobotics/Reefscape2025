@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.security.spec.ECPublicKeySpec;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
@@ -112,17 +113,7 @@ public class Swerve extends SubsystemBase {
                     new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
             ),
             config, // The robot configuration
-            () -> {
-              // Boolean supplier that controls when the path will be mirrored for the red alliance
-              // This will flip the path being followed to the red side of the field.
-              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-              var alliance = DriverStation.getAlliance();
-              if (alliance.isPresent()) {
-                return alliance.get() == DriverStation.Alliance.Red;
-              }
-              return false;
-            },
+            this::isRedAlliance,
             this // Reference to this subsystem to set requirements
     );
   }
@@ -138,6 +129,14 @@ public class Swerve extends SubsystemBase {
           //System.out.println("No alliance, setting to blue");
         }
         return currentAlliance;
+    }
+
+    public boolean isRedAlliance(){
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+        }
+        return false;
     }
 
     /** Flips a Pose2d by 180 degrees if necessary */
@@ -470,12 +469,25 @@ public class Swerve extends SubsystemBase {
     }
 
     private Pose2d getNearestCoralStation(){
-        if ((Math.pow(getPose().getX() - FieldConstants.coralStationBottomPos.getX(), 2) + Math.pow(getPose().getY() - FieldConstants.coralStationBottomPos.getY(), 2)) 
-            > (Math.pow(getPose().getX() - FieldConstants.coralStationTopPos.getX(), 2) + Math.pow(getPose().getY() - FieldConstants.coralStationTopPos.getY(), 2)))
-        {
-            return FieldConstants.coralStationTopPos;
-        } else{
-            return FieldConstants.coralStationBottomPos;
+        // if ((Math.pow(getPose().getX() - FieldConstants.coralStationBottomPos.getX(), 2) + Math.pow(getPose().getY() - FieldConstants.coralStationBottomPos.getY(), 2)) 
+        //     > (Math.pow(getPose().getX() - FieldConstants.coralStationTopPos.getX(), 2) + Math.pow(getPose().getY() - FieldConstants.coralStationTopPos.getY(), 2)))
+        // {
+        //     return FieldConstants.coralStationTopPos;
+        // } else{
+        //     return FieldConstants.coralStationBottomPos;
+        // }
+        if (!isRedAlliance()){
+            if (getPose().getY() < (FieldConstants.fieldWidth/2)){
+                return FieldConstants.coralStationBottomPos;
+            }else{
+                return FieldConstants.coralStationTopPos;
+            }
+        }else{
+            if (getPose().getY() < (FieldConstants.fieldWidth/2)){
+                return FieldConstants.coralStationTopPos;
+            }else{
+                return FieldConstants.coralStationBottomPos;
+            }
         }
     }
 
