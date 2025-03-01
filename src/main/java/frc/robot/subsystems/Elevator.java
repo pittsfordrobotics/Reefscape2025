@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkMax;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.RelativeEncoder;
@@ -20,8 +19,6 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.epilogue.Logged;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -34,9 +31,6 @@ public class Elevator extends SubsystemBase {
   private SparkClosedLoopController elevatorController = elevatorMotor.getClosedLoopController();
   private RelativeEncoder elevatorRelativeEncoder = elevatorMotor.getEncoder();
  
-  // private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 0, 0); // *****ALSO UPDATE THIS!!!!******
-  // private SparkMax elevatorFollowingMotor = new SparkMax(ElevatorConstants.CAN_FOLLOW_ELEVATOR_MOTOR, MotorType.kBrushless);
-
   // SHUTTLE
   // @Logged(name = "Shuttle Motor")
   // private SparkMax shuttleMotor = new SparkMax(ElevatorConstants.CAN_SHUTTLE_MOTOR, MotorType.kBrushless);
@@ -45,8 +39,6 @@ public class Elevator extends SubsystemBase {
   // private ProfiledPIDController profShuttleController = new ProfiledPIDController(
   //   ElevatorConstants.SHUTTLE_Kp, ElevatorConstants.SHUTTLE_Ki, ElevatorConstants.SHUTTLE_Kd, 
   //   new TrapezoidProfile.Constraints(2, 1.5));
-  
-  // private ElevatorFeedforward shuttleFeedforward = new ElevatorFeedforward(0, 0, 0);
   
   private double elevatorPos = 0;  // height from bottom elevtor position to bottom of shuttle slide
   // public double shuttlePos = 0; // from bottom of shuttle slide to **TBD**
@@ -99,12 +91,6 @@ public class Elevator extends SubsystemBase {
     //   .pid(ElevatorConstants.SHUTTLE_Kp, ElevatorConstants.SHUTTLE_Ki, ElevatorConstants.SHUTTLE_Kd);
 
     // shuttleMotor.configure(shuttleConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    // SparkMaxConfig elevatorFollowingMotorConfig = new SparkMaxConfig();
-    // elevatorFollowingMotorConfig.smartCurrentLimit(20, 20);
-    // elevatorFollowingMotorConfig.idleMode(IdleMode.kBrake);
-    // elevatorFollowingMotorConfig.follow(elevatorMotor, false);
-    // elevatorFollowingMotor.configure(elevatorFollowingMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   @Override
