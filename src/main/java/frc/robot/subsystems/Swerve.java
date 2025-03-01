@@ -3,7 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-
 import java.io.File;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
@@ -26,7 +25,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -110,20 +108,6 @@ public class Swerve extends SubsystemBase {
             this // Reference to this subsystem to set requirements
     );
   }
-
-
-    /** Gets the current alliance, defaulting to blue */
-    public Alliance getAllianceDefaultBlue() {
-        Alliance currentAlliance;
-        if (DriverStation.getAlliance().isPresent()) {
-            currentAlliance = DriverStation.getAlliance().get();
-        } else {
-          currentAlliance = Alliance.Blue;
-          //System.out.println("No alliance, setting to blue");
-        }
-        return currentAlliance;
-    }
-
     public boolean isRedAlliance(){
         var alliance = DriverStation.getAlliance();
         if (alliance.isPresent()) {
@@ -131,7 +115,6 @@ public class Swerve extends SubsystemBase {
         }
         return false;
     }
-
 
     /** Takes a rotation2d and flips it 180 degrees */
     public Rotation2d allianceRotationFlipper(Rotation2d input) {
@@ -146,13 +129,13 @@ public class Swerve extends SubsystemBase {
     public void driveAllianceRelative(double x, double y, double rotationRate, boolean headingDrive) {
         if (headingDrive) {
             swerveDrive.driveFieldOriented(
-                    swerveDrive.swerveController.getTargetSpeeds(getAllianceDefaultBlue() == Alliance.Blue ? x : -x,
-                            getAllianceDefaultBlue() == Alliance.Blue ? y : -y,
+                    swerveDrive.swerveController.getTargetSpeeds(!isRedAlliance() ? x : -x,
+                           !isRedAlliance()? y : -y,
                             currentTargetAngle.getRadians(), swerveDrive.getYaw().getRadians(), maximumSpeed));
         } else {
             swerveDrive.drive(
-                    new Translation2d(getAllianceDefaultBlue() == Alliance.Blue ? x : -x,
-                            getAllianceDefaultBlue() == Alliance.Blue ? y : -y),
+                    new Translation2d(!isRedAlliance() ? x : -x,
+                            !isRedAlliance() ? y : -y),
                     rotationRate, true, false);
         }
     }
