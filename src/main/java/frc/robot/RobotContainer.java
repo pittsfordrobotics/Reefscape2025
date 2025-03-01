@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -181,7 +182,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    /**
+    /*
      * Isaac's requested bindings:
      * left trigger: hold to climb
      * right trigger: coral output
@@ -189,23 +190,20 @@ public class RobotContainer {
      * dpad: move node selector
      * Y: algae output (arm up & run motor reverse)
      * X: algae arm up
-     * B: run coral intake
+     * B: run coral intake :)
      * A: algae intake (arm down & run motor)
      */
-    
-    //operator controls
-    operatorController.b().whileTrue(intake.dynamicDriveIntake(
-      () -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)))
-      .onFalse(intake.stopIntake());
-    operatorController.rightTrigger().whileTrue(coral.dynamicDriveCoral(
-      () -> SmartDashboard.getNumber("Coral Outtake Speed", 0.25)))
-      .onFalse(coral.stopCoral());
 
-      // operator controls moved to the objective tracker
-    // operatorController.povUp().onTrue(elevator.setElevatorLevel(ElevatorLevels.INTAKE));
-    // operatorController.povLeft().onTrue(elevator.setElevatorLevel(ElevatorLevels.L2));
-    // operatorController.povDown().onTrue(elevator.setElevatorLevel(ElevatorLevels.L3));
-    // operatorController.povRight().onTrue(elevator.setElevatorLevel(ElevatorLevels.L4));
+    //operator controls
+    // operatorController.b().whileTrue(intake.dynamicDriveIntake(
+    //   () -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)))
+    //   .onFalse(intake.stopIntake());
+    operatorController.b().whileTrue(intake.startStopIntake(() -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)));
+    // operatorController.rightTrigger().whileTrue(coral.dynamicDriveCoral(
+    //   () -> SmartDashboard.getNumber("Coral Outtake Speed", 0.25)))
+    //   .onFalse(coral.stopCoral());
+    operatorController.rightTrigger().whileTrue(coral.startStopCoral(() -> SmartDashboard.getNumber("Coral Outtake Speed", 0.25)));
+
     // Drive to reef:
     driverController.x().onTrue(swerve.driveToReef(objectiveTracker::isRightSide));
     // Drive Intake:

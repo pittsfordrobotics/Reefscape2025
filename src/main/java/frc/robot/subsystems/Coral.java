@@ -15,6 +15,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CoralConstants;
 import frc.robot.logging.SparkMaxLogger;
@@ -47,6 +48,10 @@ public class Coral extends SubsystemBase {
 
   public Command dynamicDriveCoral(DoubleSupplier speed) {
     return run(() -> setCoral(-speed.getAsDouble())).finallyDo(() -> setCoral(0));
+  }
+
+    public Command startStopCoral(DoubleSupplier speed) {
+    return startEnd(() -> setCoral(-speed.getAsDouble()), () -> stopCoral());
   }
 
   public Command stopCoral() {
