@@ -1,6 +1,5 @@
 package frc.robot.Constants;
 
-import frc.robot.lib.StructureStates.structureState;
 
 public class ElevatorConstants {
     public static final int CAN_ELEVATOR_MOTOR = 31;
