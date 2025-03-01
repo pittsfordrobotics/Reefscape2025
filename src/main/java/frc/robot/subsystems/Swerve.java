@@ -356,24 +356,8 @@ public class Swerve extends SubsystemBase {
         return Commands.defer(() -> AutoBuilder.pathfindToPoseFlipped(poseSupplier.get(), constraints).finallyDo(() -> setTargetAllianceRelAngle(poseSupplier.get().getRotation())), Set.of(this));
     }
 
-    private Pose2d getNearestCoralStation(){
-        if (!isRedAlliance()){
-            if (getPose().getY() < (FieldConstants.fieldWidth/2)){
-                return FieldConstants.coralStationBottomPos;
-            }else{
-                return FieldConstants.coralStationTopPos;
-            }
-        }else{
-            if (getPose().getY() < (FieldConstants.fieldWidth/2)){
-                return FieldConstants.coralStationTopPos;
-            }else{
-                return FieldConstants.coralStationBottomPos;
-            }
-        }
-    }
-
     public Command driveToNearestCoralStation(){
-        return driveToPoseFlipped(() -> getNearestCoralStation());
+        return driveToPoseFlipped(() -> FieldHelpers.getNearestCoralStation(getPose(), isRedAlliance()));
     }
 
     public Command driveToAlgaeCollector(){

@@ -117,4 +117,20 @@ public class FieldHelpers {
 
         return pose;
     }
+
+    public static Pose2d getNearestCoralStation(Pose2d currentPose, boolean isRedAlliance) {
+        if (!isRedAlliance){
+            if (currentPose.getY() < (FieldConstants.fieldWidth/2)){
+                return FieldConstants.coralStationBottomPos;
+            }else{
+                return FieldConstants.coralStationTopPos;
+            }
+        }else{
+            if (currentPose.getY() < (FieldConstants.fieldWidth/2)){
+                return FieldConstants.coralStationTopPos;
+            }else{
+                return FieldConstants.coralStationBottomPos;
+            }
+        }
+    }
 }
