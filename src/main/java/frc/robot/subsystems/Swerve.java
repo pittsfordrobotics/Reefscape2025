@@ -338,7 +338,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Command driveToReef(BooleanSupplier isRightSideSupplier) {
-        return driveToPose(() -> FieldHelpers.reefLocation(getPose(), isRightSideSupplier)).finallyDo(() -> setTargetAllianceRelAngle(FieldHelpers.reefLocation(getPose(), isRightSideSupplier).getRotation()));
+        return driveToPose(() -> FieldHelpers.reefLocation(getPose(), isRightSideSupplier));
     }
 
     /**
@@ -460,11 +460,11 @@ public class Swerve extends SubsystemBase {
 
     public Command driveToPose(Supplier<Pose2d> poseSupplier) {
         PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
-        return Commands.defer(() -> AutoBuilder.pathfindToPose(poseSupplier.get(), constraints), Set.of(this));
+        return Commands.defer(() -> AutoBuilder.pathfindToPose(poseSupplier.get(), constraints).finallyDo(() -> setTargetAngle(poseSupplier.get().getRotation())), Set.of(this));
     }
     /** Drive to a pose, flipped if on red alliance */
     public Command driveToPoseFlipped(Supplier<Pose2d> poseSupplier) {
         PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
-        return Commands.defer(() -> AutoBuilder.pathfindToPoseFlipped(poseSupplier.get(), constraints), Set.of(this));
+        return Commands.defer(() -> AutoBuilder.pathfindToPoseFlipped(poseSupplier.get(), constraints).finallyDo(() -> setTargetAllianceRelAngle(poseSupplier.get().getRotation())), Set.of(this));
     }
 }
