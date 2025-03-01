@@ -114,14 +114,14 @@ public class RobotContainer {
     objectiveTracker = new ObjectiveTracker(objectiveSelecterIOImpl);
     objectiveTracker.setDefaultCommand(objectiveTracker.updateReefSide(swerve::getPose));
 
-    Command enhancedHeadingSteeringCommand = swerve.headingDriveCommand(
+    Command headingSteeringCommand = swerve.headingDriveCommand(
         () -> -driverController.getLeftY(),
         () -> -driverController.getLeftX(),
         () -> -driverController.getRightY(),
         () -> -driverController.getRightX(),
         driverController::getLeftTriggerAxis,
         driverController::getRightTriggerAxis);
-    swerve.setDefaultCommand(enhancedHeadingSteeringCommand);
+    swerve.setDefaultCommand(headingSteeringCommand);
     swerve.setupPathPlanner();
 
     SmartDashboard.putNumber("speed", 0.25);
