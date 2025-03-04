@@ -22,7 +22,6 @@ public class Coral extends SubsystemBase {
   @Logged(name = "Coral Output Motor")
   private SparkMax coralMotor = new SparkMax(CoralConstants.CAN_CORAL_MOTOR, MotorType.kBrushless);
 
-
   /** Creates a new Coral. */
   public Coral() {
     SparkMaxConfig coralConfig = new SparkMaxConfig();
