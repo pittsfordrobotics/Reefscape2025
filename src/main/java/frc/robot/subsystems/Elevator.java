@@ -136,24 +136,6 @@ public class Elevator extends SubsystemBase {
     return run(() -> elevatorMotor.set(0));
   }
 
-  /* TELEMETRY */
-  @Logged(name = "Elevator applied output (V)")
-  public double getElevatorAppliedCurrent(){
-    return elevatorMotor.getAppliedOutput();
-  }
-  @Logged(name = "Elevator output current (A)")
-  public double getElevatorOutputCurrent(){
-    return elevatorMotor.getOutputCurrent();
-  }
-  @Logged(name = "Elevator encoder velocity")
-  public double getElevatorEncoderVelocity(){
-    return elevatorRelativeEncoder.getVelocity();
-  }
-  @Logged(name = "Elevator motor temperature (C)")
-  public double getElevatorTemp(){
-    return elevatorMotor.getMotorTemperature();
-  }
-
   public enum ElevatorLevels {
     INTAKE, L1, L2, L3, L4;
   }
