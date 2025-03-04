@@ -273,10 +273,6 @@ public class Swerve extends SubsystemBase {
         }
     }
 
-    public Command driveToReef(BooleanSupplier isRightSideSupplier) {
-        return driveToPose(() -> FieldHelpers.reefLocation(getPose(), isRightSideSupplier));
-    }
-
     /**
      * Set the hardware zero point of the angle motor's absolute encoder to the
      * current position.
@@ -345,23 +341,54 @@ public class Swerve extends SubsystemBase {
     }
 
     /** Drive to a pose, NOT flipped if on red alliance */
-    public Command driveToPose(Supplier<Pose2d> poseSupplier) {
-        PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
-        return Commands.defer(() -> AutoBuilder.pathfindToPose(poseSupplier.get(), constraints).finallyDo(() -> setTargetAllianceRelAngle(poseSupplier.get().getRotation())), Set.of(this));
+    public Command driveToPose(Supplier<Pose2d> poseSupplier, PathConstraints constraints) {
+        
+        //PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
+        return Commands.defer(() -> AutoBuilder.pathfindToPose(
+            poseSupplier.get(), constraints).finallyDo(
+                () -> setTargetAllianceRelAngle(poseSupplier.get().getRotation())), Set.of(this));
     }
 
     /** Drive to a pose, flipped if on red alliance */
-    public Command driveToPoseFlipped(Supplier<Pose2d> poseSupplier) {
-        PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
-        return Commands.defer(() -> AutoBuilder.pathfindToPoseFlipped(poseSupplier.get(), constraints).finallyDo(() -> setTargetAllianceRelAngle(poseSupplier.get().getRotation())), Set.of(this));
+    public Command driveToPoseFlipped(Supplier<Pose2d> poseSupplier, PathConstraints constraints) {
+
+        //PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
+        return Commands.defer(() -> AutoBuilder.pathfindToPoseFlipped(
+            poseSupplier.get(), constraints).finallyDo(
+                () -> setTargetAllianceRelAngle(poseSupplier.get().getRotation())), Set.of(this));
     }
 
     public Command driveToNearestCoralStation(){
-        return driveToPoseFlipped(() -> FieldHelpers.getNearestCoralStation(getPose(), isRedAlliance()));
+        PathConstraints constraints = new PathConstraints(
+            SwerveConstants.AUTOBUILDER_MAX_VELOCITY,
+             SwerveConstants.AUTOBUILDER_MAX_ANGULAR_VELOCITY,
+              SwerveConstants.AUTOBUILDER_MAX_ACCELERATION,
+               SwerveConstants.AUTOBUILDER_MAX_ANGULAR_ACCELERATION,
+                SwerveConstants.NOMINAL_VOLTAGE,
+                 false);
+        return driveToPoseFlipped(() -> FieldHelpers.getNearestCoralStation(getPose(), isRedAlliance()), constraints);
     }
 
     public Command driveToAlgaeCollector(){
-        return driveToPoseFlipped(() -> FieldConstants.algaeProcessorPos);
+        PathConstraints constraints = new PathConstraints(
+            SwerveConstants.AUTOBUILDER_MAX_VELOCITY,
+             SwerveConstants.AUTOBUILDER_MAX_ANGULAR_VELOCITY,
+              SwerveConstants.AUTOBUILDER_MAX_ACCELERATION,
+               SwerveConstants.AUTOBUILDER_MAX_ANGULAR_ACCELERATION,
+                SwerveConstants.NOMINAL_VOLTAGE,
+                 false);
+        return driveToPoseFlipped(() -> FieldConstants.algaeProcessorPos, constraints);
+    }
+
+    public Command driveToReef(BooleanSupplier isRightSideSupplier) {
+        PathConstraints constraints = new PathConstraints(
+            SwerveConstants.AUTOBUILDER_MAX_CORAL_VELOCITY,
+             SwerveConstants.AUTOBUILDER_MAX_CORAL_ANGULAR_VELOCITY,
+              SwerveConstants.AUTOBUILDER_MAX_CORAL_ACCELERATION,
+               SwerveConstants.AUTOBUILDER_MAX_CORAL_ANGULAR_ACCELERATION,
+                SwerveConstants.NOMINAL_VOLTAGE,
+                 false);
+        return driveToPose(() -> FieldHelpers.reefLocation(getPose(), isRightSideSupplier), constraints);
     }
 
     // *******************

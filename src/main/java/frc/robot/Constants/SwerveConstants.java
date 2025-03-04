@@ -17,6 +17,20 @@ public class SwerveConstants {
     public static final int BACK_LEFT_MODULE_INDEX = 2;
     public static final int BACK_RIGHT_MODULE_INDEX = 3;
 
+    public static double NOMINAL_VOLTAGE = 12;
+
+    public static double AUTOBUILDER_MAX_CORAL_VELOCITY = 3;
+    public static double AUTOBUILDER_MAX_CORAL_ANGULAR_VELOCITY = 7;
+
+    public static double AUTOBUILDER_MAX_CORAL_ACCELERATION = 1;
+    public static double AUTOBUILDER_MAX_CORAL_ANGULAR_ACCELERATION = 2;
+
+    public static double AUTOBUILDER_MAX_VELOCITY = 3;
+    public static double AUTOBUILDER_MAX_ANGULAR_VELOCITY = 7;
+
+    public static double AUTOBUILDER_MAX_ACCELERATION = 1;
+    public static double AUTOBUILDER_MAX_ANGULAR_ACCELERATION = 2;
+
     // public class BACK_LEFT {
     //     public static final double drive_kS = 0.26965;
     //     public static final double drive_kV = 2.6011;
