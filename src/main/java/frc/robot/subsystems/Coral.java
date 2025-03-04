@@ -51,4 +51,9 @@ public class Coral extends SubsystemBase {
   public Command stopCoral() {
     return run(() -> setCoral(0));
   }
+
+  @Logged(name = "Is coral limit switch pressed")
+  public boolean isCoralLimitSwitchPressed(){
+    return coralMotor.getForwardLimitSwitch().isPressed();
+  }
 }
