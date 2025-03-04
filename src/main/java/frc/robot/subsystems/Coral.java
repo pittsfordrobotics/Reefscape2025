@@ -22,7 +22,6 @@ public class Coral extends SubsystemBase {
   @Logged(name = "Coral Output Motor")
   private SparkMax coralMotor = new SparkMax(CoralConstants.CAN_CORAL_MOTOR, MotorType.kBrushless);
 
-
   /** Creates a new Coral. */
   public Coral() {
     SparkMaxConfig coralConfig = new SparkMaxConfig();
@@ -50,5 +49,10 @@ public class Coral extends SubsystemBase {
 
   public Command stopCoral() {
     return run(() -> setCoral(0));
+  }
+
+  @Logged(name = "Is coral limit switch pressed")
+  public boolean isCoralLimitSwitchPressed(){
+    return coralMotor.getForwardLimitSwitch().isPressed();
   }
 }
