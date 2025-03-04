@@ -15,6 +15,7 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
@@ -75,9 +76,13 @@ public class Elevator extends SubsystemBase {
       .maxAcceleration(20000);
     elevatorConfig.closedLoop
       .pid(ElevatorConstants.ELEVATOR_Kp, ElevatorConstants.ELEVATOR_Ki, ElevatorConstants.ELEVATOR_Kd);
-    
+
+    LimitSwitchConfig elevatorLimitSwitchConfig = new LimitSwitchConfig();
+    elevatorLimitSwitchConfig.forwardLimitSwitchEnabled(true);
+    elevatorLimitSwitchConfig.reverseLimitSwitchEnabled(true);
+    elevatorConfig.apply(elevatorLimitSwitchConfig);
+
     elevatorMotor.configure(elevatorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-  
 
     // SparkMaxConfig shuttleConfig = new SparkMaxConfig();
     // shuttleConfig.smartCurrentLimit(20);
