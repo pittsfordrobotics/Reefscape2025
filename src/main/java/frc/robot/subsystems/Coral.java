@@ -42,10 +42,13 @@ public class Coral extends SubsystemBase {
   private void setCoral(double speed) {
     coralMotor.set(speed);
     System.out.println("Dropping Coral!");
+    System.out.println(speed);
   }
 
   public Command placeCoral(){
-      return run(() -> setCoral(CoralConstants.CORAL_SPEED));
+      return run(() -> setCoral(CoralConstants.CORAL_SPEED))
+      .raceWith(Commands.waitSeconds(0.5))
+      .andThen(() -> setCoral(0));
   }
 
   public Command dynamicDriveCoral(DoubleSupplier speed) {
