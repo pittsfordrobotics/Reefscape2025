@@ -11,9 +11,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "dropCoralTrough"
           }
         },
         {
@@ -23,9 +23,15 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "collectCoral"
+          }
+        },
+        {
           "type": "wait",
           "data": {
-            "waitTime": 1.2
+            "waitTime": 0.5
           }
         },
         {
@@ -35,9 +41,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 2.0
+            "name": "coralDrop"
           }
         },
         {

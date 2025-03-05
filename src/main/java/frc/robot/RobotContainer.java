@@ -156,8 +156,9 @@ public class RobotContainer {
       () -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)));
     
     
-    NamedCommands.registerCommand("dropCoralTrough", intake.intakeCoralWithSensor());
-    NamedCommands.registerCommand("coralDrop", intake.intakeCoralWithSensor());
+    NamedCommands.registerCommand("dropCoralTrough", coral.placeCoral());
+    NamedCommands.registerCommand("coralDrop", coral.placeCoral());
+    NamedCommands.registerCommand("collectCoral", coral.placeCoral());
 
 
 
