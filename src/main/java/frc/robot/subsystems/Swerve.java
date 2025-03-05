@@ -17,7 +17,6 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.MathUtil;
@@ -31,8 +30,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -587,11 +586,11 @@ public class Swerve extends SubsystemBase {
         // This method will be called once per scheduler run
         swerveDrive.updateOdometry();
         // Output Reef Poses - Remove this later!!! (Or else...)
-        Pose2d rightTarget = reefLocation(() -> true);
-        rightPose.set(rightTarget);
+        //Pose2d rightTarget = reefLocation(() -> true);
+        //rightPose.set(rightTarget);
 
-        Pose2d leftTarget = reefLocation(() -> false);
-        leftPose.set(leftTarget);
+        //Pose2d leftTarget = reefLocation(() -> false);
+        //leftPose.set(leftTarget);
     }
 
     @Logged(name = "Rotation Degrees")

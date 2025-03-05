@@ -11,15 +11,27 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "dropCoralTrough"
+          }
+        },
+        {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.5
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "TroughDrop-Station(L)(L)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "collectCoral"
           }
         },
         {
@@ -35,9 +47,15 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "coralDrop"
+          }
+        },
+        {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 1.5
           }
         },
         {
