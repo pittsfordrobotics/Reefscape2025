@@ -391,6 +391,14 @@ public class Swerve extends SubsystemBase {
         return driveToPose(() -> FieldHelpers.reefLocation(getPose(), isRightSideSupplier), constraints);
     }
 
+    public Command enableSlowDriving(){
+        return run((() -> swerveDrive.setMaximumAttainableSpeeds(SwerveConstants.SWERVE_MAXIMUM_VELOCITY/4, SwerveConstants.SWERVE_MAXIMUM_ANGULAR_VELOCITY)));
+    }
+
+    public Command disableSlowDriving(){
+        return run((() -> swerveDrive.setMaximumAttainableSpeeds(SwerveConstants.SWERVE_MAXIMUM_VELOCITY, SwerveConstants.SWERVE_MAXIMUM_ANGULAR_VELOCITY)));
+    }
+
     // *******************
     // Logging methods
     // *******************

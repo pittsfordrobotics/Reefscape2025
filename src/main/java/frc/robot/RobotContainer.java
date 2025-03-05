@@ -236,7 +236,9 @@ public class RobotContainer {
     driverController.y().onTrue(swerve.driveToNearestCoralStation());
     // Drive to algae processor:
     driverController.leftTrigger().onTrue(swerve.driveToAlgaeCollector());
-    
+
+    // Slow driving
+    driverController.a().onTrue(swerve.enableSlowDriving()).onFalse(swerve.disableSlowDriving());
   }
 
   /**
