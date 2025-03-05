@@ -1,0 +1,64 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Station-Trough.path
+        "x": 5.5,
+        "y": 5.5
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.2922857668424355,
+        "y": 7.2922857668424355
+=======
+        "x": 5.825,
+        "y": 4.0
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.1017418032786885,
+        "y": 5.805174180327868
+>>>>>>> f0ff7d88af673dde52f93d305e1a93bdf760e670:src/main/deploy/pathplanner/paths/Trough-Station(M)(L).path
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.474,
+        "y": 7.292
+      },
+      "prevControl": {
+        "x": 3.919491803278688,
+        "y": 5.925401639344262
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -53.571998875767044
+  },
+  "reversed": false,
+  "folder": "Middle(L)",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}

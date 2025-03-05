@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start-TroughDrop"
+            "pathName": "Start-TroughDrop(R)(R)"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Trough-Station"
+            "pathName": "TroughDrop-Station(R)(R)"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Station-Trough"
+            "pathName": "Station-Reef(R)(R)"
           }
         },
         {
@@ -43,13 +43,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Trough Station1"
+            "pathName": "Reef-Station(R)(R)"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Right Side Station",
   "choreoAuto": false
 }

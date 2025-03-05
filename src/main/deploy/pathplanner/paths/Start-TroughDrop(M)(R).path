@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.812,
-        "y": 5.11
+        "x": 7.564241803278687,
+        "y": 4.030993852459016
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.788348974101499,
-        "y": 5.759191788795566
+        "x": 7.008091229045344,
+        "y": 4.034932566558058
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.3665983606557375,
-        "y": 7.195747950819672
+        "x": 5.802049180327868,
+        "y": 4.030993852459016
       },
       "prevControl": {
-        "x": 2.702147391253043,
-        "y": 5.644768241286094
+        "x": 5.552050466190645,
+        "y": 4.0301920234656645
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,14 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "dropCoralTrough",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -42,13 +49,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 130.710846671181
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Middle(R)",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -56.308957681486966
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }
