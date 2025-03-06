@@ -48,14 +48,14 @@ public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
   public Elevator() {
     SparkMaxConfig elevatorConfig = new SparkMaxConfig();
-    elevatorConfig.smartCurrentLimit(ElevatorConstants.STALL_LIMIT, ElevatorConstants.FREE_LIMIT);
+    elevatorConfig.smartCurrentLimit(40, 40);
     elevatorConfig.idleMode(IdleMode.kBrake)
-    .closedLoopRampRate(ElevatorConstants.CLOSED_LOOP_RAMP_RATE);
+    .closedLoopRampRate(0.15);
    
   
     elevatorConfig.closedLoop.maxMotion
-      .maxVelocity(ElevatorConstants.ELEVATOR_MAX_VELOCITY)
-      .maxAcceleration(ElevatorConstants.ELEVATOR_MAX_ACCELERATION);
+      .maxVelocity(5000)
+      .maxAcceleration(20000);
     elevatorConfig.closedLoop
       .pid(ElevatorConstants.ELEVATOR_Kp, ElevatorConstants.ELEVATOR_Ki, ElevatorConstants.ELEVATOR_Kd);
 
@@ -120,11 +120,11 @@ public class Elevator extends SubsystemBase {
     Command elevatorCommand;
     switch (level) {
       case INTAKE -> {
-        elevatorCommand = run(() -> setElevatorPosition(ElevatorConstants.INTAKE_POSITION));
+        elevatorCommand = run(() -> setElevatorPosition(0));
       } case L2 -> {
-        elevatorCommand = run(() -> setElevatorPosition(ElevatorConstants.L2_POSITION));
+        elevatorCommand = run(() -> setElevatorPosition(62));
       } case L3 -> {
-        elevatorCommand = run(() -> setElevatorPosition(ElevatorConstants.L3_POSITION));
+        elevatorCommand = run(() -> setElevatorPosition(109));
       } case L4 -> {
         elevatorCommand = run(() -> {
             setElevatorPosition(ElevatorConstants.ELEVATOR_MAX_HEIGHT);
