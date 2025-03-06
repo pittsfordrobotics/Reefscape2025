@@ -228,21 +228,12 @@ public class RobotContainer {
 
     // Drive Algae pickup:
     driverController.a().whileTrue(algae.dynamicAlgaePickup(() -> SmartDashboard.getNumber("Algae Speed", 0.25)));
-<<<<<<< HEAD
-    //
-
-    //Drive Swerve forward and backward:
-    driverController.povUp().whileTrue(swerve.driveForward(0.2));
-    driverController.povDown().whileTrue(swerve.driveForward(-0.2));
-    driverController.b().onTrue(swerve.driveToPoint(new Pose2d(5.5,5.5,Rotation2d.fromDegrees(45))));
-=======
 
     // enhanced controls through objective tracker
     operatorController.povUp().onTrue(objectiveTracker.moveIndex(MoveDirection.UP));
     operatorController.povDown().onTrue(objectiveTracker.moveIndex(MoveDirection.DOWN));
     operatorController.povRight().onTrue(objectiveTracker.moveIndex(MoveDirection.RIGHT));
     operatorController.povLeft().onTrue(objectiveTracker.moveIndex(MoveDirection.LEFT));
->>>>>>> f0ff7d88af673dde52f93d305e1a93bdf760e670
   }
 
   /**
