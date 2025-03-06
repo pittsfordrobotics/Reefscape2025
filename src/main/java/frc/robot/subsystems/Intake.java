@@ -18,13 +18,10 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.logging.SparkMaxLogger;
 
 public class Intake extends SubsystemBase {
   @Logged(name="Coral Intake Motor")
   private final SparkMax intakeMotor = new SparkMax(IntakeConstants.CAN_INTAKE_MOTOR, MotorType.kBrushless);
-  
-  private final SparkMaxLogger intakeLogger = new SparkMaxLogger();
 
   DigitalInput coralSensor = new DigitalInput(0);
   
@@ -44,7 +41,7 @@ public class Intake extends SubsystemBase {
     // This method will be called once per scheduler run
   }
   
-  @Logged(name = "IsCoralDetected")
+  @Logged(name = "Is coral detected")
   public boolean isCoralDetected() {
     return coralSensor.get();
   }
@@ -69,4 +66,8 @@ public class Intake extends SubsystemBase {
     return run(() -> setIntake(0));
   }
   
+  @Logged(name = "Is intake limit switch pressed")
+  public boolean isIntakeLimitSwitchPressed(){
+    return intakeMotor.getForwardLimitSwitch().isPressed();
+  }
 }

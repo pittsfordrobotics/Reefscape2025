@@ -15,18 +15,14 @@ import java.util.HashMap;
 
 /**
  * Contains various field dimensions and useful reference points. Dimensions are
- * in meters, and sets
- * of corners start in the lower left moving clockwise. <b>All units in
- * Meters</b> <br>
- * <br>
- *
- * <p>
+ * in meters, and sets of corners start in the lower left moving clockwise. 
+ * All units in meters.
+ 
  * All translations and poses are stored with the origin at the rightmost point
- * on the BLUE
- * ALLIANCE wall.<br>
- * <br>
- * Length refers to the <i>x</i> direction (as described by wpilib) <br>
- * Width refers to the <i>y</i> direction (as described by wpilib)
+ * on the BLUE ALLIANCE wall.
+ * 
+ * Length refers to the x direction (as described by wpilib)
+ * Width refers to the y direction (as described by wpilib)
  */
 public class FieldConstants {
   public static double fieldLength = Units.inchesToMeters(690.876);
