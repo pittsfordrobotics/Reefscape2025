@@ -228,8 +228,7 @@ public class RobotContainer {
     // Drive to reef:
     driverController.x().onTrue(swerve.driveToReef(objectiveTracker::isRightSide));
     // Drive Intake:
-    driverController.b().whileTrue(intake.dynamicDriveIntake(
-        () -> SmartDashboard.getNumber("Intake Speed", 0.25)));
+    driverController.b().whileTrue(intake.intakeCoralWithSensor());
     // Drive to nearest coral station:
     driverController.y().onTrue(swerve.driveToNearestCoralStation());
     // Drive to algae processor:
