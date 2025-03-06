@@ -2,11 +2,19 @@ package frc.robot.Constants;
 
 
 public class ElevatorConstants {
+    public static final int ELEVATOR_MAX_VELOCITY = 5000;
+    public static final int ELEVATOR_MAX_ACCELERATION = 20000;
+
+    public static final int STALL_LIMIT = 40;
+    public static final int FREE_LIMIT = 40;
+
     public static final int CAN_ELEVATOR_MOTOR = 31;
     public static final int CAN_SHUTTLE_MOTOR = 32;
 
     public static final double ELEVATOR_TICKS_PER_INCH = 20;
     public static final double SHUTTLE_TICKS_PER_INCH = 10;
+
+    public static final double CLOSED_LOOP_RAMP_RATE = 0.15;
 
     public static final double ELEVATOR_MAX_HEIGHT_INCHES = 100;
     public static final double ELEVATOR_MAX_HEIGHT = 170;
@@ -24,4 +32,8 @@ public class ElevatorConstants {
     public static final double SHUTTLE_Kp = 0.05;
     public static final double SHUTTLE_Ki = 0;
     public static final double SHUTTLE_Kd = 0.01;
+
+    public static final int INTAKE_POSITION = 0;
+    public static final int L2_POSITION = 62;
+    public static final int L3_POSITION = 109;
 }
