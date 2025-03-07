@@ -36,14 +36,12 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.lib.AllDeadbands;
 import frc.robot.lib.VisionData;
-import frc.robot.lib.util.AllianceFlipUtil;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
 import swervelib.SwerveModule;
@@ -130,51 +128,7 @@ public class Swerve extends SubsystemBase {
             this // Reference to this subsystem to set requirements
     );
   }
-    /**
-     * Setup AutoBuilder for PathPlanner.
-     */
-    /*
-     * public void setupPathPlanner() {
-     * AutoBuilder.configureHolonomic(
-     * swerveDrive::getPose, // Robot pose supplier
-     * swerveDrive::resetOdometry, // Method to reset odometry (will be called if
-     * your auto has a starting pose)
-     * swerveDrive::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT
-     * RELATIVE
-     * swerveDrive::drive, // Method that will drive the robot given ROBOT RELATIVE
-     * ChassisSpeeds
-     * new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should
-     * likely live in your
-     * // Constants class
-     * new PIDConstants(0.65, 0.0, 0.0),
-     * // Translation PID constants
-     * new PIDConstants(2,
-     * 0,
-     * 0.05), // TODO: TUNE THIS, NOT SURE IF SHOULD BE 0.005 PER OLD COMMENT
-     * // Rotation PID constants
-     * 4.5,
-     * // Max module speed, in m/s
-     * swerveDrive.swerveDriveConfiguration.getDriveBaseRadiusMeters(),
-     * // Drive base radius in meters. Distance from robot center to furthest
-     * module.
-     * new ReplanningConfig()
-     * // Default path replanning config. See the API for the options here
-     * ),
-     * () -> {
-     * // Boolean supplier that controls when the path will be mirrored for the red
-     * // alliance
-     * // This will flip the path being followed to the red side of the field.
-     * // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-     * var alliance = DriverStation.getAlliance();
-     * return alliance.isPresent() && (alliance.get() ==
-     * DriverStation.Alliance.Red);
-     * },
-     * this // Reference to this subsystem to set requirements
-     * );
-     * 
-     * 
-     * }
-     */
+
 
     /** Gets the current alliance, defaulting to blue */
     public Alliance getAllianceDefaultBlue() {
@@ -431,58 +385,9 @@ public class Swerve extends SubsystemBase {
     //back up pose by 16" so it's not overlapping the reef
     pose = pose.transformBy(new Transform2d(new Translation2d(-FieldConstants.reefLocationBackupDistance, 0), new Rotation2d()));
 
-    System.out.println(pose.toString());
     return pose;
   }
 
-    // Takes a point and returns the desired heading for the swerve to be pointing
-    // at the given point using the curent pose
-    private double getAngleToPoint(Pose2d targetPoint) {
-        Pose2d currentPose = swerveDrive.getPose();
-        double desired_heading_rad = Math.atan2(targetPoint.getY() - currentPose.getY(),
-                targetPoint.getX() - currentPose.getX());
-        return desired_heading_rad;
-    }
-
-    // needs to be called repeatedly
-    public Command pointAtVisionTarget(Pose2d targetPoint) {
-        return new InstantCommand(() -> {
-            double desired_heading_deg = getAngleToPoint(targetPoint);
-            Rotation2d desired_heading = Rotation2d.fromDegrees(desired_heading_deg);
-            swerveDrive.setHeadingCorrection(true);
-            setTargetAngle(desired_heading);
-        });
-    }
-
-    /**
-     * <h2>Vision Targeting</h2>
-     * Drives field oriented with translation X, Y, and points at the given target
-     * point
-     * 
-     * @param translationX Supplier of translation in X axis
-     * @param translationY Supplier of translation in Y axis
-     * @param targetPoint  Supplier of target point
-     * @return A RunCommand that drives the swerve drive with given translation and
-     *         rotation
-     */
-    public Command driveTranslationAndPointAtTarget(DoubleSupplier translationX, DoubleSupplier translationY,
-            Pose2d targetPoint) {
-        return run(() -> {
-            double desiredHeadingRad = getAngleToPoint(
-                    AllianceFlipUtil.apply(targetPoint));
-            Rotation2d desired_heading = Rotation2d.fromRadians(desiredHeadingRad);
-            swerveDrive.setHeadingCorrection(true);
-            double rawXInput = translationX.getAsDouble();
-            double rawYInput = translationY.getAsDouble();
-            double[] scaledDeadbandTranslationInputs = AllDeadbands
-                    .applyScaledSquaredCircularDeadband(new double[] { rawXInput, rawYInput }, 0.1);
-            double xInput = scaledDeadbandTranslationInputs[0];
-            double yInput = scaledDeadbandTranslationInputs[1];
-            // Make the robot move
-            setTargetAngle(desired_heading);
-            driveAllianceRelative(xInput, yInput, desiredHeadingRad, true);
-        });
-    }
 
     /**
      * Command to characterize the robot drive motors using SysId
@@ -516,12 +421,7 @@ public class Swerve extends SubsystemBase {
         return !hadbadreading;
     }
 
-    /**
-     * Add a fake vision reading for testing purposes.
-     */
-    public void addFakeVisionReading() {
-        swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
-    }
+
 
     /**
      * Set the hardware zero point of the angle motor's absolute encoder to the
@@ -598,13 +498,65 @@ public class Swerve extends SubsystemBase {
         //leftPose.set(leftTarget);
     }
 
-    @Logged(name = "Rotation Degrees")
-    public double getRotationDegrees() {
-        return swerveDrive.getYaw().getDegrees();
-    }
     /** Drive to a pose, flipped if on red alliance */
     public Command driveToPoseFlipped(Supplier<Pose2d> poseSupplier) {
         PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
         return Commands.defer(() -> AutoBuilder.pathfindToPoseFlipped(poseSupplier.get(), constraints), Set.of(this));
+    }
+
+    // *******************
+    // Logging methods
+    // *******************
+    @Logged(name = "Rotation Degrees")
+    public double getRotationDegrees() {
+        return swerveDrive.getYaw().getDegrees();
+    }
+
+    @Logged(name="FR Drive Motor")
+    public SparkMax getFrontRightDriveMotor() {
+        return getDriveMotor(SwerveConstants.FRONT_RIGHT_MODULE_INDEX);
+    }
+
+    @Logged(name="FR Angle Motor")
+    public SparkMax getFrontRightAngleMotor() {
+        return getAngleMotor(SwerveConstants.FRONT_RIGHT_MODULE_INDEX);
+    }
+
+    @Logged(name="FL Drive Motor")
+    public SparkMax getFrontLeftDriveMotor() {
+        return getDriveMotor(SwerveConstants.FRONT_LEFT_MODULE_INDEX);
+    }
+
+    @Logged(name="FL Angle Motor")
+    public SparkMax getFrontLeftAngleMotor() {
+        return getAngleMotor(SwerveConstants.FRONT_LEFT_MODULE_INDEX);
+    }
+
+    @Logged(name="BR Drive Motor")
+    public SparkMax getBackRightDriveMotor() {
+        return getDriveMotor(SwerveConstants.BACK_RIGHT_MODULE_INDEX);
+    }
+
+    @Logged(name="BR Angle Motor")
+    public SparkMax getBackRightAngleMotor() {
+        return getAngleMotor(SwerveConstants.BACK_RIGHT_MODULE_INDEX);
+    }
+
+    @Logged(name="BL Drive Motor")
+    public SparkMax getBackLeftDriveMotor() {
+        return getDriveMotor(SwerveConstants.BACK_LEFT_MODULE_INDEX);
+    }
+
+    @Logged(name="BL Angle Motor")
+    public SparkMax getBackLeftAngleMotor() {
+        return getAngleMotor(SwerveConstants.BACK_LEFT_MODULE_INDEX);
+    }
+
+    private SparkMax getDriveMotor(int swerveModuleIndex) {
+        return (SparkMax) swerveDrive.getModules()[swerveModuleIndex].getDriveMotor().getMotor();
+    }
+
+    private SparkMax getAngleMotor(int swerveModuleIndex) {
+        return (SparkMax) swerveDrive.getModules()[swerveModuleIndex].getAngleMotor().getMotor();
     }
 }

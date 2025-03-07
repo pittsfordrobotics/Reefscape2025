@@ -4,15 +4,11 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 
-import java.security.PublicKey;
 import java.util.function.DoubleSupplier;
 
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -24,16 +20,10 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.constraint.MaxVelocityConstraint;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AlgaeConstants;
-import frc.robot.Constants.IntakeConstants;
-
-import edu.wpi.first.epilogue.Logged;
-import frc.robot.logging.SparkMaxLogger;
 
 public class Algae extends SubsystemBase {
   @Logged(name = "Algae Pickup Motor")
@@ -43,9 +33,6 @@ public class Algae extends SubsystemBase {
 
   @Logged(name = "Algae Sensor")
   DigitalInput algaeSensor = new DigitalInput(AlgaeConstants.ALGAE_SENSOR_CHANNEL);
-  
-  private SparkClosedLoopController algaePivotController = algaePivotMotor.getClosedLoopController();
-  
 
   private SparkAbsoluteEncoder pivotEncoder;
 
