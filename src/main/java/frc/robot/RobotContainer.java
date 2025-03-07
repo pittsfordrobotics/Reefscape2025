@@ -191,10 +191,10 @@ public class RobotContainer {
     
     //Operator Controls --------------------------------------------------------
     //Coral Inputs
-    operatorController.b().whileTrue(intake.startStopIntake(
+    operatorController.b().whileTrue(intake.dynamicDriveIntake(
       () -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)));
 
-    operatorController.rightTrigger().whileTrue(coral.startStopCoral(
+    operatorController.rightTrigger().whileTrue(coral.dynamicDriveCoral(
       () -> SmartDashboard.getNumber("Coral Outtake Speed", 0.25)));
 
     //Algae Arm Inputs:
@@ -203,20 +203,19 @@ public class RobotContainer {
 
     operatorController.a().whileTrue(algae.dualAlgaeIntake(
       () -> SmartDashboard.getNumber("Algae Up Angle", 0),
-       () -> SmartDashboard.getNumber("Algae Speed", 0.25)));
+      () -> SmartDashboard.getNumber("Algae Speed", 0.25)));
 
     operatorController.y().whileTrue(algae.dualAlgaeIntake(
       () -> SmartDashboard.getNumber("Algae Down Angle", 0),
-       () -> SmartDashboard.getNumber("Algae Speed", 0.25) * -1));
+      () -> SmartDashboard.getNumber("Algae Speed", 0.25) * -1));
 
     //Elevator Inputs:
     operatorController.back().onTrue(elevator.homeElevator());
 
     //Climber Inputs:
-    operatorController.leftTrigger().whileTrue(climber.startStopClimb(
+    operatorController.leftTrigger().whileTrue(climber.dynamicDriveClimb(
         () -> SmartDashboard.getNumber("Climber Active Angle", 0)))
-      .onFalse(climber.startStopClimb(
-        () -> SmartDashboard.getNumber("Climber Default Angle", 0)));
+      .onFalse(climber.stopClimb());
 
     // enhanced controls through objective tracker
     operatorController.povUp().onTrue(objectiveTracker.moveIndex(MoveDirection.UP));

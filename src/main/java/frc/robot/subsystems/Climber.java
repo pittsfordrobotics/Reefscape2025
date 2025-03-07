@@ -74,8 +74,4 @@ public class Climber extends SubsystemBase {
     return run(() -> setClimbSpeed(0));
   }
 
-  public Command startStopClimb(DoubleSupplier degrees) {
-    return startEnd(() -> climbToPosition(degrees),
-     () -> stopClimb());
-  }
 }

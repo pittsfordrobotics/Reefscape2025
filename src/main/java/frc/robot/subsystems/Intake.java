@@ -55,7 +55,7 @@ public class Intake extends SubsystemBase {
   }
 
   public Command intakeCoralWithSensor() {
-    return run(() -> setIntake(IntakeConstants.CORAL_INTAKE_SPEED)).until(this::isCoralDetected).finallyDo(this::stopIntake);
+    return run(() -> setIntake(IntakeConstants.CORAL_INTAKE_SPEED)).until(this::isCoralDetected).finallyDo(() -> setIntake(0));
   }
 
   public Command stopIntake(){
