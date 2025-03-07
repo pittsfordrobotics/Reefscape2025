@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.lib.util.FieldHelpers;
+import frc.robot.subsystems.Elevator.ElevatorLevels;
 import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.MoveDirection;
 import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.ObjectiveSelectorInputs;
 
@@ -39,6 +40,10 @@ public class ObjectiveTracker extends SubsystemBase {
 
   public int getObjectiveIndex() {
     return selectorInputs.selectedIndex;
+  }
+
+  public ElevatorLevels getElevatorLevel() {
+    return ElevatorLevels.values()[4 - (selectorInputs.selectedIndex / 2)];
   }
 
   public boolean isRightSide() {

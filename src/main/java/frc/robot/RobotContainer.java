@@ -96,6 +96,7 @@ public class RobotContainer {
       swerve::getGyroAngle,
       swerve::getAngularVelocityRad_Sec,
       swerve::addVisionData);
+    elevator.setDefaultCommand(getAutonomousCommand());
 
     SmartDashboard.putNumber("Algae Speed", 0.25);
 
@@ -111,6 +112,7 @@ public class RobotContainer {
     ObjectiveSelecterIONetworkTables objectiveSelecterIOImpl = new ObjectiveSelecterIONetworkTables();
     objectiveTracker = new ObjectiveTracker(objectiveSelecterIOImpl);
     objectiveTracker.setDefaultCommand(objectiveTracker.updateReefSide(swerve::getPose));
+    elevator.setDefaultCommand(elevator.dynamicElevatorLevel(objectiveTracker::getElevatorLevel));
 
     Command headingSteeringCommand = swerve.headingDriveCommand(
         () -> -driverController.getLeftY(),

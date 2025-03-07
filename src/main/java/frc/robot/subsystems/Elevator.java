@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkMax;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -132,6 +133,20 @@ public class Elevator extends SubsystemBase {
       } default -> throw new IllegalArgumentException();
     }
     return elevatorCommand;
+  }
+
+  public Command dynamicElevatorLevel(Supplier<ElevatorLevels> levelSupplier) {
+    return run(() -> {
+      ElevatorLevels level = levelSupplier.get();
+      int elevatorHeight = switch(level) {
+        case INTAKE -> ElevatorConstants.INTAKE_POSITION;
+        case L2 -> ElevatorConstants.L2_POSITION;
+        case L3 -> ElevatorConstants.L3_POSITION;
+        case L4 -> (int)ElevatorConstants.ELEVATOR_MAX_HEIGHT;
+        default -> throw new IllegalArgumentException();
+      };
+      setElevatorPosition(elevatorHeight);
+    });
   }
 
   public Command dynamicElevatorSetSpeed(DoubleSupplier speed){
