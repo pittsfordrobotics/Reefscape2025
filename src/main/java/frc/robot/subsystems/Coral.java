@@ -48,10 +48,6 @@ public class Coral extends SubsystemBase {
     return run(() -> setCoral(-speed.getAsDouble())).finallyDo(() -> setCoral(0));
   }
 
-    public Command startStopCoral(DoubleSupplier speed) {
-    return startEnd(() -> setCoral(-speed.getAsDouble()), () -> stopCoral());
-  }
-
   public Command stopCoral() {
     return run(() -> setCoral(0));
   }
