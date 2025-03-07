@@ -157,7 +157,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    // SmartDashboard.putData("Auto Chooser", autoChooser);
 
 
     Shuffleboard.getTab("Debug").addString("Selected Node", objectiveTracker::getObjectiveString);
@@ -236,7 +236,7 @@ public class RobotContainer {
     driverController.leftTrigger().onTrue(swerve.driveToAlgaeCollector());
 
     // Slow driving
-    driverController.a().onTrue(swerve.enableSlowDriving()).onFalse(swerve.disableSlowDriving());
+    driverController.a().onTrue(Commands.runOnce((() -> swerve.enableSlowDriving()))).onFalse(Commands.runOnce((() -> swerve.disableSlowDriving())));
   }
 
   /**
@@ -245,7 +245,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    // return autoChooser.getSelected();
+    return null;
     /**Selects all autonomous paths; selectable from smart dashboard*/
   }
 
