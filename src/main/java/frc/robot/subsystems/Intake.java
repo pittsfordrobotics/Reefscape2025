@@ -25,7 +25,7 @@ public class Intake extends SubsystemBase {
   @Logged(name="Coral Intake Motor")
   private final SparkMax intakeMotor = new SparkMax(IntakeConstants.CAN_INTAKE_MOTOR, MotorType.kBrushless);
   
-  private final SparkMaxLogger intakeLogger = new SparkMaxLogger();
+  //private final SparkMaxLogger intakeLogger = new SparkMaxLogger();
 
   DigitalInput coralSensor = new DigitalInput(0);
   
@@ -52,6 +52,8 @@ public class Intake extends SubsystemBase {
 
   private void setIntake(double speed) {
     intakeMotor.set(speed);
+    System.out.println("Collecting Coral!");
+    System.out.println(speed);
   }
 
   public Command dynamicDriveIntake(DoubleSupplier speed){

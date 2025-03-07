@@ -11,7 +11,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -158,7 +157,7 @@ public class RobotContainer {
     
     NamedCommands.registerCommand("dropCoralTrough", coral.placeCoral());
     NamedCommands.registerCommand("coralDrop", coral.placeCoral());
-    NamedCommands.registerCommand("collectCoral", coral.placeCoral());
+    NamedCommands.registerCommand("collectCoral", intake.intakeCoralWithSensor());
 
 
 
