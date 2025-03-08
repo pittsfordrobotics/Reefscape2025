@@ -97,23 +97,10 @@ public class RobotContainer {
       swerve::getGyroAngle,
       swerve::getAngularVelocityRad_Sec,
       swerve::addVisionData);
-    // elevator.setDefaultCommand(getAutonomousCommand());
-
-    SmartDashboard.putNumber("Algae Speed", 0.25);
-
-    SmartDashboard.putNumber("Algae Pivot Speed", 0.25);
-    SmartDashboard.putNumber("Algae Up Angle", 0);
-    SmartDashboard.putNumber("Algae Down Angle", 0);
-    
-    SmartDashboard.putNumber("Climb Speed", 0.25);
-    SmartDashboard.putNumber("Climb Default Angle", 0);
-    SmartDashboard.putNumber("Climb Active Angle", 0);
-    
 
     ObjectiveSelecterIONetworkTables objectiveSelecterIOImpl = new ObjectiveSelecterIONetworkTables();
     objectiveTracker = new ObjectiveTracker(objectiveSelecterIOImpl);
     objectiveTracker.setDefaultCommand(objectiveTracker.updateReefSide(swerve::getPose));
-    // elevator.setDefaultCommand(elevator.dynamicElevatorLevel(objectiveTracker::getElevatorLevel));
 
     Command headingSteeringCommand = swerve.headingDriveCommand(
         () -> -driverController.getLeftY(),
@@ -125,45 +112,24 @@ public class RobotContainer {
     swerve.setDefaultCommand(headingSteeringCommand);
     swerve.setupPathPlanner();
 
-    SmartDashboard.putNumber("speed", 0.25);
     Shuffleboard.getTab("Config").add("Zero swerve offsets",
         swerve.runOnce(() -> swerve.setSwerveOffsets()).ignoringDisable(true));
     Shuffleboard.getTab("Config").add("Set offsets to 0",
         swerve.runOnce(() -> swerve.zeroSwerveOffsets()).ignoringDisable(true));
     Shuffleboard.getTab("Config").add("Zero gyro", swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));
 
+    SmartDashboard.putNumber("Algae Speed", 0.25);
+    SmartDashboard.putNumber("Algae Up Angle", 0);
+    SmartDashboard.putNumber("Algae Down Angle", 0);
     SmartDashboard.putNumber("Algae Intake Motor Speed", 0.25);
-    SmartDashboard.putNumber("Algae Pivot Speed", 0.25);
     SmartDashboard.putNumber("Coral Outtake Speed", 0.25);
-    SmartDashboard.putNumber("Elevator Motor Speed", 0.25);
-    SmartDashboard.putNumber("Elevator Sled Speed", 0.25);
-    SmartDashboard.putNumber("Climber Speed", 0.25);
-    SmartDashboard.putNumber("Intake Motor Speed", 0.25);
 
-    SmartDashboard.putNumber("Elevator Encoder Offset", 2);
-    
-    Shuffleboard.getTab("testing").add("Algae Motor Speed", 0.25);
-    Shuffleboard.getTab("testing").add("Algae Motor", algae.dynamicAlgaePickup(
-      () -> SmartDashboard.getNumber("Algae Intake Motor Speed", 0.25)));
-    Shuffleboard.getTab("testing").add("Algae Pivot", algae.dynamicAlgaeSpeedPivot(
-      () -> SmartDashboard.getNumber("Algae Pivot Speed", 0.25)));
-    Shuffleboard.getTab("testing").add("Coral Outtake", coral.dynamicDriveCoral(
-      () -> SmartDashboard.getNumber("Coral Outtake Speed", -0.25)));
-    Shuffleboard.getTab("testing").add("Elevator Motor", elevator.dynamicElevatorSetSpeed(
-      () -> SmartDashboard.getNumber("Elevator Motor Speed", 0.25)));
-    Shuffleboard.getTab("testing").add("Climber Motor", climber.dynamicDriveClimb(
-      () -> SmartDashboard.getNumber("Climber Speed", 0.25)));
-    Shuffleboard.getTab("testing").add("Intake Motor", intake.dynamicDriveIntake(
-      () -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)));
-
+    initTestingDashboards();
 
     // Configure the trigger bindings
     configureBindings();
     autoChooser = AutoBuilder.buildAutoChooser();
     // SmartDashboard.putData("Auto Chooser", autoChooser);
-
-
-    Shuffleboard.getTab("Debug").addString("Selected Node", objectiveTracker::getObjectiveString);
   }
 
   
@@ -204,7 +170,7 @@ public class RobotContainer {
 
     //Algae Arm Inputs:
     operatorController.x().whileTrue(algae.startStopAlgaePivot(
-      () -> SmartDashboard.getNumber("Algae Active Angle", 0)));
+      () -> SmartDashboard.getNumber("Algae Active Angle", 0))); // not even defined in dashboard might want to delete or something
 
     operatorController.a().whileTrue(algae.dualAlgaeIntake(
       () -> SmartDashboard.getNumber("Algae Up Angle", 0),
@@ -226,7 +192,7 @@ public class RobotContainer {
 
     //Climber Inputs:
     operatorController.leftTrigger().whileTrue(climber.dynamicDriveClimb(
-        () -> SmartDashboard.getNumber("Climber Active Angle", 0)))
+        () -> SmartDashboard.getNumber("Climber Active Angle", 0))) // not defined in dashboard x2????
       .onFalse(climber.stopClimb());
 
     // enhanced controls through objective tracker
@@ -262,5 +228,31 @@ public class RobotContainer {
 
   public void setInitialRobotPose(Pose2d pose) {
     swerve.setPose(pose);
+  }
+
+  private void initTestingDashboards(){
+    SmartDashboard.putNumber("Algae Pivot Speed", 0.25);
+    SmartDashboard.putNumber("Elevator Motor Speed", 0.25);
+    SmartDashboard.putNumber("Climber Speed", 0.25);
+
+    SmartDashboard.putNumber("Elevator Encoder Offset", 2);
+    
+    Shuffleboard.getTab("testing").add("Algae Motor Speed", 0.25);
+    Shuffleboard.getTab("testing").add("Algae Motor", algae.dynamicAlgaePickup(
+      () -> SmartDashboard.getNumber("Algae Intake Motor Speed", 0.25)));
+    Shuffleboard.getTab("testing").add("Algae Pivot", algae.dynamicAlgaeSpeedPivot(
+      () -> SmartDashboard.getNumber("Algae Pivot Speed", 0.25)));
+    Shuffleboard.getTab("testing").add("Coral Outtake", coral.dynamicDriveCoral(
+      () -> SmartDashboard.getNumber("Coral Outtake Speed", -0.25)));
+    Shuffleboard.getTab("testing").add("Elevator Motor", elevator.dynamicElevatorSetSpeed(
+      () -> SmartDashboard.getNumber("Elevator Motor Speed", 0.25)));
+    Shuffleboard.getTab("testing").add("Climber Motor", climber.dynamicDriveClimb(
+      () -> SmartDashboard.getNumber("Climber Speed", 0.25)));
+    Shuffleboard.getTab("testing").add("Intake Motor", intake.dynamicDriveIntake(
+      () -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)));
+
+    Shuffleboard.getTab("testing").add("Elevator Encoder Offset", 2);
+    Shuffleboard.getTab("Debug").addString("Selected Node", objectiveTracker::getObjectiveString);
+
   }
 }
