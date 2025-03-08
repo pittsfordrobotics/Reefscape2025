@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Elevator.ElevatorLevels;
 import frc.robot.subsystems.Vision.Vision;
 import frc.robot.subsystems.Algae;
 import frc.robot.subsystems.Climber;
@@ -96,7 +97,7 @@ public class RobotContainer {
       swerve::getGyroAngle,
       swerve::getAngularVelocityRad_Sec,
       swerve::addVisionData);
-    elevator.setDefaultCommand(getAutonomousCommand());
+    // elevator.setDefaultCommand(getAutonomousCommand());
 
     SmartDashboard.putNumber("Algae Speed", 0.25);
 
@@ -112,7 +113,7 @@ public class RobotContainer {
     ObjectiveSelecterIONetworkTables objectiveSelecterIOImpl = new ObjectiveSelecterIONetworkTables();
     objectiveTracker = new ObjectiveTracker(objectiveSelecterIOImpl);
     objectiveTracker.setDefaultCommand(objectiveTracker.updateReefSide(swerve::getPose));
-    elevator.setDefaultCommand(elevator.dynamicElevatorLevel(objectiveTracker::getElevatorLevel));
+    // elevator.setDefaultCommand(elevator.dynamicElevatorLevel(objectiveTracker::getElevatorLevel));
 
     Command headingSteeringCommand = swerve.headingDriveCommand(
         () -> -driverController.getLeftY(),
@@ -212,7 +213,12 @@ public class RobotContainer {
       () -> SmartDashboard.getNumber("Algae Speed", 0.25) * -1));
 
     //Elevator Inputs:
-    operatorController.back().onTrue(elevator.homeElevator());
+    // operatorController.back().onTrue(elevator.homeElevator());
+    operatorController.back().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.ZERO));
+    operatorController.povUp().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L1));
+    operatorController.povDown().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L2));
+    operatorController.povLeft().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L3));
+    operatorController.povRight().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L4));
 
     //Climber Inputs:
     operatorController.leftTrigger().whileTrue(climber.dynamicDriveClimb(
@@ -220,10 +226,10 @@ public class RobotContainer {
       .onFalse(climber.stopClimb());
 
     // enhanced controls through objective tracker
-    operatorController.povUp().onTrue(objectiveTracker.moveIndex(MoveDirection.UP));
-    operatorController.povDown().onTrue(objectiveTracker.moveIndex(MoveDirection.DOWN));
-    operatorController.povRight().onTrue(objectiveTracker.moveIndex(MoveDirection.RIGHT));
-    operatorController.povLeft().onTrue(objectiveTracker.moveIndex(MoveDirection.LEFT));
+    // operatorController.povUp().onTrue(objectiveTracker.moveIndex(MoveDirection.UP));
+    // operatorController.povDown().onTrue(objectiveTracker.moveIndex(MoveDirection.DOWN));
+    // operatorController.povRight().onTrue(objectiveTracker.moveIndex(MoveDirection.RIGHT));
+    // operatorController.povLeft().onTrue(objectiveTracker.moveIndex(MoveDirection.LEFT));
 
     //Driver Controls ----------------------------------------------------------
     // Drive to reef:

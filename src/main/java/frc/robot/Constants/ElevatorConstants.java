@@ -21,7 +21,7 @@ public class ElevatorConstants {
     public static final double SHUTTLE_MAX_HEIGHT = 580;
     public static final double GROUND_TO_ELEVATOR_BOTTOM_INCHES = 10;
 
-    public static final double ELEVATOR_FEEDFORWARD = 0.04;
+    public static final double ELEVATOR_FEEDFORWARD = 0.02;
 
     public static final double CLOSED_LOOP_RAMP_RATE = 0.15;
 
@@ -34,6 +34,8 @@ public class ElevatorConstants {
     public static final double SHUTTLE_Kd = 0.01;
 
     public static final int INTAKE_POSITION = 0;
-    public static final int L2_POSITION = 62;
-    public static final int L3_POSITION = 109;
+    public static final int L1_POSITION = 20;
+    public static final int L2_POSITION = 46;
+    public static final int L3_POSITION = 79;
+    public static final int L4_POSITION = 130;
 }

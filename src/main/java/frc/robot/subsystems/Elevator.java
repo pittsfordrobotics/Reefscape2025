@@ -52,6 +52,7 @@ public class Elevator extends SubsystemBase {
     elevatorConfig.smartCurrentLimit(ElevatorConstants.STALL_LIMIT, ElevatorConstants.FREE_LIMIT);
     elevatorConfig.idleMode(IdleMode.kBrake)
     .closedLoopRampRate(ElevatorConstants.CLOSED_LOOP_RAMP_RATE);
+    elevatorConfig.inverted(true);
    
   
     elevatorConfig.closedLoop.maxMotion
@@ -139,10 +140,12 @@ public class Elevator extends SubsystemBase {
     return run(() -> {
       ElevatorLevels level = levelSupplier.get();
       int elevatorHeight = switch(level) {
+        case ZERO -> 0;
         case INTAKE -> ElevatorConstants.INTAKE_POSITION;
+        case L1 -> ElevatorConstants.L1_POSITION;
         case L2 -> ElevatorConstants.L2_POSITION;
         case L3 -> ElevatorConstants.L3_POSITION;
-        case L4 -> (int)ElevatorConstants.ELEVATOR_MAX_HEIGHT;
+        case L4 -> ElevatorConstants.L4_POSITION;
         default -> throw new IllegalArgumentException();
       };
       setElevatorPosition(elevatorHeight);
@@ -158,6 +161,6 @@ public class Elevator extends SubsystemBase {
   }
 
   public enum ElevatorLevels {
-    INTAKE, L1, L2, L3, L4;
+    ZERO, INTAKE, L1, L2, L3, L4;
   }
 }
