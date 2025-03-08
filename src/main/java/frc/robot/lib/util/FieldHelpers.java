@@ -112,7 +112,7 @@ public class FieldHelpers {
         // back up pose by 16" so it's not overlapping the reef
         pose = pose.transformBy(
                 new Transform2d(new Translation2d(-FieldConstants.reefLocationBackupDistance,
-                        (isRightSideSupplier.getAsBoolean() ? 1 : -1) * FieldConstants.reefLocationLeftRightDistance),
+                        (isRightSideSupplier.getAsBoolean() ? FieldConstants.reefLocationRightDistance : FieldConstants.reefLocationLeftDistance)),
                         new Rotation2d()));
 
         return pose;
