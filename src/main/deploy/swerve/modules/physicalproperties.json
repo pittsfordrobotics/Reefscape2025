@@ -22,6 +22,6 @@
   },
   "friction": {
     "drive": 0,
-    "angle": 0.1
+    "angle": 0.55
   }
 }
