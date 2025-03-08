@@ -18,6 +18,7 @@ import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -69,10 +70,10 @@ public class Swerve extends SubsystemBase {
 
         for (int i = 0; i < swerveDrive.getModules().length; i++) {
             // Lower the kS to reduce wobble?
-            // swerveDrive.getModules()[i].setFeedforward(new
-            // SimpleMotorFeedforward(SwerveConstants.MODULE_CONSTANTS[i].drive_kS * 0.1,
-            // SwerveConstants.MODULE_CONSTANTS[i].drive_kV,
-            // SwerveConstants.MODULE_CONSTANTS[i].drive_kA));
+            swerveDrive.getModules()[i].setFeedforward(new
+            SimpleMotorFeedforward(SwerveConstants.MODULE_CONSTANTS[i].drive_kS * 0.5,
+            SwerveConstants.MODULE_CONSTANTS[i].drive_kV,
+            SwerveConstants.MODULE_CONSTANTS[i].drive_kA));
         }
         // setupPathPlanner();
     }
