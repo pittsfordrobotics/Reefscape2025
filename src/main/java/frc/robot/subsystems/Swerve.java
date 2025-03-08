@@ -392,13 +392,15 @@ public class Swerve extends SubsystemBase {
     }
 
     public void enableSlowDriving(){
-        swerveDrive.setMaximumAttainableSpeeds(SwerveConstants.SWERVE_MAXIMUM_VELOCITY/4, SwerveConstants.SWERVE_MAXIMUM_ANGULAR_VELOCITY);
-        maximumSpeed = SwerveConstants.SWERVE_MAXIMUM_VELOCITY/4;
+        swerveDrive.setMaximumAttainableSpeeds(SwerveConstants.SWERVE_MAXIMUM_VELOCITY/6, SwerveConstants.SWERVE_MAXIMUM_ANGULAR_VELOCITY/2);
+        maximumSpeed = SwerveConstants.SWERVE_MAXIMUM_VELOCITY/6;
+        maximumAngularSpeed = SwerveConstants.SWERVE_MAXIMUM_ANGULAR_VELOCITY/2;
     }
 
     public void disableSlowDriving(){
         swerveDrive.setMaximumAttainableSpeeds(SwerveConstants.SWERVE_MAXIMUM_VELOCITY, SwerveConstants.SWERVE_MAXIMUM_ANGULAR_VELOCITY);
         maximumSpeed = SwerveConstants.SWERVE_MAXIMUM_VELOCITY;
+        maximumAngularSpeed = SwerveConstants.SWERVE_MAXIMUM_ANGULAR_VELOCITY;
     }
 
     // *******************
