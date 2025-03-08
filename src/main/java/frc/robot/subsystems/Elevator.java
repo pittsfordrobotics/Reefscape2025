@@ -173,4 +173,8 @@ public class Elevator extends SubsystemBase {
   public void increaseEncoderOffset(int offset){
     encoderOffset += offset;
   }
+
+  public void zeroElevatorOffset(){
+    encoderOffset = 0;
+  }
 }

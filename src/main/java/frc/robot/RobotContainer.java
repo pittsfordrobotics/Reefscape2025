@@ -187,8 +187,9 @@ public class RobotContainer {
     operatorController.povDown().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L2));
     operatorController.povLeft().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L3));
     operatorController.povRight().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L4));
-    operatorController.rightTrigger().onTrue(Commands.runOnce(
+    operatorController.rightBumper().onTrue(Commands.runOnce(
       (() -> elevator.increaseEncoderOffset((int)SmartDashboard.getNumber("Elevator Encoder Offset", 2)))));
+    operatorController.leftBumper().onTrue(Commands.runOnce((() -> elevator.zeroElevatorOffset())));
 
     //Climber Inputs:
     operatorController.leftTrigger().whileTrue(climber.dynamicDriveClimb(
