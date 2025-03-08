@@ -49,6 +49,8 @@ public class Swerve extends SubsystemBase {
     public double maximumAngularSpeed = SwerveConstants.SWERVE_MAXIMUM_ANGULAR_VELOCITY;
     private Rotation2d currentTargetAngle = new Rotation2d();
 
+    public boolean isSlowDrivingEnabled = false;
+
     /** Creates a new Swerve. */
     public Swerve(File config_dir) {
         // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary
@@ -394,11 +396,21 @@ public class Swerve extends SubsystemBase {
     public void enableSlowDriving(){
         swerveDrive.setMaximumAttainableSpeeds(SwerveConstants.SWERVE_MAXIMUM_VELOCITY/4, SwerveConstants.SWERVE_MAXIMUM_ANGULAR_VELOCITY);
         maximumSpeed = SwerveConstants.SWERVE_MAXIMUM_VELOCITY/4;
+        isSlowDrivingEnabled = true;
     }
 
     public void disableSlowDriving(){
         swerveDrive.setMaximumAttainableSpeeds(SwerveConstants.SWERVE_MAXIMUM_VELOCITY, SwerveConstants.SWERVE_MAXIMUM_ANGULAR_VELOCITY);
         maximumSpeed = SwerveConstants.SWERVE_MAXIMUM_VELOCITY;
+        isSlowDrivingEnabled = false;
+    }
+
+    public void toggleSlowDriving(){
+        if (isSlowDrivingEnabled == false) {
+            Commands.runOnce(() -> enableSlowDriving());
+          } else {
+            Commands.runOnce(() -> disableSlowDriving());
+          }
     }
 
     // *******************

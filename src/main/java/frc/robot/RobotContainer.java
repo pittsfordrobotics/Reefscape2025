@@ -238,15 +238,18 @@ public class RobotContainer {
     //Driver Controls ----------------------------------------------------------
     // Drive to reef:
     driverController.x().onTrue(swerve.driveToReef(objectiveTracker::isRightSide));
-    // Drive Intake:
-    driverController.b().whileTrue(intake.intakeCoralWithSensor());
+
     // Drive to nearest coral station:
     driverController.y().onTrue(swerve.driveToNearestCoralStation());
-    // Drive to algae processor:
-    driverController.leftTrigger().onTrue(swerve.driveToAlgaeCollector());
 
-    // Slow driving
-    driverController.a().onTrue(Commands.runOnce((() -> swerve.enableSlowDriving()))).onFalse(Commands.runOnce((() -> swerve.disableSlowDriving())));
+    // Drive to algae processor:
+    driverController.b().onTrue(swerve.driveToAlgaeCollector());
+
+    // Slow driving [Hold]
+    //driverController.a().onTrue(Commands.runOnce((() -> swerve.enableSlowDriving()))).onFalse(Commands.runOnce((() -> swerve.disableSlowDriving())));
+
+    // Slow Driving [Toggle]
+    driverController.a().onChange(Commands.runOnce(() -> swerve.toggleSlowDriving()));
   }
 
   /**
