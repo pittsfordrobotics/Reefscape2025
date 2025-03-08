@@ -139,6 +139,8 @@ public class RobotContainer {
     SmartDashboard.putNumber("Elevator Sled Speed", 0.25);
     SmartDashboard.putNumber("Climber Speed", 0.25);
     SmartDashboard.putNumber("Intake Motor Speed", 0.25);
+
+    SmartDashboard.putNumber("Elevator Encoder Offset", 2);
     
     Shuffleboard.getTab("testing").add("Algae Motor Speed", 0.25);
     Shuffleboard.getTab("testing").add("Algae Motor", algae.dynamicAlgaePickup(
@@ -219,6 +221,8 @@ public class RobotContainer {
     operatorController.povDown().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L2));
     operatorController.povLeft().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L3));
     operatorController.povRight().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L4));
+    operatorController.rightTrigger().onTrue(Commands.runOnce(
+      (() -> elevator.increaseEncoderOffset((int)SmartDashboard.getNumber("Elevator Encoder Offset", 2)))));
 
     //Climber Inputs:
     operatorController.leftTrigger().whileTrue(climber.dynamicDriveClimb(
