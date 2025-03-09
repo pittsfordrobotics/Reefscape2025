@@ -183,10 +183,10 @@ public class RobotContainer {
     //Elevator Inputs:
     // operatorController.back().onTrue(elevator.homeElevator());
     operatorController.back().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.ZERO));
-    operatorController.povUp().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L1));
-    operatorController.povDown().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L2));
-    operatorController.povLeft().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L3));
-    operatorController.povRight().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L4));
+    // operatorController.povUp().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L1));
+    // operatorController.povDown().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L2));
+    // operatorController.povLeft().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L3));
+    // operatorController.povRight().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L4));
     operatorController.rightBumper().onTrue(Commands.runOnce(
       (() -> elevator.increaseEncoderOffset((int)SmartDashboard.getNumber("Elevator Encoder Offset", 2)))));
     operatorController.leftBumper().onTrue(Commands.runOnce((() -> elevator.zeroElevatorOffset())));
@@ -199,14 +199,14 @@ public class RobotContainer {
     //   .onFalse(climber.stopClimb());
 
     // enhanced controls through objective tracker
-    // operatorController.povUp().onTrue(objectiveTracker.moveIndex(MoveDirection.UP));
-    // operatorController.povDown().onTrue(objectiveTracker.moveIndex(MoveDirection.DOWN));
-    // operatorController.povRight().onTrue(objectiveTracker.moveIndex(MoveDirection.RIGHT));
-    // operatorController.povLeft().onTrue(objectiveTracker.moveIndex(MoveDirection.LEFT));
+    operatorController.povUp().onTrue(objectiveTracker.moveIndex(MoveDirection.UP));
+    operatorController.povDown().onTrue(objectiveTracker.moveIndex(MoveDirection.DOWN));
+    operatorController.povRight().onTrue(objectiveTracker.moveIndex(MoveDirection.RIGHT));
+    operatorController.povLeft().onTrue(objectiveTracker.moveIndex(MoveDirection.LEFT));
 
     //Driver Controls ----------------------------------------------------------
     // Drive to reef:
-    driverController.x().onTrue(swerve.driveToReef(objectiveTracker::isRightSide));
+    driverController.x().whileTrue(swerve.driveToReef(objectiveTracker::isRightSide));
     // Drive Intake:
     driverController.b().whileTrue(intake.intakeCoralWithSensor());
     // Drive to nearest coral station:
