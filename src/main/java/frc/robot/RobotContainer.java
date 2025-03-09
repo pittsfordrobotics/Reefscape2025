@@ -163,7 +163,7 @@ public class RobotContainer {
     //Operator Controls --------------------------------------------------------
     //Coral Inputs
     operatorController.b().whileTrue(intake.dynamicDriveIntake(
-      () -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)));
+      () -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)).alongWith(elevator.setElevatorLevel(ElevatorLevels.INTAKE)));
 
     operatorController.rightTrigger().whileTrue(coral.dynamicDriveCoral(
       () -> SmartDashboard.getNumber("Coral Outtake Speed", 0.25)));
@@ -191,7 +191,7 @@ public class RobotContainer {
       (() -> elevator.increaseEncoderOffset((int)SmartDashboard.getNumber("Elevator Encoder Offset", 2)))));
     operatorController.leftBumper().onTrue(Commands.runOnce((() -> elevator.zeroElevatorOffset())));
 
-    operatorController.leftTrigger().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.INTAKE));
+    operatorController.leftTrigger().onTrue(climber.dynamicDriveClimb(() -> 0));// TODO: fix
 
     //Climber Inputs:
     // operatorController.leftTrigger().whileTrue(climber.dynamicDriveClimb(
@@ -208,11 +208,9 @@ public class RobotContainer {
     // Drive to reef:
     driverController.x().whileTrue(swerve.driveToReef(objectiveTracker::isRightSide));
     // Drive Intake:
-    driverController.b().whileTrue(intake.intakeCoralWithSensor());
+    driverController.b().whileTrue(swerve.driveToAlgaeCollector());
     // Drive to nearest coral station:
     driverController.y().onTrue(swerve.driveToNearestCoralStation());
-    // Drive to algae processor:
-    driverController.leftTrigger().onTrue(swerve.driveToAlgaeCollector());
 
     // Zero gyro:
     driverController.povUp().onTrue(swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));
