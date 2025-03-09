@@ -29,7 +29,7 @@ public class FieldConstants {
   public static double fieldWidth = Units.inchesToMeters(317);
 
   public static double reefLocationBackupDistance = Units.inchesToMeters(16);
-  public static double reefLocationLeftDistance = Units.inchesToMeters(12);
+  public static double reefLocationLeftDistance = Units.inchesToMeters(11);
   public static double reefLocationRightDistance = Units.inchesToMeters(-4);
   
   public static double startingLineX = Units.inchesToMeters(311.5);

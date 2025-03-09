@@ -210,7 +210,7 @@ public class RobotContainer {
     // Drive Intake:
     driverController.b().whileTrue(swerve.driveToAlgaeCollector());
     // Drive to nearest coral station:
-    driverController.y().onTrue(swerve.driveToNearestCoralStation());
+    driverController.y().whileTrue(swerve.driveToNearestCoralStation());
 
     // Zero gyro:
     driverController.povUp().onTrue(swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));
