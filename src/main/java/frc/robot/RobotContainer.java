@@ -191,10 +191,12 @@ public class RobotContainer {
       (() -> elevator.increaseEncoderOffset((int)SmartDashboard.getNumber("Elevator Encoder Offset", 2)))));
     operatorController.leftBumper().onTrue(Commands.runOnce((() -> elevator.zeroElevatorOffset())));
 
+    operatorController.leftTrigger().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.INTAKE));
+
     //Climber Inputs:
-    operatorController.leftTrigger().whileTrue(climber.dynamicDriveClimb(
-        () -> SmartDashboard.getNumber("Climber Active Angle", 0))) // not defined in dashboard x2????
-      .onFalse(climber.stopClimb());
+    // operatorController.leftTrigger().whileTrue(climber.dynamicDriveClimb(
+    //     () -> SmartDashboard.getNumber("Climber Active Angle", 0))) // not defined in dashboard x2????
+    //   .onFalse(climber.stopClimb());
 
     // enhanced controls through objective tracker
     // operatorController.povUp().onTrue(objectiveTracker.moveIndex(MoveDirection.UP));
@@ -211,6 +213,9 @@ public class RobotContainer {
     driverController.y().onTrue(swerve.driveToNearestCoralStation());
     // Drive to algae processor:
     driverController.leftTrigger().onTrue(swerve.driveToAlgaeCollector());
+
+    // Zero gyro:
+    driverController.povUp().onTrue(swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));
 
     // Slow driving
     driverController.a().onTrue(Commands.runOnce((() -> swerve.enableSlowDriving()))).onFalse(Commands.runOnce((() -> swerve.disableSlowDriving())));

@@ -36,6 +36,7 @@ public class Climber extends SubsystemBase {
     climbConfig2.smartCurrentLimit(40, 40);
     
     climbConfig1.idleMode(IdleMode.kBrake);
+    // climbConfig2.idleMode(IdleMode.kCoast);
     climbConfig2.idleMode(IdleMode.kBrake);
 
     climbConfig1.closedLoop.pid(
@@ -56,6 +57,7 @@ public class Climber extends SubsystemBase {
 
   private void setClimbSpeed(double speed) {
     climbMotor1.set(speed);
+    // climbMotor2.set((speed == 0) ? 0 : ((speed < 0) ? -0.05 : 0.05));
   }
 
   public Command dynamicDriveClimb(DoubleSupplier speed){
