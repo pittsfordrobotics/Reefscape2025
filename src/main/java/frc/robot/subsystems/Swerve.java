@@ -361,10 +361,10 @@ public class Swerve extends SubsystemBase {
 
     public Command driveToNearestCoralStation(){
         PathConstraints constraints = new PathConstraints(
-            SwerveConstants.AUTOBUILDER_MAX_VELOCITY,
-            SwerveConstants.AUTOBUILDER_MAX_ANGULAR_VELOCITY,
-            SwerveConstants.AUTOBUILDER_MAX_ACCELERATION,
-            SwerveConstants.AUTOBUILDER_MAX_ANGULAR_ACCELERATION,
+            SwerveConstants.AUTOBUILDER_MAX_VELOCITY * 0.25,
+            SwerveConstants.AUTOBUILDER_MAX_ANGULAR_VELOCITY * 0.25,
+            SwerveConstants.AUTOBUILDER_MAX_ACCELERATION * 0.25,
+            SwerveConstants.AUTOBUILDER_MAX_ANGULAR_ACCELERATION * 0.25,
             SwerveConstants.NOMINAL_VOLTAGE,
             false);
         return driveToPoseFlipped(() -> FieldHelpers.getNearestCoralStation(getPose(), isRedAlliance()), constraints);
@@ -372,21 +372,21 @@ public class Swerve extends SubsystemBase {
 
     public Command driveToAlgaeCollector(){
         PathConstraints constraints = new PathConstraints(
-            SwerveConstants.AUTOBUILDER_MAX_VELOCITY,
-            SwerveConstants.AUTOBUILDER_MAX_ANGULAR_VELOCITY,
-            SwerveConstants.AUTOBUILDER_MAX_ACCELERATION,
-            SwerveConstants.AUTOBUILDER_MAX_ANGULAR_ACCELERATION,
+            SwerveConstants.AUTOBUILDER_MAX_VELOCITY * 0.25,
+            SwerveConstants.AUTOBUILDER_MAX_ANGULAR_VELOCITY * 0.25,
+            SwerveConstants.AUTOBUILDER_MAX_ACCELERATION * 0.25,
+            SwerveConstants.AUTOBUILDER_MAX_ANGULAR_ACCELERATION * 0.25,
             SwerveConstants.NOMINAL_VOLTAGE,
             false);
         return driveToPoseFlipped(() -> FieldConstants.algaeProcessorPos, constraints);
     }
 
     public Command driveToReef(BooleanSupplier isRightSideSupplier) {
-        PathConstraints constraints = new PathConstraints(
-            SwerveConstants.AUTOBUILDER_MAX_CORAL_VELOCITY,
-            SwerveConstants.AUTOBUILDER_MAX_CORAL_ANGULAR_VELOCITY,
-            SwerveConstants.AUTOBUILDER_MAX_CORAL_ACCELERATION,
-            SwerveConstants.AUTOBUILDER_MAX_CORAL_ANGULAR_ACCELERATION,
+        PathConstraints constraints = new PathConstraints(// TODO: set back to normal for comp
+            SwerveConstants.AUTOBUILDER_MAX_CORAL_VELOCITY * 0.25,
+            SwerveConstants.AUTOBUILDER_MAX_CORAL_ANGULAR_VELOCITY * 0.25,
+            SwerveConstants.AUTOBUILDER_MAX_CORAL_ACCELERATION * 0.5,
+            SwerveConstants.AUTOBUILDER_MAX_CORAL_ANGULAR_ACCELERATION * 0.5,
             SwerveConstants.NOMINAL_VOLTAGE,
             false);
         return driveToPose(() -> FieldHelpers.reefLocation(getPose(), isRightSideSupplier), constraints);
