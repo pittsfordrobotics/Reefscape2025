@@ -50,8 +50,8 @@ public class Algae extends SubsystemBase {
     SparkMaxConfig algaeConfig = new SparkMaxConfig();
     SparkMaxConfig pivotConfig = new SparkMaxConfig();
 
-    algaeConfig.smartCurrentLimit(20, 20);
-    pivotConfig.smartCurrentLimit(20,20);
+    algaeConfig.smartCurrentLimit(40, 40);
+    pivotConfig.smartCurrentLimit(40,40);
 
     algaeConfig.idleMode(IdleMode.kBrake);
     pivotConfig.idleMode(IdleMode.kBrake);
@@ -95,11 +95,20 @@ public class Algae extends SubsystemBase {
     return run(() -> algaePivotMotor.set(-speed.getAsDouble())).finallyDo(() -> algaePivotMotor.set(0));
   }
 
-  public Command stopAlgaePickup(){
-    return run(() -> algaePickupMotor.set(0));
+  public Command startStopDriveAlgae(DoubleSupplier speed) {
+    return startEnd(
+      () -> algaePickupMotor.set(speed.getAsDouble()),
+       () -> algaePickupMotor.set(0));
+  }
+
+  public Command startStopAlgaePivot(DoubleSupplier degrees) {
+    return startEnd(
+      () -> setAlgaePivotPosition(degrees.getAsDouble()),
+       () -> algaePivotMotor.set(0));
+  }
+
+  public Command dualAlgaeIntake(DoubleSupplier degrees, DoubleSupplier speed){
+    return dynamicAlgaeSetPivot(degrees).andThen(startStopDriveAlgae(speed));
   }
   
-  public Command stopAlgaePivot(){
-    return run(() -> algaePivotMotor.set(0));
-  }
 }

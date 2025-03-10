@@ -31,8 +31,8 @@ function updateReefSide(side) {
 }
 
 let client = new NT4_Client(
-  // "10.31.81.2",
-  "127.0.0.1",
+  "10.31.81.2",
+  // "127.0.0.1",
   "NodeSelector",
   (topic) => {
     // Topic announce

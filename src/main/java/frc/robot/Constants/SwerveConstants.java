@@ -9,13 +9,27 @@ public class SwerveConstants {
     private static SwerveModuleConstants BACK_RIGHT_CONSTANTS = new SwerveModuleConstants(0.14703, 2.0077, 0.18546, 0, 0, 0);
     public static final SwerveModuleConstants[] MODULE_CONSTANTS = {FRONT_LEFT_CONSTANTS, FRONT_RIGHT_CONSTANTS, BACK_LEFT_CONSTANTS, BACK_RIGHT_CONSTANTS};
 
-    public static double SWERVE_MAXIMUM_VELOCITY = 5.5;
-    public static double SWERVE_MAXIMUM_ANGULAR_VELOCITY = 13.6;
+    public static final double SWERVE_MAXIMUM_VELOCITY = 5.5;
+    public static final double SWERVE_MAXIMUM_ANGULAR_VELOCITY = 13.6;
 
     public static final int FRONT_LEFT_MODULE_INDEX = 0;
     public static final int FRONT_RIGHT_MODULE_INDEX = 1;
     public static final int BACK_LEFT_MODULE_INDEX = 2;
     public static final int BACK_RIGHT_MODULE_INDEX = 3;
+
+    public static final double NOMINAL_VOLTAGE = 12;
+
+    public static final double AUTOBUILDER_MAX_CORAL_VELOCITY = 3;
+    public static final double AUTOBUILDER_MAX_CORAL_ANGULAR_VELOCITY = 7;
+
+    public static final double AUTOBUILDER_MAX_CORAL_ACCELERATION = 1;
+    public static final double AUTOBUILDER_MAX_CORAL_ANGULAR_ACCELERATION = 2;
+
+    public static final double AUTOBUILDER_MAX_VELOCITY = 3;
+    public static final double AUTOBUILDER_MAX_ANGULAR_VELOCITY = 7;
+
+    public static final double AUTOBUILDER_MAX_ACCELERATION = 1;
+    public static final double AUTOBUILDER_MAX_ANGULAR_ACCELERATION = 2;
 
     // public class BACK_LEFT {
     //     public static final double drive_kS = 0.26965;

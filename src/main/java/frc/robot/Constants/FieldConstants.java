@@ -29,44 +29,19 @@ public class FieldConstants {
   public static double fieldWidth = Units.inchesToMeters(317);
 
   public static double reefLocationBackupDistance = Units.inchesToMeters(16);
-
-  /** This hashmap maps tag numbers to the reef side they are on.
-   * key: tag number
-   * value: reef side number
-   */
-  public static HashMap<Integer, Integer> tagNoToReefSide = new HashMap<>() {{
-    put(7, 1);   put(18, 1);
-    put(8, 2);   put(17, 2);
-    put(9, 3);   put(22, 3);
-    put(10, 4);  put(21, 4);
-    put(11, 5);  put(20, 5);
-    put(6, 6);   put(19, 6);
-  }};
-
-  /** 
-   * @param robotPose the pose of the robot
-   * @return the reef side number that the robot is closest to
-   */
-  public static int findNearestReefSide(Pose2d robotPose) {
-    Translation2d robotTranslation = robotPose.getTranslation();
-    double minDistance = Double.MAX_VALUE;
-    int nearestReefSide = -1;
-
-    for(int tagID : tagNoToReefSide.keySet()) {
-      Pose2d tagPose = aprilTags.getTagPose(tagID).get().toPose2d();
-      Translation2d tagTranslation = tagPose.getTranslation();
-      double distance = tagTranslation.getDistance(robotTranslation);
-      if(distance < minDistance) {
-        minDistance = distance;
-        nearestReefSide = tagNoToReefSide.get(tagID);
-      }
-    }
-    return nearestReefSide;
-  }
-  
+  public static double reefLocationLeftDistance = Units.inchesToMeters(12);
+  public static double reefLocationRightDistance = Units.inchesToMeters(-4);
   public static double startingLineX = Units.inchesToMeters(311.5);
   public static double aprilTagWidth = Units.inchesToMeters(6.50);
   public static AprilTagFieldLayout aprilTags;
+
+  public static Rotation2d coralStationBottomRot = new Rotation2d(45);
+  public static Pose2d coralStationBottomPos = new Pose2d(1.139, 1.154, coralStationBottomRot);
+  public static Rotation2d coralStationTopRot = new Rotation2d(-45);
+  public static Pose2d coralStationTopPos = new Pose2d(1.295, 7, coralStationBottomRot);
+
+  public static Rotation2d algaeProcessorRot = new Rotation2d(-90);
+  public static Pose2d algaeProcessorPos = new Pose2d(5.988, 0.41, algaeProcessorRot);
 
   static {
     try {
