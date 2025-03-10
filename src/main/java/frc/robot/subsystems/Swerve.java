@@ -28,16 +28,19 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.Robot;
 import frc.robot.lib.AllDeadbands;
 import frc.robot.lib.VisionData;
 import frc.robot.lib.util.FieldHelpers;
 import swervelib.SwerveDrive;
+import swervelib.SwerveDriveTest;
 import swervelib.SwerveModule;
 import swervelib.parser.SwerveModuleConfiguration;
 import swervelib.parser.SwerveParser;
@@ -242,6 +245,34 @@ public class Swerve extends SubsystemBase {
                 }
             }
         });
+    }
+
+    /**
+     * Command to characterize the robot drive motors using SysId
+     *
+     * @return SysId Drive Command
+     */
+    public Command sysIdDriveMotorCommand() {
+        return SwerveDriveTest.generateSysIdCommand(
+                SwerveDriveTest.setDriveSysIdRoutine(
+                        new Config(),
+                        this, swerveDrive, 12, true),
+                3.0, 5.0, 3.0); // TODO: Tweak (increase quasitimeout if possible) for running sysid
+        // characterization
+    }
+
+    /**
+     * Command to characterize the robot angle motors using SysId
+     *
+     * @return SysId Angle Command
+     */
+    public Command sysIdAngleMotorCommand() {
+        return SwerveDriveTest.generateSysIdCommand(
+                SwerveDriveTest.setAngleSysIdRoutine(
+                        new Config(),
+                        this, swerveDrive),
+                3.0, 5.0, 3.0); // TODO: Tweak (increase quasitimeout if possible) if needed for running sysid
+        // characterization
     }
 
     // * Adds vision measurement from vision object to swerve
