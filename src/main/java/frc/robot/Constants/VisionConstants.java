@@ -22,6 +22,7 @@ public final class VisionConstants {
     public static final double FIELD_BORDER_MARGIN = 0.5;
     public static final double Z_MARGIN = 0.75;
     public static final double XY_STD_DEV_COEF = 0.2;
+    
     //Don't even bother using vision for heading measurement, Pigeon2 is good enough
     public static final double THETA_STD_DEV_COEF = 1;
     public static final double TARGET_LOG_SECONDS = 0.1;

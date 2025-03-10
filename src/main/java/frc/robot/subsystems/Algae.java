@@ -44,6 +44,7 @@ public class Algae extends SubsystemBase {
     AlgaeConstants.ARM_FEEDFORWARD_KS, 
     AlgaeConstants.ARM_FEEDFORWARD_KG, 
     AlgaeConstants.ARM_FEEDFORWARD_KV);
+  
   /** Creates a new Algae. */
   public Algae() {
     SparkMaxConfig algaeConfig = new SparkMaxConfig();
@@ -71,7 +72,7 @@ public class Algae extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  @Logged(name = "IsAlgaeDetected")
+  @Logged(name = "Is algae detected")
   public boolean isAlgaeDetected() {
     return algaeSensor.get();
   }
