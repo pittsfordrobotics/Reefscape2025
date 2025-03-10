@@ -159,7 +159,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("dropCoralTrough", coral.placeCoral());
     NamedCommands.registerCommand("coralDrop", coral.placeCoral());
     NamedCommands.registerCommand("collectCoral", intake.intakeCoralWithSensor());
-    NamedCommands.registerCommand("ElevatorRaise", elevator.setElevatorLevel(ElevatorLevels.L2));
+    NamedCommands.registerCommand("ElevatorRaise", elevator.setElevatorLevel(ElevatorLevels.L4));
+    NamedCommands.registerCommand("ElevatorLower", elevator.setElevatorLevel(ElevatorLevels.L1));
     
 
 
