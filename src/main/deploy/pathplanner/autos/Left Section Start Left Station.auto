@@ -23,21 +23,27 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "collectCoral"
-          }
-        },
-        {
           "type": "wait",
           "data": {
             "waitTime": 0.5
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "collectCoral"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Station-Reef(L)(L)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorRaise"
           }
         },
         {

@@ -19,7 +19,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Trough-Station(M)(L)"
+            "pathName": "TroughDrop-Station(M)(L)"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         },
         {

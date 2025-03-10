@@ -4,20 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.Vision.Vision;
-import frc.robot.subsystems.Algae;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Coral;
-import frc.robot.subsystems.Intake;
-
-import frc.robot.subsystems.objectiveTracker.ObjectiveSelecterIONetworkTables;
-import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
-import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.MoveDirection;
-
 import java.io.File;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -34,6 +20,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.VisionConstants;
+import frc.robot.subsystems.Algae;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Coral;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Elevator.ElevatorLevels;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Vision.Vision;
+import frc.robot.subsystems.objectiveTracker.ObjectiveSelecterIONetworkTables;
+import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.MoveDirection;
+import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -160,6 +159,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("dropCoralTrough", coral.placeCoral());
     NamedCommands.registerCommand("coralDrop", coral.placeCoral());
     NamedCommands.registerCommand("collectCoral", intake.intakeCoralWithSensor());
+    NamedCommands.registerCommand("ElevatorRaise", elevator.setElevatorLevel(ElevatorLevels.L2));
+    
 
 
 
