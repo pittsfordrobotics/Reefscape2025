@@ -172,17 +172,18 @@ public class RobotContainer {
     operatorController.x().whileTrue(algae.startStopAlgaePivot(
       () -> SmartDashboard.getNumber("Algae Active Angle", 0))); // not even defined in dashboard might want to delete or something
 
-    operatorController.a().whileTrue(algae.dualAlgaeIntake(
-      () -> SmartDashboard.getNumber("Algae Up Angle", 0),
-      () -> SmartDashboard.getNumber("Algae Speed", 0.25)));
+    // operatorController.a().whileTrue(algae.dualAlgaeIntake(
+    //   () -> SmartDashboard.getNumber("Algae Up Angle", 0),
+    //   () -> SmartDashboard.getNumber("Algae Speed", 0.25)));
 
-    operatorController.y().whileTrue(algae.dualAlgaeIntake(
-      () -> SmartDashboard.getNumber("Algae Down Angle", 0),
-      () -> SmartDashboard.getNumber("Algae Speed", 0.25) * -1));
+    // operatorController.y().whileTrue(algae.dualAlgaeIntake(
+    //   () -> SmartDashboard.getNumber("Algae Down Angle", 0),
+    //   () -> SmartDashboard.getNumber("Algae Speed", 0.25) * -1));
 
     //Elevator Inputs:
     // operatorController.back().onTrue(elevator.homeElevator());
     operatorController.back().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.ZERO));
+    operatorController.a().onTrue(elevator.dynamicElevatorLevel(() -> objectiveTracker.getElevatorLevel()));
     // operatorController.povUp().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L1));
     // operatorController.povDown().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L2));
     // operatorController.povLeft().onTrue(elevator.dynamicElevatorLevel(() -> ElevatorLevels.L3));
