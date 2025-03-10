@@ -12,6 +12,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.lib.util.FieldHelpers;
+import frc.robot.subsystems.Elevator.ElevatorLevels;
 import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.MoveDirection;
 import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.ObjectiveSelectorInputs;
 
@@ -40,6 +42,10 @@ public class ObjectiveTracker extends SubsystemBase {
     return selectorInputs.selectedIndex;
   }
 
+  public ElevatorLevels getElevatorLevel() {
+    return ElevatorLevels.values()[4 - (selectorInputs.selectedIndex / 2)];
+  }
+
   public boolean isRightSide() {
     return selectorInputs.selectedIndex % 2 == 1;
   }
@@ -48,7 +54,7 @@ public class ObjectiveTracker extends SubsystemBase {
     return this.runOnce(() -> moveIndexInternal(direction)).ignoringDisable(true);
   }
   public Command updateReefSide(Supplier<Pose2d> currentPose) {
-    return this.run(() -> updateReefSide(currentPose)).ignoringDisable(true);
+    return this.run(() -> updateReefSideInternal(currentPose)).ignoringDisable(true);
   }
 
   private void moveIndexInternal(MoveDirection direction)
@@ -89,7 +95,7 @@ public class ObjectiveTracker extends SubsystemBase {
     objectiveSelector.setIndex(newIndex);
   }
   private void updateReefSideInternal(Supplier<Pose2d> currentPose) {
-    int reefSide = FieldConstants.findNearestReefSide(currentPose.get());
+    int reefSide = FieldHelpers.findNearestReefSide(currentPose.get());
     objectiveSelector.setReefSide(reefSide);
   }
 }

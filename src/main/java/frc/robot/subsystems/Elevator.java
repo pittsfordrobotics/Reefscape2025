@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkMax;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -34,6 +35,7 @@ public class Elevator extends SubsystemBase {
   
   private double elevatorPos = 0;  // height from bottom elevtor position to bottom of shuttle slide
   public boolean elevatorIsHomed = false;
+  private int encoderOffset = 0;
 
   @Logged(name = "Elevator position inches")
   public double getElevatorPosition() {
@@ -45,17 +47,23 @@ public class Elevator extends SubsystemBase {
     return elevatorIsHomed;
   }
 
+  @Logged(name = "Encoder offset")
+  public int getEncoderOffset(){
+    return encoderOffset;
+  }
+
   /** Creates a new Elevator. */
   public Elevator() {
     SparkMaxConfig elevatorConfig = new SparkMaxConfig();
-    elevatorConfig.smartCurrentLimit(40, 40);
+    elevatorConfig.smartCurrentLimit(ElevatorConstants.STALL_LIMIT, ElevatorConstants.FREE_LIMIT);
     elevatorConfig.idleMode(IdleMode.kBrake)
-    .closedLoopRampRate(0.15);
+    .closedLoopRampRate(ElevatorConstants.CLOSED_LOOP_RAMP_RATE);
+    elevatorConfig.inverted(true);
    
   
     elevatorConfig.closedLoop.maxMotion
-      .maxVelocity(5000)
-      .maxAcceleration(20000);
+      .maxVelocity(ElevatorConstants.ELEVATOR_MAX_VELOCITY)
+      .maxAcceleration(ElevatorConstants.ELEVATOR_MAX_ACCELERATION);
     elevatorConfig.closedLoop
       .pid(ElevatorConstants.ELEVATOR_Kp, ElevatorConstants.ELEVATOR_Ki, ElevatorConstants.ELEVATOR_Kd);
 
@@ -120,18 +128,34 @@ public class Elevator extends SubsystemBase {
     Command elevatorCommand;
     switch (level) {
       case INTAKE -> {
-        elevatorCommand = run(() -> setElevatorPosition(0));
+        elevatorCommand = run(() -> setElevatorPosition(ElevatorConstants.INTAKE_POSITION + encoderOffset));
       } case L2 -> {
-        elevatorCommand = run(() -> setElevatorPosition(62));
+        elevatorCommand = run(() -> setElevatorPosition(ElevatorConstants.L2_POSITION + encoderOffset));
       } case L3 -> {
-        elevatorCommand = run(() -> setElevatorPosition(109));
+        elevatorCommand = run(() -> setElevatorPosition(ElevatorConstants.L3_POSITION + encoderOffset));
       } case L4 -> {
         elevatorCommand = run(() -> {
-            setElevatorPosition(ElevatorConstants.ELEVATOR_MAX_HEIGHT);
+            setElevatorPosition(ElevatorConstants.L4_POSITION + encoderOffset);
           });
       } default -> throw new IllegalArgumentException();
     }
     return elevatorCommand;
+  }
+
+  public Command dynamicElevatorLevel(Supplier<ElevatorLevels> levelSupplier) {
+    return run(() -> {
+      ElevatorLevels level = levelSupplier.get();
+      int elevatorHeight = switch(level) {
+        case ZERO -> 0;
+        case INTAKE -> ElevatorConstants.INTAKE_POSITION + encoderOffset;
+        case L1 -> ElevatorConstants.L1_POSITION + encoderOffset;
+        case L2 -> ElevatorConstants.L2_POSITION + encoderOffset;
+        case L3 -> ElevatorConstants.L3_POSITION + encoderOffset;
+        case L4 -> ElevatorConstants.L4_POSITION + encoderOffset;
+        default -> throw new IllegalArgumentException();
+      };
+      setElevatorPosition(elevatorHeight);
+    });
   }
 
   public Command dynamicElevatorSetSpeed(DoubleSupplier speed){
@@ -143,6 +167,14 @@ public class Elevator extends SubsystemBase {
   }
 
   public enum ElevatorLevels {
-    INTAKE, L1, L2, L3, L4;
+    ZERO, INTAKE, L1, L2, L3, L4;
+  }
+
+  public void increaseEncoderOffset(int offset){
+    encoderOffset += offset;
+  }
+
+  public void zeroElevatorOffset(){
+    encoderOffset = 0;
   }
 }
