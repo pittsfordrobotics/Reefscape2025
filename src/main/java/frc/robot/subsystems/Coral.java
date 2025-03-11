@@ -39,11 +39,12 @@ public class Coral extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  private boolean isCoralDetected() {
+  @Logged(name = "Coral Detected")
+  public boolean isCoralDetected() {
     if (Robot.isSimulation()) {
       return true;
     }
-    return coralSensor.get();
+    return !coralSensor.get();
   }
 
   private void setCoral(double speed) {
@@ -55,6 +56,7 @@ public class Coral extends SubsystemBase {
   public Command intakeCoral() {
     return runOnce(() -> setCoral(CoralConstants.CORAL_INTAKE_SPEED))
         .andThen(Commands.waitUntil(this::isCoralDetected))
+        .andThen(Commands.waitSeconds(0.25))
         .andThen(Commands.waitUntil(() -> !isCoralDetected()))
         .finallyDo(() -> setCoral(0));
   }
