@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.commands.IntakeCoral;
 import frc.robot.subsystems.Algae;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Coral;
@@ -158,8 +159,11 @@ public class RobotContainer {
     
     NamedCommands.registerCommand("dropCoralTrough", coral.placeCoral());
     NamedCommands.registerCommand("coralDrop", coral.placeCoral());
-    NamedCommands.registerCommand("collectCoral", intake.intakeCoralWithSensor());
-    NamedCommands.registerCommand("ElevatorRaise", elevator.setElevatorLevel(ElevatorLevels.L2));
+    NamedCommands.registerCommand("collectCoral", new IntakeCoral(intake, coral, elevator));
+    NamedCommands.registerCommand("ElevatorL4", elevator.setElevatorLevel(ElevatorLevels.L4).until(() -> elevator.isAtLevel(ElevatorLevels.L4)));
+    NamedCommands.registerCommand("ElevatorL3", elevator.setElevatorLevel(ElevatorLevels.L3).until(() -> elevator.isAtLevel(ElevatorLevels.L3)));
+    NamedCommands.registerCommand("ElevatorL2", elevator.setElevatorLevel(ElevatorLevels.L2).until(() -> elevator.isAtLevel(ElevatorLevels.L2)));
+    NamedCommands.registerCommand("ElevatorIntake", elevator.setElevatorLevel(ElevatorLevels.INTAKE).until(() -> elevator.isAtLevel(ElevatorLevels.INTAKE)));
     
 
 

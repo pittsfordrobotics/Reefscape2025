@@ -22,6 +22,7 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
@@ -170,6 +171,7 @@ public class Elevator extends SubsystemBase {
    * Sets the position of the elevator and shuttle, based on an elevator level
    */
   public Command setElevatorLevel(ElevatorLevels level) {
+    System.out.println("Setting elevator level to " + level);
     Command elevatorCommand;
     switch (level) {
       case INTAKE -> {
@@ -192,6 +194,23 @@ public class Elevator extends SubsystemBase {
       } default -> throw new IllegalArgumentException();
     }
     return elevatorCommand;
+  }
+
+  public boolean isAtLevel(ElevatorLevels level) {
+    if(Robot.isSimulation()) {
+      return true;
+    }
+    switch (level) {
+      case INTAKE -> {
+        return elevatorPos < 1;
+      } case L2 -> {
+        return elevatorPos > 61 && elevatorPos < 63;
+      } case L3 -> {
+        return elevatorPos > 108 && elevatorPos < 110;
+      } case L4 -> {
+        return elevatorPos > ElevatorConstants.ELEVATOR_MAX_HEIGHT - 1;
+      } default -> throw new IllegalArgumentException();
+    }
   }
 
   public Command dynamicElevatorSetSpeed(DoubleSupplier speed){

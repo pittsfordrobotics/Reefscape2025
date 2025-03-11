@@ -17,6 +17,7 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.logging.SparkMaxLogger;
 
@@ -26,7 +27,7 @@ public class Intake extends SubsystemBase {
   
   //private final SparkMaxLogger intakeLogger = new SparkMaxLogger();
 
-  DigitalInput coralSensor = new DigitalInput(0);
+  DigitalInput intakeSensor = new DigitalInput(1);
   
   /** Creates a new IntakeSubsystem. */
   public Intake() {
@@ -44,9 +45,15 @@ public class Intake extends SubsystemBase {
     // This method will be called once per scheduler run
   }
   
-  @Logged(name = "IsCoralDetected")
+  // @Logged(name = "IsCoralDetected")
   public boolean isCoralDetected() {
-    return coralSensor.get();
+    System.out.println("Coral Detected in sim!");
+    return true;
+    // if(Robot.isSimulation()) {
+    //   System.out.println("Coral Detected in sim!");
+    //   return true;
+    // }
+    // return intakeSensor.get();
   }
 
   private void setIntake(double speed) {
@@ -61,6 +68,10 @@ public class Intake extends SubsystemBase {
 
   public Command intakeCoralWithSensor() {
     return run(() -> setIntake(IntakeConstants.CORAL_INTAKE_SPEED)).until(this::isCoralDetected);
+  }
+
+  public Command intakeCoral() {
+    return runOnce(() -> setIntake(IntakeConstants.CORAL_INTAKE_SPEED));
   }
 
   public Command stopIntake(){
