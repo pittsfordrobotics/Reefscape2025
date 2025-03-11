@@ -1,0 +1,4 @@
+Coords (x, y, degrees):
+Left Start (7.6, 7, 180)
+Left Coral Station (1.2, 7.1, -54)
+Side 2 Left (4.142, 5.255, -60)
