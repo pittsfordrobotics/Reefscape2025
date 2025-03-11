@@ -13,49 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ElevatorRaise"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "dropCoralTrough"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ElevatorLower"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "TroughDrop-Station(R)(L)"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "collectCoral"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Station-Reef(R)(L)"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ElevatorRaise"
+            "name": "ElevatorL4"
           }
         },
         {
@@ -67,13 +25,55 @@
         {
           "type": "named",
           "data": {
-            "name": "ElevatorLower"
+            "name": "ElevatorIntake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Reef-Station(R)(L)"
+            "pathName": "TroughDrop-Station(L)(L)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "collectCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Station-Reef(L)(L)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "coralDrop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef-Station(L)(L)"
           }
         }
       ]
