@@ -29,6 +29,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "ElevatorLower"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "TroughDrop-Station(L)(L)"

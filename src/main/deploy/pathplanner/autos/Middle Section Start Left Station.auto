@@ -13,7 +13,19 @@
         {
           "type": "named",
           "data": {
+            "name": "ElevatorRaise"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "dropCoralTrough"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorLower"
           }
         },
         {
@@ -37,7 +49,19 @@
         {
           "type": "named",
           "data": {
+            "name": "ElevatorRaise"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "coralDrop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorLower"
           }
         },
         {

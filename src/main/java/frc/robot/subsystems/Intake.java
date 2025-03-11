@@ -47,13 +47,11 @@ public class Intake extends SubsystemBase {
   
   // @Logged(name = "IsCoralDetected")
   public boolean isCoralDetected() {
-    System.out.println("Coral Detected in sim!");
-    return true;
-    // if(Robot.isSimulation()) {
-    //   System.out.println("Coral Detected in sim!");
-    //   return true;
-    // }
-    // return intakeSensor.get();
+    if(Robot.isSimulation()) {
+      System.out.println("Coral Detected in sim!");
+      return true;
+    }
+    return intakeSensor.get();
   }
 
   private void setIntake(double speed) {
