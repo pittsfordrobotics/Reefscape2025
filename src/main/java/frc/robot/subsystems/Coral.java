@@ -68,6 +68,6 @@ public class Coral extends SubsystemBase {
   }
 
   public Command stopCoral() {
-    return run(() -> setCoral(0));
+    return runOnce(() -> setCoral(0));
   }
 }

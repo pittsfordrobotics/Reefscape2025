@@ -15,10 +15,11 @@ import frc.robot.subsystems.Elevator.ElevatorLevels;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class IntakeCoral extends SequentialCommandGroup {
-  /** Creates a new intakeCoral. */
+  /** Intake coral, sets elevator to intake level and stops when staged */
   public IntakeCoral(Intake intake, Coral coral, Elevator elevator) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    addCommands(intake.intakeCoralWithSensor(), elevator.setElevatorLevel(ElevatorLevels.INTAKE).until(() -> elevator.isAtLevel(ElevatorLevels.INTAKE)), intake.intakeCoral().alongWith(coral.intakeCoral()));
+    addCommands(
+        elevator.setElevatorLevel(ElevatorLevels.INTAKE).until(() -> elevator.isAtLevel(ElevatorLevels.INTAKE)),
+        intake.intakeCoral().alongWith(coral.intakeCoral()),
+        intake.stopIntake().alongWith(coral.stopCoral()));
   }
 }
