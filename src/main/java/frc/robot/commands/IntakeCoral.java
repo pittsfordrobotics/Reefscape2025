@@ -20,6 +20,9 @@ public class IntakeCoral extends SequentialCommandGroup {
     addCommands(
         elevator.setElevatorLevel(ElevatorLevels.INTAKE).until(() -> elevator.isAtLevel(() -> ElevatorLevels.INTAKE)),
         intake.intakeCoral().alongWith(coral.intakeCoral()),
+        Commands.waitUntil(coral::isCoralDetected),
+        intake.slowIntakeCoral(),
+        Commands.waitUntil(() -> !coral.isCoralDetected()),
         intake.stopIntake().alongWith(coral.stopCoral()));
   }
 }

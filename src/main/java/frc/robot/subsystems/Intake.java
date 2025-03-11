@@ -68,6 +68,10 @@ public class Intake extends SubsystemBase {
     return runOnce(() -> setIntake(IntakeConstants.CORAL_INTAKE_SPEED));
   }
 
+  public Command slowIntakeCoral() {
+    return runOnce(() -> setIntake(IntakeConstants.CORAL_SLOW_INTAKE_SPEED));
+  }
+
   public Command stopIntake(){
     return runOnce(() -> setIntake(0));
   }
