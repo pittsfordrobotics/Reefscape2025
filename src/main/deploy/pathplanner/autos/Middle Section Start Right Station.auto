@@ -11,9 +11,21 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "ElevatorRaise"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "dropCoralTrough"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorLower"
           }
         },
         {
@@ -25,7 +37,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.2
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "collectCoral"
           }
         },
         {
@@ -35,9 +53,21 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 2.0
+            "name": "ElevatorRaise"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "coralDrop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorLower"
           }
         },
         {

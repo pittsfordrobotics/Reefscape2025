@@ -22,6 +22,7 @@ import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.MoveDirection;
 import java.io.File;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -35,6 +36,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.IntakeCoral;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -72,6 +74,7 @@ public class RobotContainer {
   @Logged(name = "PDH")
   private final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
 
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
@@ -87,9 +90,10 @@ public class RobotContainer {
     algae = new Algae();
     climber = new Climber();
     elevator = new Elevator();
-    coral = new Coral();
 
     swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve"));
+    coral = new Coral();
+
     vision = new Vision(
       VisionConstants.LIMELIGHT_LEFT,
       VisionConstants.LIMELIGHT_RIGHT,
@@ -117,19 +121,23 @@ public class RobotContainer {
     Shuffleboard.getTab("Config").add("Set offsets to 0",
         swerve.runOnce(() -> swerve.zeroSwerveOffsets()).ignoringDisable(true));
     Shuffleboard.getTab("Config").add("Zero gyro", swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));
+    
+    NamedCommands.registerCommand("dropCoralTrough", coral.placeCoral());
+    NamedCommands.registerCommand("coralDrop", coral.placeCoral());
+    NamedCommands.registerCommand("collectCoral", new IntakeCoral(intake, coral, elevator));
+    NamedCommands.registerCommand("ElevatorL4", elevator.setElevatorLevel(ElevatorLevels.L4).until(() -> elevator.isAtLevel(ElevatorLevels.L4)));
+    NamedCommands.registerCommand("ElevatorL3", elevator.setElevatorLevel(ElevatorLevels.L3).until(() -> elevator.isAtLevel(ElevatorLevels.L3)));
+    NamedCommands.registerCommand("ElevatorL2", elevator.setElevatorLevel(ElevatorLevels.L2).until(() -> elevator.isAtLevel(ElevatorLevels.L2)));
+    NamedCommands.registerCommand("ElevatorIntake", elevator.setElevatorLevel(ElevatorLevels.INTAKE).until(() -> elevator.isAtLevel(ElevatorLevels.INTAKE)));
+    
 
-    SmartDashboard.putNumber("Algae Speed", 0.25);
-    SmartDashboard.putNumber("Algae Up Angle", 0);
-    SmartDashboard.putNumber("Algae Down Angle", 0);
-    SmartDashboard.putNumber("Algae Intake Motor Speed", 0.25);
-    SmartDashboard.putNumber("Coral Outtake Speed", 0.25);
 
     initTestingDashboards();
 
     // Configure the trigger bindings
     configureBindings();
     autoChooser = AutoBuilder.buildAutoChooser();
-    // SmartDashboard.putData("Auto Chooser", autoChooser);
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   
@@ -226,8 +234,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // return autoChooser.getSelected();
-    return null;
+    return autoChooser.getSelected();
     /**Selects all autonomous paths; selectable from smart dashboard*/
   }
 
@@ -236,12 +243,6 @@ public class RobotContainer {
   }
 
   private void initTestingDashboards(){
-    SmartDashboard.putNumber("Algae Pivot Speed", 0.25);
-    SmartDashboard.putNumber("Elevator Motor Speed", 0.25);
-    SmartDashboard.putNumber("Climber Speed", 0.25);
-
-    SmartDashboard.putNumber("Elevator Encoder Offset", 2);
-    
     Shuffleboard.getTab("testing").add("Algae Motor Speed", 0.25);
     Shuffleboard.getTab("testing").add("Algae Motor", algae.dynamicAlgaePickup(
       () -> SmartDashboard.getNumber("Algae Intake Motor Speed", 0.25)));

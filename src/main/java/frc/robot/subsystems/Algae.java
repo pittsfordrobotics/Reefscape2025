@@ -31,8 +31,8 @@ public class Algae extends SubsystemBase {
   @Logged(name = "Algae Pivot Motor")
   private SparkMax algaePivotMotor = new SparkMax(AlgaeConstants.CAN_ALGAE_PIVOT_MOTOR, MotorType.kBrushless);
 
-  @Logged(name = "Algae Sensor")
-  DigitalInput algaeSensor = new DigitalInput(AlgaeConstants.ALGAE_SENSOR_CHANNEL);
+  // @Logged(name = "Algae Sensor")
+  // DigitalInput algaeSensor = new DigitalInput(AlgaeConstants.ALGAE_SENSOR_CHANNEL);
 
   private SparkAbsoluteEncoder pivotEncoder;
 
@@ -72,10 +72,10 @@ public class Algae extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  @Logged(name = "Is algae detected")
-  public boolean isAlgaeDetected() {
-    return algaeSensor.get();
-  }
+  // @Logged(name = "IsAlgaeDetected")
+  // public boolean isAlgaeDetected() {
+  //   return algaeSensor.get();
+  // }
 
   private void setAlgaePivotPosition(double degrees) {
     algaePivotMotor.set(

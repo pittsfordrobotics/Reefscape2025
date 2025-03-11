@@ -11,21 +11,33 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "ElevatorRaise"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "dropCoralTrough"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorLower"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Trough-Station(M)(L)"
+            "pathName": "TroughDrop-Station(M)(L)"
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.2
+            "name": "collectCoral"
           }
         },
         {
@@ -35,9 +47,21 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 2.0
+            "name": "ElevatorRaise"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "coralDrop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorLower"
           }
         },
         {

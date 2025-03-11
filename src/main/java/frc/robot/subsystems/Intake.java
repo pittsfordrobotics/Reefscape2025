@@ -17,13 +17,13 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
   @Logged(name="Coral Intake Motor")
   private final SparkMax intakeMotor = new SparkMax(IntakeConstants.CAN_INTAKE_MOTOR, MotorType.kBrushless);
-
-  DigitalInput coralSensor = new DigitalInput(0);
+  DigitalInput intakeSensor = new DigitalInput(1);
   
   /** Creates a new IntakeSubsystem. */
   public Intake() {
@@ -43,11 +43,17 @@ public class Intake extends SubsystemBase {
   
   @Logged(name = "Is coral detected")
   public boolean isCoralDetected() {
-    return coralSensor.get();
+    if(Robot.isSimulation()) {
+      System.out.println("Coral Detected in sim!");
+      return true;
+    }
+    return intakeSensor.get();
   }
 
   private void setIntake(double speed) {
     intakeMotor.set(speed);
+    System.out.println("Collecting Coral!");
+    System.out.println(speed);
   }
 
   public Command dynamicDriveIntake(DoubleSupplier speed){
@@ -58,8 +64,12 @@ public class Intake extends SubsystemBase {
     return run(() -> setIntake(IntakeConstants.CORAL_INTAKE_SPEED)).until(this::isCoralDetected).finallyDo(() -> setIntake(0));
   }
 
+  public Command intakeCoral() {
+    return runOnce(() -> setIntake(IntakeConstants.CORAL_INTAKE_SPEED));
+  }
+
   public Command stopIntake(){
-    return run(() -> setIntake(0));
+    return runOnce(() -> setIntake(0));
   }
   
   @Logged(name = "Is intake limit switch pressed")
