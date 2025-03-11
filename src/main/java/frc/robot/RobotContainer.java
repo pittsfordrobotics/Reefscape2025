@@ -125,10 +125,10 @@ public class RobotContainer {
     NamedCommands.registerCommand("dropCoralTrough", coral.placeCoral());
     NamedCommands.registerCommand("coralDrop", coral.placeCoral());
     NamedCommands.registerCommand("collectCoral", new IntakeCoral(intake, coral, elevator));
-    NamedCommands.registerCommand("ElevatorL4", elevator.setElevatorLevel(ElevatorLevels.L4).until(() -> elevator.isAtLevel(ElevatorLevels.L4)));
-    NamedCommands.registerCommand("ElevatorL3", elevator.setElevatorLevel(ElevatorLevels.L3).until(() -> elevator.isAtLevel(ElevatorLevels.L3)));
-    NamedCommands.registerCommand("ElevatorL2", elevator.setElevatorLevel(ElevatorLevels.L2).until(() -> elevator.isAtLevel(ElevatorLevels.L2)));
-    NamedCommands.registerCommand("ElevatorIntake", elevator.setElevatorLevel(ElevatorLevels.INTAKE).until(() -> elevator.isAtLevel(ElevatorLevels.INTAKE)));
+    NamedCommands.registerCommand("ElevatorL4", elevator.setElevatorLevel(ElevatorLevels.L4).until(() -> elevator.isAtLevel(() -> ElevatorLevels.L4)));
+    NamedCommands.registerCommand("ElevatorL3", elevator.setElevatorLevel(ElevatorLevels.L3).until(() -> elevator.isAtLevel(() -> ElevatorLevels.L3)));
+    NamedCommands.registerCommand("ElevatorL2", elevator.setElevatorLevel(ElevatorLevels.L2).until(() -> elevator.isAtLevel(() -> ElevatorLevels.L2)));
+    NamedCommands.registerCommand("ElevatorIntake", elevator.setElevatorLevel(ElevatorLevels.INTAKE).until(() -> elevator.isAtLevel(() -> ElevatorLevels.INTAKE)));
     
 
 
@@ -170,8 +170,7 @@ public class RobotContainer {
     
     //Operator Controls --------------------------------------------------------
     //Coral Inputs
-    operatorController.b().whileTrue(intake.dynamicDriveIntake(
-      () -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)).alongWith(elevator.setElevatorLevel(ElevatorLevels.INTAKE)));
+    operatorController.b().whileTrue(new IntakeCoral(intake, coral, elevator));
 
     operatorController.rightTrigger().whileTrue(coral.dynamicDriveCoral(
       () -> SmartDashboard.getNumber("Coral Outtake Speed", 0.25)));

@@ -160,11 +160,11 @@ public class Elevator extends SubsystemBase {
     });
   }
   
-  public boolean isAtLevel(ElevatorLevels level) {
+  public boolean isAtLevel(Supplier<ElevatorLevels> level) {
     if(Robot.isSimulation()) {
       return true;
     }
-    switch (level) {
+    switch (level.get()) {
       case INTAKE -> {
         return elevatorPos < 1;
       } case L2 -> {
