@@ -170,7 +170,7 @@ public class RobotContainer {
     
     //Operator Controls --------------------------------------------------------
     //Coral Inputs
-    operatorController.b().whileTrue(new IntakeCoral(intake, coral, elevator));
+    operatorController.b().whileTrue(new IntakeCoral(intake, coral, elevator)).onFalse(intake.stopIntake().alongWith(coral.stopCoral()));
 
     operatorController.rightTrigger().whileTrue(coral.dynamicDriveCoral(
       () -> SmartDashboard.getNumber("Coral Outtake Speed", 0.25)));

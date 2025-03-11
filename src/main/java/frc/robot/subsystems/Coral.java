@@ -53,7 +53,7 @@ public class Coral extends SubsystemBase {
   }
 
   public Command intakeCoral() {
-    return runOnce(() -> setCoral(-CoralConstants.CORAL_INTAKE_SPEED))
+    return runOnce(() -> setCoral(CoralConstants.CORAL_INTAKE_SPEED))
         .andThen(Commands.waitUntil(this::isCoralDetected))
         .andThen(Commands.waitUntil(() -> !isCoralDetected()))
         .finallyDo(() -> setCoral(0));
