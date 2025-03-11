@@ -24,7 +24,7 @@ import frc.robot.Constants.CoralConstants;
 public class Coral extends SubsystemBase {
   @Logged(name = "Coral Output Motor")
   private SparkMax coralMotor = new SparkMax(CoralConstants.CAN_CORAL_MOTOR, MotorType.kBrushless);
-  private DigitalInput coralSensor = new DigitalInput(2);
+  private DigitalInput coralSensor = new DigitalInput(3);
 
   /** Creates a new Coral. */
   public Coral() {
@@ -40,7 +40,7 @@ public class Coral extends SubsystemBase {
   }
 
   private boolean isCoralDetected() {
-    if(Robot.isSimulation()) {
+    if (Robot.isSimulation()) {
       return true;
     }
     return coralSensor.get();
@@ -53,13 +53,16 @@ public class Coral extends SubsystemBase {
   }
 
   public Command intakeCoral() {
-    return run(() -> setCoral(-CoralConstants.CORAL_INTAKE_SPEED)).until(this::isCoralDetected).finallyDo(() -> setCoral(0));
+    return runOnce(() -> setCoral(-CoralConstants.CORAL_INTAKE_SPEED))
+        .andThen(Commands.waitUntil(this::isCoralDetected))
+        .andThen(Commands.waitUntil(() -> !isCoralDetected()))
+        .finallyDo(() -> setCoral(0));
   }
 
-  public Command placeCoral(){
-      return run(() -> setCoral(CoralConstants.CORAL_SPEED))
-      .raceWith(Commands.waitSeconds(0.5))
-      .andThen(() -> setCoral(0));
+  public Command placeCoral() {
+    return run(() -> setCoral(CoralConstants.CORAL_SPEED))
+        .raceWith(Commands.waitSeconds(0.5))
+        .andThen(() -> setCoral(0));
   }
 
   public Command dynamicDriveCoral(DoubleSupplier speed) {
@@ -71,7 +74,7 @@ public class Coral extends SubsystemBase {
   }
 
   @Logged(name = "Is coral limit switch pressed")
-  public boolean isCoralLimitSwitchPressed(){
+  public boolean isCoralLimitSwitchPressed() {
     return coralMotor.getForwardLimitSwitch().isPressed();
   }
 }

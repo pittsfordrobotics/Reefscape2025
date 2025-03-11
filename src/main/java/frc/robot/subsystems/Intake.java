@@ -23,7 +23,7 @@ import frc.robot.Constants.IntakeConstants;
 public class Intake extends SubsystemBase {
   @Logged(name="Coral Intake Motor")
   private final SparkMax intakeMotor = new SparkMax(IntakeConstants.CAN_INTAKE_MOTOR, MotorType.kBrushless);
-  DigitalInput intakeSensor = new DigitalInput(1);
+  DigitalInput intakeSensor = new DigitalInput(2);
   
   /** Creates a new IntakeSubsystem. */
   public Intake() {
