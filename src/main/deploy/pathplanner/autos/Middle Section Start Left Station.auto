@@ -13,7 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ElevatorRaise"
+            "name": "ElevatorL2"
           }
         },
         {
@@ -25,13 +25,13 @@
         {
           "type": "named",
           "data": {
-            "name": "ElevatorLower"
+            "name": "ElevatorIntake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "TroughDrop-Station(M)(L)"
+            "pathName": "TroughDrop-Station(L)(L)"
           }
         },
         {
@@ -43,13 +43,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Station-Trough(M)(L)"
+            "pathName": "Station-TroughDrop(L)(L)"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ElevatorRaise"
+            "name": "ElevatorL2"
           }
         },
         {
@@ -61,13 +61,13 @@
         {
           "type": "named",
           "data": {
-            "name": "ElevatorLower"
+            "name": "ElevatorIntake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Reef-Station(M)(L)"
+            "pathName": "TroughDrop-Station(L)(L)"
           }
         }
       ]
