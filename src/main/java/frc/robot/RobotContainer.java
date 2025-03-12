@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.CoralConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Swerve;
@@ -122,13 +123,14 @@ public class RobotContainer {
         swerve.runOnce(() -> swerve.zeroSwerveOffsets()).ignoringDisable(true));
     Shuffleboard.getTab("Config").add("Zero gyro", swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));
     
+    NamedCommands.registerCommand("stopSwerve", Commands.runOnce(swerve::stopSwerve));
     NamedCommands.registerCommand("dropCoralTrough", coral.placeCoral());
     NamedCommands.registerCommand("coralDrop", coral.placeCoral());
     NamedCommands.registerCommand("collectCoral", new IntakeCoral(intake, coral, elevator));
-    NamedCommands.registerCommand("ElevatorL4", elevator.setElevatorLevel(ElevatorLevels.L4).until(() -> elevator.isAtLevel(() -> ElevatorLevels.L4)));
-    NamedCommands.registerCommand("ElevatorL3", elevator.setElevatorLevel(ElevatorLevels.L3).until(() -> elevator.isAtLevel(() -> ElevatorLevels.L3)));
-    NamedCommands.registerCommand("ElevatorL2", elevator.setElevatorLevel(ElevatorLevels.L2).until(() -> elevator.isAtLevel(() -> ElevatorLevels.L2)));
-    NamedCommands.registerCommand("ElevatorIntake", elevator.setElevatorLevel(ElevatorLevels.INTAKE).until(() -> elevator.isAtLevel(() -> ElevatorLevels.INTAKE)));
+    NamedCommands.registerCommand("ElevatorL4", elevator.setElevatorLevel(ElevatorLevels.L4).andThen(Commands.waitUntil(() -> elevator.isAtLevel(() -> ElevatorLevels.L4))));
+    NamedCommands.registerCommand("ElevatorL3", elevator.setElevatorLevel(ElevatorLevels.L3).andThen(Commands.waitUntil(() -> elevator.isAtLevel(() -> ElevatorLevels.L3))));
+    NamedCommands.registerCommand("ElevatorL2", elevator.setElevatorLevel(ElevatorLevels.L2).andThen(Commands.waitUntil(() -> elevator.isAtLevel(() -> ElevatorLevels.L2))));
+    NamedCommands.registerCommand("ElevatorIntake", elevator.setElevatorLevel(ElevatorLevels.INTAKE).andThen(Commands.waitUntil(() -> elevator.isAtLevel(() -> ElevatorLevels.INTAKE))));
     
 
 
@@ -172,8 +174,7 @@ public class RobotContainer {
     //Coral Inputs
     operatorController.b().whileTrue(new IntakeCoral(intake, coral, elevator)).onFalse(intake.stopIntake().alongWith(coral.stopCoral()));
 
-    operatorController.rightTrigger().whileTrue(coral.dynamicDriveCoral(
-      () -> SmartDashboard.getNumber("Coral Outtake Speed", 0.25)));
+    operatorController.rightTrigger().whileTrue(coral.dynamicDriveCoral(() -> CoralConstants.CORAL_SPEED));
 
     //Algae Arm Inputs:
     operatorController.x().whileTrue(algae.startStopAlgaePivot(

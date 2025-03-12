@@ -31,6 +31,7 @@ public class Coral extends SubsystemBase {
     SparkMaxConfig coralConfig = new SparkMaxConfig();
     coralConfig.smartCurrentLimit(20, 20);
     coralConfig.idleMode(IdleMode.kBrake);
+    coralConfig.inverted(true);
     coralMotor.configure(coralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
@@ -64,7 +65,7 @@ public class Coral extends SubsystemBase {
   }
 
   public Command dynamicDriveCoral(DoubleSupplier speed) {
-    return run(() -> setCoral(-speed.getAsDouble())).finallyDo(() -> setCoral(0));
+    return run(() -> setCoral(speed.getAsDouble())).finallyDo(() -> setCoral(0));
   }
 
   public Command stopCoral() {

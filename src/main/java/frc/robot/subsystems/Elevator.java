@@ -79,7 +79,7 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    elevatorPos = elevatorRelativeEncoder.getPosition() / ElevatorConstants.ELEVATOR_TICKS_PER_INCH;
+    elevatorPos = elevatorRelativeEncoder.getPosition();
   }
 
   @Logged(name = "Total Height Inches")
@@ -130,13 +130,13 @@ public class Elevator extends SubsystemBase {
     Command elevatorCommand;
     switch (level) {
       case INTAKE -> {
-        elevatorCommand = run(() -> setElevatorPosition(ElevatorConstants.INTAKE_POSITION + encoderOffset));
+        elevatorCommand = runOnce(() -> setElevatorPosition(ElevatorConstants.INTAKE_POSITION + encoderOffset));
       } case L2 -> {
-        elevatorCommand = run(() -> setElevatorPosition(ElevatorConstants.L2_POSITION + encoderOffset));
+        elevatorCommand = runOnce(() -> setElevatorPosition(ElevatorConstants.L2_POSITION + encoderOffset));
       } case L3 -> {
-        elevatorCommand = run(() -> setElevatorPosition(ElevatorConstants.L3_POSITION + encoderOffset));
+        elevatorCommand = runOnce(() -> setElevatorPosition(ElevatorConstants.L3_POSITION + encoderOffset));
       } case L4 -> {
-        elevatorCommand = run(() -> {
+        elevatorCommand = runOnce(() -> {
             setElevatorPosition(ElevatorConstants.L4_POSITION + encoderOffset);
           });
       } default -> throw new IllegalArgumentException();
@@ -166,13 +166,17 @@ public class Elevator extends SubsystemBase {
     }
     switch (level.get()) {
       case INTAKE -> {
-        return elevatorPos < 1;
+        System.out.println(ElevatorConstants.INTAKE_POSITION + encoderOffset - elevatorPos);
+        return Math.abs(ElevatorConstants.INTAKE_POSITION + encoderOffset - elevatorPos) < 2;
       } case L2 -> {
-        return elevatorPos > 61 && elevatorPos < 63;
+        System.out.println(ElevatorConstants.L2_POSITION + encoderOffset - elevatorPos);
+        return Math.abs(ElevatorConstants.L2_POSITION + encoderOffset - elevatorPos) < 2;
       } case L3 -> {
-        return elevatorPos > 108 && elevatorPos < 110;
+        System.out.println(ElevatorConstants.L3_POSITION + encoderOffset - elevatorPos);
+        return Math.abs(ElevatorConstants.L3_POSITION + encoderOffset - elevatorPos) < 2;
       } case L4 -> {
-        return elevatorPos > ElevatorConstants.ELEVATOR_MAX_HEIGHT - 1;
+        System.out.println(ElevatorConstants.L4_POSITION + encoderOffset - elevatorPos);
+        return Math.abs(ElevatorConstants.L4_POSITION + encoderOffset - elevatorPos) < 2;
       } default -> throw new IllegalArgumentException();
     }
   }

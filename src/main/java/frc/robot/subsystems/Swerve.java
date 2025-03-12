@@ -24,6 +24,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -91,7 +92,7 @@ public class Swerve extends SubsystemBase {
     // Configure AutoBuilder last
     AutoBuilder.configure(
             swerveDrive::getPose, // Robot pose supplier
-            swerveDrive::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+            this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
             swerveDrive::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             (speeds, feedforwards) -> swerveDrive.drive(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
             new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
@@ -134,6 +135,13 @@ public class Swerve extends SubsystemBase {
                     rotationRate, true, false);
         }
     }
+    
+    /**
+     * Stops the swerve drive
+     */
+    public void stopSwerve() {
+        swerveDrive.drive(new ChassisSpeeds());
+    }
 
     /**
      * Resets the gyro angle to zero and resets odometry to the same position, but
@@ -154,6 +162,7 @@ public class Swerve extends SubsystemBase {
      * @param pose The current robot pose.
      */
     public void setPose(Pose2d pose) {
+        setGyroAngle(pose.getRotation());
         swerveDrive.resetOdometry(pose);
     }
 

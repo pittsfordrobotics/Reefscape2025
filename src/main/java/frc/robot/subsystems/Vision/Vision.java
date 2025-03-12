@@ -178,11 +178,6 @@ public class Vision extends SubsystemBase {
             boolean hasGreatSpeakerReading = ((inputs[i].tagCount >= 2) && (avgDistance < 4.0)
                     && (hasBlueSpeakerTags || hasRedSpeakerTags));
 
-            // Exits when in auto if it doesnt have a great great reading
-            if (DriverStation.isAutonomous() && !hasGreatSpeakerReading) {
-                continue;
-            }
-
             // Calculate standard deviation to give to the .addVisionData() swerve method
             // Standard Deveation is inverse to confidence level
             xyStdDev = VisionConstants.XY_STD_DEV_COEF * (avgDistance * avgDistance)
@@ -194,8 +189,10 @@ public class Vision extends SubsystemBase {
 
             // Add vision data to swerve pose estimator
             VisionData visionData = new VisionData(visionCalcPose, inputs[i].captureTimestamp,
-                    VecBuilder.fill(xyStdDev, xyStdDev, thetaStdDev));
-            visionDataConsumer.accept(visionData);
+                VecBuilder.fill(xyStdDev, xyStdDev, thetaStdDev));
+            if(!DriverStation.isAutonomous()){
+                visionDataConsumer.accept(visionData);
+            }
 
             // Add robot pose from this camera to a list of all robot poses
             allRobotPoses.add(visionCalcPose);

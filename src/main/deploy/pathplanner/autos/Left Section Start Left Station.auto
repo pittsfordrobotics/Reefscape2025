@@ -13,6 +13,12 @@
         {
           "type": "named",
           "data": {
+            "name": "stopSwerve"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "ElevatorL2"
           }
         },
@@ -29,15 +35,15 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ElevatorLower"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "TroughDrop-Station(L)(L)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopSwerve"
           }
         },
         {
@@ -50,6 +56,12 @@
           "type": "path",
           "data": {
             "pathName": "Station-TroughDrop(L)(L)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopSwerve"
           }
         },
         {
