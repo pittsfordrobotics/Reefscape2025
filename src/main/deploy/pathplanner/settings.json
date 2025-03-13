@@ -4,14 +4,16 @@
   "holonomicMode": true,
   "pathFolders": [
     "Left(L)",
+    "Left(R)",
     "Middle(L)",
     "Middle(R)",
-    "Left(R)",
+    "Simple RIT",
     "Right(L)",
     "Right(R)"
   ],
   "autoFolders": [
     "Left Side Station",
+    "Simple RIT",
     "Right Side Station"
   ],
   "defaultMaxVel": 3.0,
@@ -23,7 +25,7 @@
   "robotMOI": 6.883,
   "robotTrackwidth": 0.546,
   "driveWheelRadius": 0.0508,
-  "driveGearing": 5.143,
+  "driveGearing": 5.4,
   "maxDriveSpeed": 5.45,
   "driveMotorType": "NEO",
   "driveCurrentLimit": 40.0,

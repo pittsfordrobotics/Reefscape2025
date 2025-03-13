@@ -147,7 +147,7 @@ public class Elevator extends SubsystemBase {
   public Command dynamicElevatorLevel(Supplier<ElevatorLevels> levelSupplier) {
     return run(() -> {
       ElevatorLevels level = levelSupplier.get();
-      int elevatorHeight = switch(level) {
+      double elevatorHeight = switch(level) {
         case ZERO -> 0;
         case INTAKE -> ElevatorConstants.INTAKE_POSITION + encoderOffset;
         case L1 -> ElevatorConstants.L1_POSITION + encoderOffset;

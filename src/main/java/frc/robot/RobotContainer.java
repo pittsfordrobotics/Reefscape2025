@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.AlgaeConstants;
 import frc.robot.Constants.CoralConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.VisionConstants;
@@ -117,6 +118,8 @@ public class RobotContainer {
     swerve.setDefaultCommand(headingSteeringCommand);
     swerve.setupPathPlanner();
 
+    algae.setDefaultCommand(algae.dynamicAlgaeSetPivot(() -> AlgaeConstants.PIVOT_STORE_DEGREES));
+
     Shuffleboard.getTab("Config").add("Zero swerve offsets",
         swerve.runOnce(() -> swerve.setSwerveOffsets()).ignoringDisable(true));
     Shuffleboard.getTab("Config").add("Set offsets to 0",
@@ -177,8 +180,8 @@ public class RobotContainer {
     operatorController.rightTrigger().whileTrue(coral.dynamicDriveCoral(() -> CoralConstants.CORAL_SPEED));
 
     //Algae Arm Inputs:
-    operatorController.x().whileTrue(algae.startStopAlgaePivot(
-      () -> SmartDashboard.getNumber("Algae Active Angle", 0))); // not even defined in dashboard might want to delete or something
+    operatorController.x().onTrue(algae.dynamicAlgaeSetPivot(() -> AlgaeConstants.PIVOT_DOWN_DEGREES));
+    operatorController.y().whileTrue(algae.yeetAlgae());
 
     // operatorController.a().whileTrue(algae.dualAlgaeIntake(
     //   () -> SmartDashboard.getNumber("Algae Up Angle", 0),
@@ -200,7 +203,7 @@ public class RobotContainer {
       (() -> elevator.increaseEncoderOffset((int)SmartDashboard.getNumber("Elevator Encoder Offset", 2)))));
     operatorController.leftBumper().onTrue(Commands.runOnce((() -> elevator.zeroElevatorOffset())));
 
-    operatorController.leftTrigger().onTrue(climber.dynamicDriveClimb(() -> 0));// TODO: fix
+    operatorController.leftTrigger().onTrue(climber.dynamicDriveClimb(() -> 0.1));// TODO: fix
 
     //Climber Inputs:
     // operatorController.leftTrigger().whileTrue(climber.dynamicDriveClimb(
@@ -244,8 +247,8 @@ public class RobotContainer {
 
   private void initTestingDashboards(){
     Shuffleboard.getTab("testing").add("Algae Motor Speed", 0.25);
-    Shuffleboard.getTab("testing").add("Algae Motor", algae.dynamicAlgaePickup(
-      () -> SmartDashboard.getNumber("Algae Intake Motor Speed", 0.25)));
+    // Shuffleboard.getTab("testing").add("Algae Motor", algae.dynamicAlgaePickup(
+    //   () -> SmartDashboard.getNumber("Algae Intake Motor Speed", 0.25)));
     Shuffleboard.getTab("testing").add("Algae Pivot", algae.dynamicAlgaeSpeedPivot(
       () -> SmartDashboard.getNumber("Algae Pivot Speed", 0.25)));
     Shuffleboard.getTab("testing").add("Coral Outtake", coral.dynamicDriveCoral(

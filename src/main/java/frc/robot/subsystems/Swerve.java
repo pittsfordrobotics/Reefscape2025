@@ -189,6 +189,10 @@ public class Swerve extends SubsystemBase {
         return swerveDrive.getRobotVelocity().omegaRadiansPerSecond;
     }
 
+    public void setTargetAngle(Rotation2d angle) {
+        currentTargetAngle = angle;
+    }
+
     public void setTargetAllianceRelAngle(Rotation2d allianceRelAngle) {
         currentTargetAngle = allianceRotationFlipper(allianceRelAngle);
     }
@@ -361,7 +365,7 @@ public class Swerve extends SubsystemBase {
         //PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
         return Commands.defer(() -> AutoBuilder.pathfindToPose(
             poseSupplier.get(), constraints).finallyDo(
-                () -> setTargetAllianceRelAngle(poseSupplier.get().getRotation())), Set.of(this));
+                () -> setTargetAngle(poseSupplier.get().getRotation())), Set.of(this));
     }
 
     /** Drive to a pose, flipped if on red alliance */
@@ -377,8 +381,8 @@ public class Swerve extends SubsystemBase {
         PathConstraints constraints = new PathConstraints(
             SwerveConstants.AUTOBUILDER_MAX_VELOCITY * 0.25,
             SwerveConstants.AUTOBUILDER_MAX_ANGULAR_VELOCITY * 0.25,
-            SwerveConstants.AUTOBUILDER_MAX_ACCELERATION * 0.25,
-            SwerveConstants.AUTOBUILDER_MAX_ANGULAR_ACCELERATION * 0.25,
+            SwerveConstants.AUTOBUILDER_MAX_ACCELERATION * 0.5,
+            SwerveConstants.AUTOBUILDER_MAX_ANGULAR_ACCELERATION * 0.5,
             SwerveConstants.NOMINAL_VOLTAGE,
             false);
         return driveToPoseFlipped(() -> FieldHelpers.getNearestCoralStation(getPose(), isRedAlliance()), constraints);
@@ -388,8 +392,8 @@ public class Swerve extends SubsystemBase {
         PathConstraints constraints = new PathConstraints(
             SwerveConstants.AUTOBUILDER_MAX_VELOCITY * 0.25,
             SwerveConstants.AUTOBUILDER_MAX_ANGULAR_VELOCITY * 0.25,
-            SwerveConstants.AUTOBUILDER_MAX_ACCELERATION * 0.25,
-            SwerveConstants.AUTOBUILDER_MAX_ANGULAR_ACCELERATION * 0.25,
+            SwerveConstants.AUTOBUILDER_MAX_ACCELERATION * 0.5,
+            SwerveConstants.AUTOBUILDER_MAX_ANGULAR_ACCELERATION * 0.5,
             SwerveConstants.NOMINAL_VOLTAGE,
             false);
         return driveToPoseFlipped(() -> FieldConstants.algaeProcessorPos, constraints);
@@ -397,10 +401,10 @@ public class Swerve extends SubsystemBase {
 
     public Command driveToReef(BooleanSupplier isRightSideSupplier) {
         PathConstraints constraints = new PathConstraints(// TODO: set back to normal for comp
-            SwerveConstants.AUTOBUILDER_MAX_CORAL_VELOCITY * 0.25,
-            SwerveConstants.AUTOBUILDER_MAX_CORAL_ANGULAR_VELOCITY * 0.25,
-            SwerveConstants.AUTOBUILDER_MAX_CORAL_ACCELERATION * 0.5,
-            SwerveConstants.AUTOBUILDER_MAX_CORAL_ANGULAR_ACCELERATION * 0.5,
+            SwerveConstants.AUTOBUILDER_MAX_VELOCITY * 0.25,
+            SwerveConstants.AUTOBUILDER_MAX_ANGULAR_VELOCITY * 0.25,
+            SwerveConstants.AUTOBUILDER_MAX_ACCELERATION * 0.5,
+            SwerveConstants.AUTOBUILDER_MAX_ANGULAR_ACCELERATION * 0.5,
             SwerveConstants.NOMINAL_VOLTAGE,
             false);
         return driveToPose(() -> FieldHelpers.reefLocation(getPose(), isRightSideSupplier), constraints);
