@@ -237,7 +237,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    return autoChooser.getSelected().andThen(() -> swerve.setTargetAngle(swerve.getGyroAngle()));
     /**Selects all autonomous paths; selectable from smart dashboard*/
   }
 

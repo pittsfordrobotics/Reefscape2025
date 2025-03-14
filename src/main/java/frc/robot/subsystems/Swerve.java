@@ -351,6 +351,11 @@ public class Swerve extends SubsystemBase {
         // Emit the left/right reef poses to the field object for debugging purposes.
         swerveDrive.field.getObject("Target pose right").setPose(FieldHelpers.reefLocation(getPose(), () -> true));
         swerveDrive.field.getObject("Target pose left").setPose(FieldHelpers.reefLocation(getPose(), () -> false));
+        // swerveDrive.field.getObject("3L").setPose(new Pose2d(5.37531, 5.00173, Rotation2d.fromDegrees(-120)));
+        // swerveDrive.field.getObject("3R").setPose(new Pose2d(5.04535, 5.19223, Rotation2d.fromDegrees(-120)));
+        // swerveDrive.field.getObject("4R").setPose(new Pose2d(5.77825, 4.1275, Rotation2d.fromDegrees(180)));
+        // swerveDrive.field.getObject("5L").setPose(new Pose2d(4.89137, 2.770671, Rotation2d.fromDegrees(120)));
+        // swerveDrive.field.getObject("5R").setPose(new Pose2d(5.22133, 2.961171, Rotation2d.fromDegrees(120)));
         // This method will be called once per scheduler run
         swerveDrive.updateOdometry();
 
