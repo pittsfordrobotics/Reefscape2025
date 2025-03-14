@@ -7,9 +7,11 @@
     "Left(R)",
     "Middle(L)",
     "Middle(R)",
-    "Simple RIT",
+    "Simple RIT Right Start",
     "Right(L)",
-    "Right(R)"
+    "Right(R)",
+    "Simple RIT Center Start",
+    "Simple RIT Left Start"
   ],
   "autoFolders": [
     "Left Side Station",

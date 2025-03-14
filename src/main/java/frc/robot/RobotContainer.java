@@ -22,6 +22,7 @@ import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.MoveDirection;
 
 import java.io.File;
+import java.util.Set;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -127,6 +128,7 @@ public class RobotContainer {
     Shuffleboard.getTab("Config").add("Zero gyro", swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));
     
     NamedCommands.registerCommand("stopSwerve", Commands.runOnce(swerve::stopSwerve));
+    NamedCommands.registerCommand("holdHeading", swerve.setTargetAngleCommand(swerve::getGyroAngle));
     NamedCommands.registerCommand("dropCoralTrough", coral.placeCoral());
     NamedCommands.registerCommand("coralDrop", coral.placeCoral());
     NamedCommands.registerCommand("collectCoral", new IntakeCoral(intake, coral, elevator));

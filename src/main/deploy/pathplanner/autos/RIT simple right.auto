@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RIT center to reef"
+            "pathName": "RIT right to reef"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ElevatorL4"
+            "name": "ElevatorL2"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RIT reef to center"
+            "pathName": "RIT reef to right"
           }
         },
         {
