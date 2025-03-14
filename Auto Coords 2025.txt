@@ -5,4 +5,11 @@ Right Start (7.6, 1.89, 180)
 Left Coral Station (1.2, 7.1, -54)
 Side 2 Left (4.142, 5.255, -60)
 Side 3 Left (5.364, 4.95, -120)
-Side 4 Left (5.7, 3.721, 180)
+Side 4 Left (5.8, 3.721, 180)
+
+
+NEW Coords (same but with correct robot size and 11in left offset, -4 right offset)
+Left Start (7.6, 6.15, 180)
+Center Start (7.6, 4, 180)
+Right Start (7.6, 1.89, 180)
+Side 4 Right (5.8, 4.1016, 180)

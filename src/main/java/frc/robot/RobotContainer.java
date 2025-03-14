@@ -203,7 +203,7 @@ public class RobotContainer {
       (() -> elevator.increaseEncoderOffset((int)SmartDashboard.getNumber("Elevator Encoder Offset", 2)))));
     operatorController.leftBumper().onTrue(Commands.runOnce((() -> elevator.zeroElevatorOffset())));
 
-    operatorController.leftTrigger().onTrue(climber.dynamicDriveClimb(() -> 0.1));// TODO: fix
+    operatorController.leftTrigger().whileTrue(climber.dynamicDriveClimb(() -> -0.33));// TODO: fix
 
     //Climber Inputs:
     // operatorController.leftTrigger().whileTrue(climber.dynamicDriveClimb(
@@ -257,6 +257,7 @@ public class RobotContainer {
       () -> SmartDashboard.getNumber("Elevator Motor Speed", 0.25)));
     Shuffleboard.getTab("testing").add("Climber Motor", climber.dynamicDriveClimb(
       () -> SmartDashboard.getNumber("Climber Speed", 0.25)));
+    SmartDashboard.putNumber("Climber Speed", 0.25);
     Shuffleboard.getTab("testing").add("Intake Motor", intake.dynamicDriveIntake(
       () -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)));
 
