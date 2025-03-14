@@ -25,6 +25,7 @@ public class Coral extends SubsystemBase {
   @Logged(name = "Coral Output Motor")
   private SparkMax coralMotor = new SparkMax(CoralConstants.CAN_CORAL_MOTOR, MotorType.kBrushless);
   private DigitalInput coralSensor = new DigitalInput(3);
+  private boolean hasIntaken = false;
 
   /** Creates a new Coral. */
   public Coral() {
@@ -52,6 +53,15 @@ public class Coral extends SubsystemBase {
     coralMotor.set(speed);
     System.out.println("Dropping Coral!");
     System.out.println(speed);
+  }
+
+  @Logged(name = "Has intaken")
+  public boolean hasIntaken() {
+    return hasIntaken;
+  }
+
+  public void setIntaken(boolean hasIntaken) {
+    this.hasIntaken = hasIntaken;
   }
 
   public Command intakeCoral() {
