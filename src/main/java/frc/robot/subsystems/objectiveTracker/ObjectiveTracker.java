@@ -43,7 +43,7 @@ public class ObjectiveTracker extends SubsystemBase {
   }
 
   public ElevatorLevels getElevatorLevel() {
-    return ElevatorLevels.values()[4 - (selectorInputs.selectedIndex / 2)];
+    return ElevatorLevels.values()[5 - (selectorInputs.selectedIndex / 2)];
   }
 
   public boolean isRightSide() {

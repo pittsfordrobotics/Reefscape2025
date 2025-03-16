@@ -28,19 +28,25 @@ public class FieldConstants {
   public static double fieldLength = Units.inchesToMeters(690.876);
   public static double fieldWidth = Units.inchesToMeters(317);
 
-  public static double reefLocationBackupDistance = Units.inchesToMeters(16);
-  public static double reefLocationLeftDistance = Units.inchesToMeters(12);
+  public static double reefLocationBackupDistance = Units.inchesToMeters(18);
+  public static double reefLocationLeftDistance = Units.inchesToMeters(11);
   public static double reefLocationRightDistance = Units.inchesToMeters(-4);
   public static double startingLineX = Units.inchesToMeters(311.5);
   public static double aprilTagWidth = Units.inchesToMeters(6.50);
   public static AprilTagFieldLayout aprilTags;
 
+  // public static Rotation2d coralStationBottomRot = Rotation2d.fromDegrees(54);
+  // public static Pose2d coralStationBottomPos = new Pose2d(0.96, 1.4, coralStationBottomRot);
+  // public static Pose2d coralStationBottomPos = new Pose2d(0, 10, coralStationBottomRot);
+  // public static Rotation2d coralStationTopRot = Rotation2d.fromDegrees(-54);
+  // public static Pose2d coralStationTopPos = new Pose2d(1.116, 7.246, coralStationBottomRot);
+  // public static Pose2d coralStationTopPos = new Pose2d(0, 10, coralStationBottomRot);
   public static Rotation2d coralStationBottomRot = new Rotation2d(45);
   public static Pose2d coralStationBottomPos = new Pose2d(1.139, 1.154, coralStationBottomRot);
   public static Rotation2d coralStationTopRot = new Rotation2d(-45);
   public static Pose2d coralStationTopPos = new Pose2d(1.295, 7, coralStationBottomRot);
 
-  public static Rotation2d algaeProcessorRot = new Rotation2d(-90);
+  public static Rotation2d algaeProcessorRot = Rotation2d.fromDegrees(-90);
   public static Pose2d algaeProcessorPos = new Pose2d(5.988, 0.41, algaeProcessorRot);
 
   static {

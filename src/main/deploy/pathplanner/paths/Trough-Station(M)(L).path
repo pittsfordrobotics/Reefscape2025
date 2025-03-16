@@ -3,6 +3,15 @@
   "waypoints": [
     {
       "anchor": {
+<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Station-Trough.path
+        "x": 5.5,
+        "y": 5.5
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.2922857668424355,
+        "y": 7.2922857668424355
+=======
         "x": 5.825,
         "y": 4.0
       },
@@ -10,6 +19,7 @@
       "nextControl": {
         "x": 6.1017418032786885,
         "y": 5.805174180327868
+>>>>>>> f0ff7d88af673dde52f93d305e1a93bdf760e670:src/main/deploy/pathplanner/paths/Trough-Station(M)(L).path
       },
       "isLocked": false,
       "linkedName": null

@@ -9,14 +9,17 @@ import com.revrobotics.spark.SparkMax;
 
 import java.util.function.DoubleSupplier;
 
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SoftLimitConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
 import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -26,13 +29,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AlgaeConstants;
 
 public class Algae extends SubsystemBase {
-  @Logged(name = "Algae Pickup Motor")
-  private SparkMax algaePickupMotor = new SparkMax(AlgaeConstants.CAN_ALGAE_PICKUP_MOTOR, MotorType.kBrushless);
+  // @Logged(name = "Algae Pickup Motor")
+  // private SparkMax algaePickupMotor = new SparkMax(AlgaeConstants.CAN_ALGAE_PICKUP_MOTOR, MotorType.kBrushless);
   @Logged(name = "Algae Pivot Motor")
   private SparkMax algaePivotMotor = new SparkMax(AlgaeConstants.CAN_ALGAE_PIVOT_MOTOR, MotorType.kBrushless);
 
-  @Logged(name = "Algae Sensor")
-  DigitalInput algaeSensor = new DigitalInput(AlgaeConstants.ALGAE_SENSOR_CHANNEL);
+  // @Logged(name = "Algae Sensor")
+  // DigitalInput algaeSensor = new DigitalInput(AlgaeConstants.ALGAE_SENSOR_CHANNEL);
 
   private SparkAbsoluteEncoder pivotEncoder;
 
@@ -44,23 +47,29 @@ public class Algae extends SubsystemBase {
     AlgaeConstants.ARM_FEEDFORWARD_KS, 
     AlgaeConstants.ARM_FEEDFORWARD_KG, 
     AlgaeConstants.ARM_FEEDFORWARD_KV);
+
+  private boolean canYeet = true;
   
   /** Creates a new Algae. */
   public Algae() {
-    SparkMaxConfig algaeConfig = new SparkMaxConfig();
+    // SparkMaxConfig algaeConfig = new SparkMaxConfig();
     SparkMaxConfig pivotConfig = new SparkMaxConfig();
+    SoftLimitConfig pivotSoftLimit = new SoftLimitConfig();
 
-    algaeConfig.smartCurrentLimit(40, 40);
-    pivotConfig.smartCurrentLimit(40,40);
+    // algaeConfig.smartCurrentLimit(40, 40);
+    pivotConfig.smartCurrentLimit(20);
 
-    algaeConfig.idleMode(IdleMode.kBrake);
+    // algaeConfig.idleMode(IdleMode.kBrake);
     pivotConfig.idleMode(IdleMode.kBrake);
 
-    algaePickupMotor.configure(algaeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // algaePickupMotor.configure(algaeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     
-    pivotConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
-    
-    pivotConfig.absoluteEncoder.positionConversionFactor(1);
+    pivotConfig.absoluteEncoder.positionConversionFactor(360);
+
+    pivotConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+    .pid(0.01, 0, 0.01)
+    .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+    .positionWrappingInputRange(0, 360);
 
     algaePivotMotor.configure(pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -72,34 +81,47 @@ public class Algae extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  @Logged(name = "Is algae detected")
-  public boolean isAlgaeDetected() {
-    return algaeSensor.get();
-  }
+  // @Logged(name = "IsAlgaeDetected")
+  // public boolean isAlgaeDetected() {
+  //   return algaeSensor.get();
+  // }
 
   private void setAlgaePivotPosition(double degrees) {
-    algaePivotMotor.set(
-      algaePivotProfiledPIDController.calculate(pivotEncoder.getPosition(), degrees) 
-    + algaePivotFeedforward.calculate(pivotEncoder.getPosition(), pivotEncoder.getVelocity()));
+    // algaePivotMotor.set(
+    //   algaePivotProfiledPIDController.calculate(pivotEncoder.getPosition(), degrees) 
+    // + algaePivotFeedforward.calculate(pivotEncoder.getPosition(), pivotEncoder.getVelocity()));
+    algaePivotMotor.getClosedLoopController().setReference(degrees, ControlType.kPosition);
   }
 
-  public Command dynamicAlgaePickup(DoubleSupplier speed){
-    return run(() -> algaePickupMotor.set(speed.getAsDouble())).finallyDo(() -> algaePickupMotor.set(0));
-  }
+  // public Command dynamicAlgaePickup(DoubleSupplier speed){
+  //   return run(() -> algaePickupMotor.set(speed.getAsDouble())).finallyDo(() -> algaePickupMotor.set(0));
+  // }
 
   public Command dynamicAlgaeSetPivot(DoubleSupplier degrees){
     return run(() -> setAlgaePivotPosition(degrees.getAsDouble()));
   }
 
   public Command dynamicAlgaeSpeedPivot(DoubleSupplier speed){
-    return run(() -> algaePivotMotor.set(-speed.getAsDouble())).finallyDo(() -> algaePivotMotor.set(0));
+    return run(() -> algaePivotMotor.set(speed.getAsDouble())).finallyDo(() -> algaePivotMotor.set(0));
   }
 
-  public Command startStopDriveAlgae(DoubleSupplier speed) {
-    return startEnd(
-      () -> algaePickupMotor.set(speed.getAsDouble()),
-       () -> algaePickupMotor.set(0));
+  public Command yeetAlgae() {
+    return startRun(() -> {
+      if(MathUtil.inputModulus(pivotEncoder.getPosition(), -180, 180) > AlgaeConstants.PIVOT_DOWN_DEGREES + 20) {
+        canYeet = false;
+      }
+    }, () -> {
+      if(canYeet) {
+        dynamicAlgaeSpeedPivot(() -> AlgaeConstants.PIVOT_YEET_SPEED);
+      }
+    });
   }
+
+  // public Command startStopDriveAlgae(DoubleSupplier speed) {
+  //   return startEnd(
+  //     () -> algaePickupMotor.set(speed.getAsDouble()),
+  //      () -> algaePickupMotor.set(0));
+  // }
 
   public Command startStopAlgaePivot(DoubleSupplier degrees) {
     return startEnd(
@@ -107,8 +129,8 @@ public class Algae extends SubsystemBase {
        () -> algaePivotMotor.set(0));
   }
 
-  public Command dualAlgaeIntake(DoubleSupplier degrees, DoubleSupplier speed){
-    return dynamicAlgaeSetPivot(degrees).andThen(startStopDriveAlgae(speed));
-  }
+  // public Command dualAlgaeIntake(DoubleSupplier degrees, DoubleSupplier speed){
+  //   return dynamicAlgaeSetPivot(degrees).andThen(startStopDriveAlgae(speed));
+  // }
   
 }

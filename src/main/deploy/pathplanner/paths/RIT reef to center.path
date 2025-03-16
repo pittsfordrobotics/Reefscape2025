@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.564241803278687,
-        "y": 4.030993852459016
+        "x": 5.778,
+        "y": 4.1275
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.008091229045344,
-        "y": 4.034932566558058
+        "x": 6.2793948132672215,
+        "y": 4.102402533131507
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.802049180327868,
-        "y": 4.030993852459016
+        "x": 7.55655,
+        "y": 4.0259
       },
       "prevControl": {
-        "x": 5.552050466190645,
-        "y": 4.0301920234656645
+        "x": 7.863795772327473,
+        "y": 4.00727773297878
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,14 +31,7 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "dropCoralTrough",
-      "waypointRelativePos": 1.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -52,7 +45,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Middle(R)",
+  "folder": "Simple RIT Center Start",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

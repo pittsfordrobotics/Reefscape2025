@@ -32,7 +32,7 @@ public class Climber extends SubsystemBase {
     SparkMaxConfig climbConfig1 = new SparkMaxConfig();
     SparkMaxConfig climbConfig2 = new SparkMaxConfig();
 
-    climbConfig1.smartCurrentLimit(40, 40);
+    climbConfig1.smartCurrentLimit(80, 80);
     climbConfig2.smartCurrentLimit(40, 40);
     
     climbConfig1.idleMode(IdleMode.kBrake);

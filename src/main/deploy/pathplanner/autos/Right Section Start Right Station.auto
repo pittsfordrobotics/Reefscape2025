@@ -1,0 +1,85 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Start-TroughDrop(R)(R)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorRaise"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "dropCoralTrough"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorLower"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TroughDrop-Station(R)(R)"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "collectCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Station-Reef(R)(R)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorRaise"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "coralDrop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorLower"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef-Station(R)(R)"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Right Side Station",
+  "choreoAuto": false
+}

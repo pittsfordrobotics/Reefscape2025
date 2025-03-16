@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -93,7 +94,7 @@ public class Swerve extends SubsystemBase {
     // Configure AutoBuilder last
     AutoBuilder.configure(
             swerveDrive::getPose, // Robot pose supplier
-            swerveDrive::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+            this::setPose, // Method to reset odometry (will be called if your auto has a starting pose)
             swerveDrive::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             (speeds, feedforwards) -> swerveDrive.drive(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
             new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
@@ -136,6 +137,13 @@ public class Swerve extends SubsystemBase {
                     rotationRate, true, false);
         }
     }
+    
+    /**
+     * Stops the swerve drive
+     */
+    public void stopSwerve() {
+        swerveDrive.drive(new ChassisSpeeds());
+    }
 
     /**
      * Resets the gyro angle to zero and resets odometry to the same position, but
@@ -156,6 +164,7 @@ public class Swerve extends SubsystemBase {
      * @param pose The current robot pose.
      */
     public void setPose(Pose2d pose) {
+        setGyroAngle(pose.getRotation());
         swerveDrive.resetOdometry(pose);
     }
 
@@ -180,6 +189,14 @@ public class Swerve extends SubsystemBase {
 
     public double getAngularVelocityRad_Sec() {
         return swerveDrive.getRobotVelocity().omegaRadiansPerSecond;
+    }
+
+    public void setTargetAngle(Rotation2d angle) {
+        currentTargetAngle = angle;
+    }
+
+    public Command setTargetAngleCommand(Supplier<Rotation2d> angleSupplier) {
+        return runOnce(() -> setTargetAngle(angleSupplier.get()));
     }
 
     public void setTargetAllianceRelAngle(Rotation2d allianceRelAngle) {
@@ -323,7 +340,10 @@ public class Swerve extends SubsystemBase {
             System.out.println("raw ap:" + module.getRawAbsolutePosition());
         }
     }
-
+    public Command driveToPoint (Pose2d pointLocation){
+        PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
+        return AutoBuilder.pathfindToPoseFlipped(pointLocation, constraints);
+    }
     public void setSwerveOffsets() {
         Rotation2d[] currentOffsets = new Rotation2d[4];
         Rotation2d[] newOffsets = new Rotation2d[4];
@@ -365,6 +385,11 @@ public class Swerve extends SubsystemBase {
         // Emit the left/right reef poses to the field object for debugging purposes.
         swerveDrive.field.getObject("Target pose right").setPose(FieldHelpers.reefLocation(getPose(), () -> true));
         swerveDrive.field.getObject("Target pose left").setPose(FieldHelpers.reefLocation(getPose(), () -> false));
+        // swerveDrive.field.getObject("3L").setPose(new Pose2d(5.37531, 5.00173, Rotation2d.fromDegrees(-120)));
+        // swerveDrive.field.getObject("3R").setPose(new Pose2d(5.04535, 5.19223, Rotation2d.fromDegrees(-120)));
+        // swerveDrive.field.getObject("4R").setPose(new Pose2d(5.77825, 4.1275, Rotation2d.fromDegrees(180)));
+        // swerveDrive.field.getObject("5L").setPose(new Pose2d(4.89137, 2.770671, Rotation2d.fromDegrees(120)));
+        // swerveDrive.field.getObject("5R").setPose(new Pose2d(5.22133, 2.961171, Rotation2d.fromDegrees(120)));
         // This method will be called once per scheduler run
         swerveDrive.updateOdometry();
 
@@ -379,7 +404,7 @@ public class Swerve extends SubsystemBase {
         //PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
         return Commands.defer(() -> AutoBuilder.pathfindToPose(
             poseSupplier.get(), constraints).finallyDo(
-                () -> setTargetAllianceRelAngle(poseSupplier.get().getRotation())), Set.of(this));
+                () -> setTargetAngle(poseSupplier.get().getRotation())), Set.of(this));
     }
 
     public Command driveToPose(Supplier<Pose2d> poseSupplier) {
@@ -399,8 +424,8 @@ public class Swerve extends SubsystemBase {
         PathConstraints constraints = new PathConstraints(
             SwerveConstants.AUTOBUILDER_MAX_VELOCITY * 0.25,
             SwerveConstants.AUTOBUILDER_MAX_ANGULAR_VELOCITY * 0.25,
-            SwerveConstants.AUTOBUILDER_MAX_ACCELERATION * 0.25,
-            SwerveConstants.AUTOBUILDER_MAX_ANGULAR_ACCELERATION * 0.25,
+            SwerveConstants.AUTOBUILDER_MAX_ACCELERATION * 0.5,
+            SwerveConstants.AUTOBUILDER_MAX_ANGULAR_ACCELERATION * 0.5,
             SwerveConstants.NOMINAL_VOLTAGE,
             false);
         return driveToPoseFlipped(() -> FieldHelpers.getNearestCoralStation(getPose(), isRedAlliance()), constraints);
@@ -410,8 +435,8 @@ public class Swerve extends SubsystemBase {
         PathConstraints constraints = new PathConstraints(
             SwerveConstants.AUTOBUILDER_MAX_VELOCITY * 0.25,
             SwerveConstants.AUTOBUILDER_MAX_ANGULAR_VELOCITY * 0.25,
-            SwerveConstants.AUTOBUILDER_MAX_ACCELERATION * 0.25,
-            SwerveConstants.AUTOBUILDER_MAX_ANGULAR_ACCELERATION * 0.25,
+            SwerveConstants.AUTOBUILDER_MAX_ACCELERATION * 0.5,
+            SwerveConstants.AUTOBUILDER_MAX_ANGULAR_ACCELERATION * 0.5,
             SwerveConstants.NOMINAL_VOLTAGE,
             false);
         return driveToPoseFlipped(() -> FieldConstants.algaeProcessorPos, constraints);
@@ -419,10 +444,10 @@ public class Swerve extends SubsystemBase {
 
     public Command driveToReef(BooleanSupplier isRightSideSupplier) {
         PathConstraints constraints = new PathConstraints(// TODO: set back to normal for comp
-            SwerveConstants.AUTOBUILDER_MAX_CORAL_VELOCITY * 0.25,
-            SwerveConstants.AUTOBUILDER_MAX_CORAL_ANGULAR_VELOCITY * 0.25,
-            SwerveConstants.AUTOBUILDER_MAX_CORAL_ACCELERATION * 0.5,
-            SwerveConstants.AUTOBUILDER_MAX_CORAL_ANGULAR_ACCELERATION * 0.5,
+            SwerveConstants.AUTOBUILDER_MAX_VELOCITY * 0.25,
+            SwerveConstants.AUTOBUILDER_MAX_ANGULAR_VELOCITY * 0.25,
+            SwerveConstants.AUTOBUILDER_MAX_ACCELERATION * 0.5,
+            SwerveConstants.AUTOBUILDER_MAX_ANGULAR_ACCELERATION * 0.5,
             SwerveConstants.NOMINAL_VOLTAGE,
             false);
         return driveToPose(() -> FieldHelpers.reefLocation(getPose(), isRightSideSupplier), constraints);

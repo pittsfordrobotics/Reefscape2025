@@ -7,49 +7,43 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start-TroughDrop(R)(R)"
+            "pathName": "RIT left to reef"
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "ElevatorL2"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "TroughDrop-Station(R)(R)"
+            "name": "coralDrop"
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.2
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Station-Reef(R)(R)"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
+            "name": "ElevatorIntake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Reef-Station(R)(R)"
+            "pathName": "RIT reef to left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "holdHeading"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Right Side Station",
+  "folder": "Simple RIT",
   "choreoAuto": false
 }

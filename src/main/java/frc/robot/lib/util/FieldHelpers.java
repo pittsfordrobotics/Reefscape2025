@@ -118,18 +118,50 @@ public class FieldHelpers {
         return pose;
     }
 
+    // public static Pose2d getNearestCoralStation(Pose2d currentPose, boolean isRedAlliance) {
+    //     if (!isRedAlliance){
+    //         if (currentPose.getY() < (FieldConstants.fieldWidth/2)){
+    //             return FieldConstants.coralStationBottomPos;
+    //         }else{
+    //             return FieldConstants.coralStationTopPos;
+    //         }
+    //     }else{
+    //         if (currentPose.getY() < (FieldConstants.fieldWidth/2)){
+    //             return FieldConstants.coralStationTopPos;
+    //         }else{
+    //             return FieldConstants.coralStationBottomPos;
+    //         }
+    //     }
+    // }
     public static Pose2d getNearestCoralStation(Pose2d currentPose, boolean isRedAlliance) {
         if (!isRedAlliance){
             if (currentPose.getY() < (FieldConstants.fieldWidth/2)){
-                return FieldConstants.coralStationBottomPos;
+                Pose2d pose = aprilTags.getTagPose(12).get().toPose2d();
+                pose = pose.transformBy(new Transform2d(new Translation2d(0.315, 0.315), new Rotation2d()));
+                return pose;
             }else{
-                return FieldConstants.coralStationTopPos;
+                Pose2d pose = aprilTags.getTagPose(13).get().toPose2d();
+                pose = pose.transformBy(new Transform2d(new Translation2d(0.315, -0.315), new Rotation2d()));
+                return pose;
             }
         }else{
-            if (currentPose.getY() < (FieldConstants.fieldWidth/2)){
-                return FieldConstants.coralStationTopPos;
+            // if (currentPose.getY() < (FieldConstants.fieldWidth/2)){
+            //     Pose2d pose = aprilTags.getTagPose(1).get().toPose2d();
+            //     pose = pose.transformBy(new Transform2d(new Translation2d(-0.315, 0.315), new Rotation2d()));
+            //     return pose;
+            // }else{
+            //     Pose2d pose = aprilTags.getTagPose(2).get().toPose2d();
+            //     pose = pose.transformBy(new Transform2d(new Translation2d(-0.315, -0.315), new Rotation2d()));
+            //     return pose;
+            // }
+        if (currentPose.getY() > (FieldConstants.fieldWidth/2)){
+                Pose2d pose = aprilTags.getTagPose(12).get().toPose2d();
+                pose = pose.transformBy(new Transform2d(new Translation2d(0.315, 0.315), new Rotation2d()));
+                return pose;
             }else{
-                return FieldConstants.coralStationBottomPos;
+                Pose2d pose = aprilTags.getTagPose(13).get().toPose2d();
+                pose = pose.transformBy(new Transform2d(new Translation2d(0.315, -0.315), new Rotation2d()));
+                return pose;
             }
         }
     }
