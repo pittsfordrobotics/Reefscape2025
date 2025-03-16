@@ -16,7 +16,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Coral;
 import frc.robot.subsystems.Intake;
-
+import frc.robot.subsystems.Leds;
 import frc.robot.subsystems.objectiveTracker.ObjectiveSelecterIONetworkTables;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.MoveDirection;
@@ -77,8 +77,8 @@ public class RobotContainer {
   @Logged(name = "PDH")
   private final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
 
-  leds = new Leds();
-  
+  Leds leds = new Leds();
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
@@ -132,7 +132,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("holdHeading", swerve.setTargetAngleCommand(swerve::getGyroAngle));
     NamedCommands.registerCommand("dropCoralTrough", coral.placeCoral());
     NamedCommands.registerCommand("coralDrop", coral.placeCoral());
-    NamedCommands.registerCommand("collectCoral", new IntakeCoral(intake, coral, elevator));
+    NamedCommands.registerCommand("collectCoral", new IntakeCoral(intake, coral, elevator, leds));
     NamedCommands.registerCommand("ElevatorL4", elevator.setElevatorLevel(ElevatorLevels.L4).andThen(Commands.waitUntil(() -> elevator.isAtLevel(() -> ElevatorLevels.L4))));
     NamedCommands.registerCommand("ElevatorL3", elevator.setElevatorLevel(ElevatorLevels.L3).andThen(Commands.waitUntil(() -> elevator.isAtLevel(() -> ElevatorLevels.L3))));
     NamedCommands.registerCommand("ElevatorL2", elevator.setElevatorLevel(ElevatorLevels.L2).andThen(Commands.waitUntil(() -> elevator.isAtLevel(() -> ElevatorLevels.L2))));
@@ -180,7 +180,7 @@ public class RobotContainer {
     
     //Operator Controls --------------------------------------------------------
     //Coral Inputs
-    operatorController.b().whileTrue(new IntakeCoral(intake, coral, elevator)).onFalse(intake.stopIntake().alongWith(coral.stopCoral()));
+    operatorController.b().whileTrue(new IntakeCoral(intake, coral, elevator,leds)).onFalse(intake.stopIntake().alongWith(coral.stopCoral()));
 
     operatorController.rightTrigger().whileTrue(coral.dynamicDriveCoral(() -> CoralConstants.CORAL_SPEED));
 

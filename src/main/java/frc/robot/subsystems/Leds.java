@@ -68,8 +68,8 @@ public class Leds extends SubsystemBase {
         mainColorChooser.onChange(color -> {
             MainColor = color;
         });
-        secondaryColorChooser.onChange(coloor -> {
-            SecondaryColor = coloor;
+        secondaryColorChooser.onChange(color2 -> {
+            SecondaryColor = color2;
         });
         modeChooser.onChange(mode -> {
             ledMode = mode;
@@ -222,9 +222,14 @@ public class Leds extends SubsystemBase {
     }
 
     // When the robot is ready to shoot
-    public Command setLEDHasGoodSpeakerShot() {
+    public Command coralIntakeDone() {
         return this.runOnce(() -> {
-            setLedAll(Color.kGreen, Color.kDarkSeaGreen, LedMode.blink, LedSpeed.fast);
+            setLedAll(Color.kGreen, Color.kDarkSeaGreen, LedMode.solid, LedSpeed.fast);
+        });
+    }
+    public Command coralIntakeInProcess() {
+        return this.runOnce(() -> {
+            setLedAll(Color.kGreen, Color.kDarkRed, LedMode.solid, LedSpeed.fast);
         });
     }
 

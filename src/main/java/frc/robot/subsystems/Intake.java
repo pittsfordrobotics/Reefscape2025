@@ -44,7 +44,6 @@ public class Intake extends SubsystemBase {
   @Logged(name = "Is coral detected")
   public boolean isCoralDetected() {
     if(Robot.isSimulation()) {
-      System.out.println("Coral Detected in sim!");
       return true;
     }
     return intakeSensor.get();
