@@ -37,6 +37,7 @@ public class Elevator extends SubsystemBase {
   private double elevatorPos = 0;  // height from bottom elevtor position to bottom of shuttle slide
   public boolean elevatorIsHomed = false;
   private int encoderOffset = 0;
+  private boolean canElevate = true;
 
   @Logged(name = "Elevator position inches")
   public double getElevatorPosition() {
@@ -44,13 +45,17 @@ public class Elevator extends SubsystemBase {
   }
   
   @Logged(name = "Is elevator homed")
-  public boolean getElevatorIsHomed(){
+  public boolean getElevatorIsHomed() {
     return elevatorIsHomed;
   }
 
   @Logged(name = "Encoder offset")
-  public int getEncoderOffset(){
+  public int getEncoderOffset() {
     return encoderOffset;
+  }
+
+  public void canElevate(boolean canElevate) {
+    this.canElevate = canElevate;
   }
 
   /** Creates a new Elevator. */
@@ -83,13 +88,13 @@ public class Elevator extends SubsystemBase {
   }
 
   @Logged(name = "Total Height Inches")
-  public double getTotalHeightInches(){
+  public double getTotalHeightInches() {
     return elevatorPos + ElevatorConstants.GROUND_TO_ELEVATOR_BOTTOM_INCHES;
   }
 
   /* HOMING */
 
-  public Command homeElevator(){
+  public Command homeElevator() {
     return run(() -> elevatorMotor.set(-0.05)).raceWith(Commands.waitUntil(this::isElevatorAtLimit))
       .andThen(run(() -> {
         elevatorMotor.set(0);
@@ -98,20 +103,22 @@ public class Elevator extends SubsystemBase {
       }));
   }
 
-  private boolean isElevatorAtLimit(){
+  private boolean isElevatorAtLimit() {
     return elevatorMotor.getReverseLimitSwitch().isPressed();
   }
 
   /* SETTING POSITION */
-  private void setElevatorPosition(double pos){
+  private void setElevatorPosition(double pos) {
     /*
      * coral encoder for shuttle (elevator @ bottom): -436
      * coral L2 encoder for elevator (shuttle @ previous pos): 62
      * L3: 109
      * L4: max elevator, shuttle @ -266, robot back ~6"
      */
-    elevatorIsHomed = false;
-    elevatorController.setReference(pos, ControlType.kPosition, ClosedLoopSlot.kSlot0, ElevatorConstants.ELEVATOR_FEEDFORWARD);
+    if(canElevate) {
+      elevatorIsHomed = false;
+      elevatorController.setReference(pos, ControlType.kPosition, ClosedLoopSlot.kSlot0, ElevatorConstants.ELEVATOR_FEEDFORWARD);
+    } //else do nothing
   }
 
   public Command dynamicElevatorSetPosition(DoubleSupplier height) {
@@ -128,19 +135,13 @@ public class Elevator extends SubsystemBase {
   public Command setElevatorLevel(ElevatorLevels level) {
     System.out.println("Setting elevator level to " + level);
     Command elevatorCommand;
-    switch (level) {
-      case INTAKE -> {
-        elevatorCommand = runOnce(() -> setElevatorPosition(ElevatorConstants.INTAKE_POSITION + encoderOffset));
-      } case L2 -> {
-        elevatorCommand = runOnce(() -> setElevatorPosition(ElevatorConstants.L2_POSITION + encoderOffset));
-      } case L3 -> {
-        elevatorCommand = runOnce(() -> setElevatorPosition(ElevatorConstants.L3_POSITION + encoderOffset));
-      } case L4 -> {
-        elevatorCommand = runOnce(() -> {
-            setElevatorPosition(ElevatorConstants.L4_POSITION + encoderOffset);
-          });
-      } default -> throw new IllegalArgumentException();
-    }
+    elevatorCommand = runOnce(() -> setElevatorPosition(switch (level) {
+      case INTAKE -> ElevatorConstants.INTAKE_POSITION;
+      case L2 -> ElevatorConstants.L2_POSITION;
+      case L3 -> ElevatorConstants.L3_POSITION;
+      case L4 -> ElevatorConstants.L4_POSITION;
+      default -> throw new IllegalArgumentException();
+    } + encoderOffset));
     return elevatorCommand;
   }
 
@@ -181,7 +182,7 @@ public class Elevator extends SubsystemBase {
     }
   }
 
-  public Command dynamicElevatorSetSpeed(DoubleSupplier speed){
+  public Command dynamicElevatorSetSpeed(DoubleSupplier speed) {
     return run(() -> elevatorMotor.set(speed.getAsDouble())).finallyDo(() -> elevatorMotor.set(ElevatorConstants.ELEVATOR_FEEDFORWARD));
   }
 
@@ -193,11 +194,11 @@ public class Elevator extends SubsystemBase {
     ZERO, INTAKE, L1, L2, L3, L4;
   }
 
-  public void increaseEncoderOffset(int offset){
+  public void increaseEncoderOffset(int offset) {
     encoderOffset += offset;
   }
 
-  public void zeroElevatorOffset(){
+  public void zeroElevatorOffset() {
     encoderOffset = 0;
   }
 }
