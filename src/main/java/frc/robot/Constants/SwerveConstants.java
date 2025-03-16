@@ -1,5 +1,8 @@
 package frc.robot.Constants;
 
+import com.pathplanner.lib.config.PIDConstants;
+
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import frc.robot.lib.SwerveModuleConstants;
 
 public class SwerveConstants {
@@ -31,25 +34,10 @@ public class SwerveConstants {
     public static final double AUTOBUILDER_MAX_ACCELERATION = 1;
     public static final double AUTOBUILDER_MAX_ANGULAR_ACCELERATION = 2;
 
-    // public class BACK_LEFT {
-    //     public static final double drive_kS = 0.26965;
-    //     public static final double drive_kV = 2.6011;
-    //     public static final double drive_kA = 13.234;
-    // }
-    // public class BACK_RIGHT {
-    //     public static final double drive_kS = 0.25825;
-    //     public static final double drive_kV = 2.7213;
-    //     public static final double drive_kA = 12.562;
-    // }
-    // public class FRONT_LEFT {
-    //     public static final double drive_kS = 0.3199;
-    //     public static final double drive_kV = 2.6512;
-    //     public static final double drive_kA = 10.006;
+    public static final double AUTOBUILDER_P = 5;
+    public static final double AUTOBUILDER_I = 0;
+    public static final double AUTOBUILDER_D = 0;
 
-    // }
-    // public class FRONT_RIGHT {
-    //     public static final double drive_kS = 0.23351;
-    //     public static final double drive_kV = 2.6361;
-    //     public static final double drive_kA = 13.654;
-    // }
+    public static final PIDConstants AUTOBUILDER_XY_PID = new PIDConstants(AUTOBUILDER_P, AUTOBUILDER_I, AUTOBUILDER_D);
+    public static final PIDConstants AUTOBUILDER_THETA_PID = new PIDConstants(AUTOBUILDER_P, AUTOBUILDER_I, AUTOBUILDER_D);
 }
