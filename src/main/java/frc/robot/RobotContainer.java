@@ -77,7 +77,8 @@ public class RobotContainer {
   @Logged(name = "PDH")
   private final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
 
-
+  leds = new Leds();
+  
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
