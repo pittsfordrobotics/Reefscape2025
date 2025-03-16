@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.LedConstants;
 
 public class Leds extends SubsystemBase {
     // public enum LedColor {
@@ -42,8 +43,8 @@ public class Leds extends SubsystemBase {
 
     /** Creates a new Leds. */
     public Leds() {
-        ledstrip = new AddressableLED(4);
-        ledBuffer = new AddressableLEDBuffer(9);
+        ledstrip = new AddressableLED(LedConstants.port);
+        ledBuffer = new AddressableLEDBuffer(LedConstants.length);
         ledstrip.setLength(ledBuffer.getLength());
         ledstrip.setData(ledBuffer);
         ledstrip.start();
