@@ -475,7 +475,7 @@ public class Swerve extends SubsystemBase {
                 SwerveConstants.NOMINAL_VOLTAGE,
                 false);
         // return driveToPose(() -> FieldHelpers.reefLocation(getPose(), isRightSideSupplier), constraints);
-        return shortDriveToPose(() -> FieldHelpers.reefLocation(getPose(), isRightSideSupplier));
+        return driveToPose(() -> FieldHelpers.reefLocation(getPose(), isRightSideSupplier), constraints).andThen(shortDriveToPose(() -> FieldHelpers.reefLocation(getPose(), isRightSideSupplier)));
     }
 
     
