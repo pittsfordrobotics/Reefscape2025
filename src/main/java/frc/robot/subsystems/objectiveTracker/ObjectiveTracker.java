@@ -6,12 +6,9 @@ package frc.robot.subsystems.objectiveTracker;
 
 import java.util.function.Supplier;
 
-import org.ejml.dense.row.decomposition.eig.SwitchingEigenDecomposition_FDRM;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.lib.util.FieldHelpers;
 import frc.robot.subsystems.Elevator.ElevatorLevels;
 import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.MoveDirection;
