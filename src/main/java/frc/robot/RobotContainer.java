@@ -233,6 +233,7 @@ public class RobotContainer {
 
     // Slow driving
     driverController.a().onTrue(Commands.runOnce((() -> swerve.enableSlowDriving()))).onFalse(Commands.runOnce((() -> swerve.disableSlowDriving())));
+    elevator.forceSlowDrive().onTrue(Commands.runOnce(() -> swerve.enableSlowDriving())).onFalse(Commands.runOnce((() -> swerve.disableSlowDriving())));
   }
 
   /**
