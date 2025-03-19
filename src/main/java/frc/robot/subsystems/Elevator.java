@@ -166,16 +166,12 @@ public class Elevator extends SubsystemBase {
     }
     switch (level.get()) {
       case INTAKE -> {
-        System.out.println(ElevatorConstants.INTAKE_POSITION + encoderOffset - elevatorPos);
         return Math.abs(ElevatorConstants.INTAKE_POSITION + encoderOffset - elevatorPos) < 2;
       } case L2 -> {
-        System.out.println(ElevatorConstants.L2_POSITION + encoderOffset - elevatorPos);
         return Math.abs(ElevatorConstants.L2_POSITION + encoderOffset - elevatorPos) < 2;
       } case L3 -> {
-        System.out.println(ElevatorConstants.L3_POSITION + encoderOffset - elevatorPos);
         return Math.abs(ElevatorConstants.L3_POSITION + encoderOffset - elevatorPos) < 2;
       } case L4 -> {
-        System.out.println(ElevatorConstants.L4_POSITION + encoderOffset - elevatorPos);
         return Math.abs(ElevatorConstants.L4_POSITION + encoderOffset - elevatorPos) < 2;
       } default -> throw new IllegalArgumentException();
     }

@@ -51,8 +51,6 @@ public class Coral extends SubsystemBase {
 
   private void setCoral(double speed) {
     coralMotor.set(speed);
-    System.out.println("Dropping Coral!");
-    System.out.println(speed);
   }
 
   @Logged(name = "Has intaken")
@@ -68,6 +66,10 @@ public class Coral extends SubsystemBase {
     return runOnce(() -> setCoral(CoralConstants.CORAL_INTAKE_SPEED));
   }
 
+  public Command retractCoral() {
+    return runOnce(() -> setCoral(CoralConstants.CORAL_RETRACT_SPEED));
+  }
+
   public Command placeCoral() {
     return run(() -> setCoral(CoralConstants.CORAL_SPEED))
         .raceWith(Commands.waitSeconds(0.5))
@@ -80,10 +82,5 @@ public class Coral extends SubsystemBase {
 
   public Command stopCoral() {
     return runOnce(() -> setCoral(0));
-  }
-
-  @Logged(name = "Is coral limit switch pressed")
-  public boolean isCoralLimitSwitchPressed() {
-    return coralMotor.getForwardLimitSwitch().isPressed();
   }
 }
