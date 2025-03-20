@@ -137,6 +137,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("ElevatorL2", elevator.setElevatorLevel(ElevatorLevels.L2).andThen(Commands.waitUntil(() -> elevator.isAtLevel(() -> ElevatorLevels.L2))));
     NamedCommands.registerCommand("ElevatorIntake", elevator.setElevatorLevel(ElevatorLevels.INTAKE).andThen(Commands.waitUntil(() -> elevator.isAtLevel(() -> ElevatorLevels.INTAKE))));
     
+    Shuffleboard.getTab("Config").add("SysID Drive Motors", swerve.sysIdDriveMotorCommand());
+    Shuffleboard.getTab("Config").add("SysID Angle Motors", swerve.sysIdAngleMotorCommand());
 
 
     initTestingDashboards();
