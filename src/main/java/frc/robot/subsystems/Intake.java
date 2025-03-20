@@ -44,7 +44,6 @@ public class Intake extends SubsystemBase {
   @Logged(name = "Is coral detected")
   public boolean isCoralDetected() {
     if(Robot.isSimulation()) {
-      System.out.println("Coral Detected in sim!");
       return true;
     }
     return intakeSensor.get();
@@ -60,6 +59,10 @@ public class Intake extends SubsystemBase {
     return run(() -> setIntake(-speed.getAsDouble())).finallyDo(() -> setIntake(0));
   }
 
+  /**
+   * Never use. Uses the sensor in the intake, not the one in the coral.
+   * @return Command that should never be used.
+   */
   public Command intakeCoralWithSensor() {
     return run(() -> setIntake(IntakeConstants.CORAL_INTAKE_SPEED)).until(this::isCoralDetected).finallyDo(() -> setIntake(0));
   }
