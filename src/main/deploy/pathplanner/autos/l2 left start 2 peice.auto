@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start-TroughDrop(R)(R)"
+            "pathName": "2 peice left start"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ElevatorL4"
+            "name": "stopSwerve"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorL2"
           }
         },
         {
@@ -31,13 +37,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "TroughDrop-Station(R)(R)"
+            "pathName": "2 peice step 2"
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.5
+            "name": "stopSwerve"
           }
         },
         {
@@ -49,13 +55,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Station-Reef(R)(R)"
+            "pathName": "2 peice step 3"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ElevatorL4"
+            "name": "stopSwerve"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorL2"
           }
         },
         {
@@ -69,17 +81,11 @@
           "data": {
             "name": "ElevatorIntake"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Reef-Station(R)(R)"
-          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Right Side Station",
+  "folder": "left start 2 peice",
   "choreoAuto": false
 }

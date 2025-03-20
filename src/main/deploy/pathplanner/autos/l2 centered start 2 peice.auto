@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start-TroughDrop(R)(R)"
+            "pathName": "2 peice center start"
           }
         },
         {
@@ -31,13 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "TroughDrop-Station(R)(R)"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "pathName": "2 peice step 2"
           }
         },
         {
@@ -49,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Station-Reef(R)(R)"
+            "pathName": "2 peice step 3"
           }
         },
         {
@@ -73,13 +67,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Reef-Station(R)(R)"
+            "pathName": "2 piece step 4"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Right Side Station",
+  "folder": "centered start 2 peice",
   "choreoAuto": false
 }

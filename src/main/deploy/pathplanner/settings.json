@@ -16,8 +16,10 @@
   ],
   "autoFolders": [
     "Left Side Station",
+    "left start 2 peice",
+    "Right Side Station",
     "Simple RIT",
-    "Right Side Station"
+    "centered start 2 peice"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,

@@ -63,17 +63,11 @@
           "data": {
             "name": "ElevatorIntake"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "2 piece step 4"
-          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "centered start 2 peice",
   "choreoAuto": false
 }

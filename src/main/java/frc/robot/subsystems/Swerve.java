@@ -340,10 +340,7 @@ public class Swerve extends SubsystemBase {
             System.out.println("raw ap:" + module.getRawAbsolutePosition());
         }
     }
-    public Command driveToPoint (Pose2d pointLocation){
-        PathConstraints constraints = PathConstraints.unlimitedConstraints(12);
-        return AutoBuilder.pathfindToPoseFlipped(pointLocation, constraints);
-    }
+
     public void setSwerveOffsets() {
         Rotation2d[] currentOffsets = new Rotation2d[4];
         Rotation2d[] newOffsets = new Rotation2d[4];
