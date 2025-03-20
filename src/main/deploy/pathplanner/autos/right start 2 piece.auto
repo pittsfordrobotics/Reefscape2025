@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2 peice center start"
+            "pathName": "2 piece right start"
           }
         },
         {
@@ -62,12 +62,6 @@
           "type": "named",
           "data": {
             "name": "ElevatorIntake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "2 piece step 4"
           }
         }
       ]
