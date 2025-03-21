@@ -22,7 +22,7 @@ import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
   @Logged(name="Coral Intake Motor")
-  private final SparkMax intakeMotor = new SparkMax(IntakeConstants.CAN_INTAKE_MOTOR, MotorType.kBrushless);
+  // private final SparkMax intakeMotor = new SparkMax(IntakeConstants.CAN_INTAKE_MOTOR, MotorType.kBrushless);
   DigitalInput intakeSensor = new DigitalInput(2);
   
   /** Creates a new IntakeSubsystem. */
@@ -33,7 +33,7 @@ public class Intake extends SubsystemBase {
 
     intakeConfig.idleMode(IdleMode.kCoast);
 
-    intakeMotor.configure(intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // intakeMotor.configure(intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
   
   @Override
@@ -50,9 +50,7 @@ public class Intake extends SubsystemBase {
   }
 
   private void setIntake(double speed) {
-    intakeMotor.set(speed);
-    System.out.println("Collecting Coral!");
-    System.out.println(speed);
+    // intakeMotor.set(speed);
   }
 
   public Command dynamicDriveIntake(DoubleSupplier speed){
@@ -79,8 +77,8 @@ public class Intake extends SubsystemBase {
     return runOnce(() -> setIntake(0));
   }
   
-  @Logged(name = "Is intake limit switch pressed")
-  public boolean isIntakeLimitSwitchPressed(){
-    return intakeMotor.getForwardLimitSwitch().isPressed();
-  }
+  // @Logged(name = "Is intake limit switch pressed")
+  // public boolean isIntakeLimitSwitchPressed(){
+  //   return intakeMotor.getForwardLimitSwitch().isPressed();
+  // }
 }
