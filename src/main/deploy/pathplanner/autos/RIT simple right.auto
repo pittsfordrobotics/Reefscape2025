@@ -29,6 +29,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "stopSwerve"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "RIT reef to right"
