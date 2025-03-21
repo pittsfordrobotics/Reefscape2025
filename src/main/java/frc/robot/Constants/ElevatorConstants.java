@@ -34,8 +34,10 @@ public class ElevatorConstants {
     public static final double SHUTTLE_Kd = 0.01;
 
     public static final double INTAKE_POSITION = 0;
-    public static final double L1_POSITION = 15.5;
-    public static final double L2_POSITION = 41.5;
-    public static final double L3_POSITION = 74.5;
-    public static final double L4_POSITION = 125.5;
+
+    public static final int L1_POSITION = 20;
+    public static final int L2_POSITION = 46;
+    public static final int L3_POSITION = 79;
+    public static final int L4_POSITION = 130;
+//yippeeeeeeeee
 }
