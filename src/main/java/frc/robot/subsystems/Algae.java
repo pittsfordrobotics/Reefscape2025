@@ -52,17 +52,17 @@ public class Algae extends SubsystemBase {
   
   /** Creates a new Algae. */
   public Algae() {
-    // SparkMaxConfig algaeConfig = new SparkMaxConfig();
+    SparkMaxConfig algaeConfig = new SparkMaxConfig();
     SparkMaxConfig pivotConfig = new SparkMaxConfig();
     SoftLimitConfig pivotSoftLimit = new SoftLimitConfig();
 
-    // algaeConfig.smartCurrentLimit(40, 40);
+    algaeConfig.smartCurrentLimit(40, 40);
     pivotConfig.smartCurrentLimit(20);
 
-    // algaeConfig.idleMode(IdleMode.kBrake);
+    algaeConfig.idleMode(IdleMode.kBrake);
     pivotConfig.idleMode(IdleMode.kBrake);
 
-    // algaePickupMotor.configure(algaeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    algaePickupMotor.configure(algaeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     
     pivotConfig.absoluteEncoder.positionConversionFactor(360);
 
@@ -93,9 +93,9 @@ public class Algae extends SubsystemBase {
     algaePivotMotor.getClosedLoopController().setReference(degrees, ControlType.kPosition);
   }
 
-  // public Command dynamicAlgaePickup(DoubleSupplier speed){
-  //   return run(() -> algaePickupMotor.set(speed.getAsDouble())).finallyDo(() -> algaePickupMotor.set(0));
-  // }
+  public Command dynamicAlgaePickup(DoubleSupplier speed){
+    return run(() -> algaePickupMotor.set(speed.getAsDouble())).finallyDo(() -> algaePickupMotor.set(0));
+  }
 
   public Command dynamicAlgaeSetPivot(DoubleSupplier degrees){
     return run(() -> setAlgaePivotPosition(degrees.getAsDouble()));
