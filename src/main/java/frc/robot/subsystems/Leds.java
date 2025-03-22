@@ -229,7 +229,7 @@ public class Leds extends SubsystemBase {
     }
     public Command coralIntakeInProcess() {
         return this.runOnce(() -> {
-            setLedAll(Color.kGreen, Color.kDarkRed, LedMode.solid, LedSpeed.fast);
+            setLedAll(Color.kRed, Color.kDarkRed, LedMode.solid, LedSpeed.fast);
         });
     }
 
