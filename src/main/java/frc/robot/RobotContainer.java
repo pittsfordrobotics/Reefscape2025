@@ -261,7 +261,7 @@ public class RobotContainer {
       () -> SmartDashboard.getNumber("Elevator Motor Speed", 0.25)));
     //Shuffleboard.getTab("testing").add("Climber Motor", climber.dynamicDriveClimb(
     //  () -> SmartDashboard.getNumber("Climber Speed", 0.25)));
-    SmartDashboard.putNumber("Climber Speed", 0.25);
+    // SmartDashboard.putNumber("Climber Speed", 0.25);
     Shuffleboard.getTab("testing").add("Intake Motor", intake.dynamicDriveIntake(
       () -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)));
 
