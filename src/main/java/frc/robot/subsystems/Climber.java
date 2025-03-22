@@ -22,13 +22,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
 
 public class Climber extends SubsystemBase {
+  /* 
   @Logged(name = "Climb Motor 1")
   private SparkMax climbMotor1 = new SparkMax(ClimberConstants.CAN_CLIMBER_1, MotorType.kBrushless);
   @Logged(name = "Climb Motor 2")
   private SparkMax climbMotor2 = new SparkMax(ClimberConstants.CAN_CLIMBER_2, MotorType.kBrushless);
   private SparkClosedLoopController climbClosedLoopController = climbMotor1.getClosedLoopController();
+  */
   /** Creates a new Climber. */
   public Climber() {
+    /*
     SparkMaxConfig climbConfig1 = new SparkMaxConfig();
     SparkMaxConfig climbConfig2 = new SparkMaxConfig();
 
@@ -48,6 +51,7 @@ public class Climber extends SubsystemBase {
 
     climbMotor1.configure(climbConfig1, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     climbMotor2.configure(climbConfig2, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    */
   }
 
   @Override
@@ -55,9 +59,10 @@ public class Climber extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  /* 
   private void setClimbSpeed(double speed) {
     climbMotor1.set(speed);
-    // climbMotor2.set((speed == 0) ? 0 : ((speed < 0) ? -0.05 : 0.05));
+     climbMotor2.set((speed == 0) ? 0 : ((speed < 0) ? -0.05 : 0.05));
   }
 
   public Command dynamicDriveClimb(DoubleSupplier speed){
@@ -75,5 +80,5 @@ public class Climber extends SubsystemBase {
   public Command stopClimb(){
     return run(() -> setClimbSpeed(0));
   }
-
+  */
 }
