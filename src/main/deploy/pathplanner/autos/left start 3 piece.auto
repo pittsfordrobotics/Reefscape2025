@@ -127,7 +127,19 @@
         {
           "type": "named",
           "data": {
+            "name": "stopSwerve"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "ElevatorIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopSwerve"
           }
         },
         {
