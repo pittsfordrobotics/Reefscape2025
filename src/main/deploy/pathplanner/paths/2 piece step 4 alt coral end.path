@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.04535,
-        "y": 5.192
+        "x": 5.375,
+        "y": 5.002
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.6082991803278697,
-        "y": 7.243698770491804
+        "x": 5.754098360655737,
+        "y": 6.1648053278688515
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +20,8 @@
         "y": 7.027
       },
       "prevControl": {
-        "x": 1.355577440846563,
-        "y": 6.943314461439361
+        "x": 1.361971128516637,
+        "y": 7.089848810365712
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,7 +32,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.799459824442942,
+      "minWaypointRelativePos": 0.6725185685347664,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.75,
@@ -69,7 +69,7 @@
   "folder": "flashy 2 peice paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": -119.86655679166148
   },
   "useDefaultConstraints": true
 }
