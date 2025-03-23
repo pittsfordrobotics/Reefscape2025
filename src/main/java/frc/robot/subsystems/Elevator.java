@@ -38,7 +38,6 @@ public class Elevator extends SubsystemBase {
   private DigitalInput sensor1 = new DigitalInput(0);
   private DigitalInput sensor2 = new DigitalInput(1);
   private double elevatorPos = 0;  // height from bottom elevtor position to bottom of shuttle slide
-  public boolean elevatorIsHomed = false;
   private int encoderOffset = 0;
   private boolean canElevate = true;
 
@@ -47,10 +46,7 @@ public class Elevator extends SubsystemBase {
     return elevatorPos;
   }
   
-  @Logged(name = "Is elevator homed")
-  public boolean getElevatorIsHomed() {
-    return elevatorIsHomed;
-  }
+ 
 
   @Logged(name = "Encoder offset")
   public int getEncoderOffset() {
@@ -98,7 +94,6 @@ public class Elevator extends SubsystemBase {
      * L4: max elevator, shuttle @ -266, robot back ~6"
      */
     if(canElevate) {
-      elevatorIsHomed = false;
       elevatorController.setReference(pos, ControlType.kPosition, ClosedLoopSlot.kSlot0, ElevatorConstants.ELEVATOR_FEEDFORWARD);
     } //else do nothing
   }
