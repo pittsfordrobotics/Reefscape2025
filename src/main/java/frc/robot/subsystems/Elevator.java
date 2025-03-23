@@ -56,11 +56,6 @@ public class Elevator extends SubsystemBase {
   public int getEncoderOffset() {
     return encoderOffset;
   }
-
-  public void canElevate(boolean canElevate) {
-    this.canElevate = canElevate;
-  }
-
   /** Creates a new Elevator. */
   public Elevator() {
     SparkMaxConfig elevatorConfig = new SparkMaxConfig();
