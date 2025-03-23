@@ -7,7 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start-TroughDrop(R)(R)"
+            "pathName": "2 piece right start"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopSwerve"
           }
         },
         {
@@ -31,13 +37,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "TroughDrop-Station(R)(R)"
+            "pathName": "2 peice step 2"
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.5
+            "name": "stopSwerve"
           }
         },
         {
@@ -49,7 +55,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Station-Reef(R)(R)"
+            "pathName": "2 peice step 3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopSwerve"
           }
         },
         {
@@ -73,13 +85,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Reef-Station(R)(R)"
+            "pathName": "2 piece step 4 alt coral end"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopSwerve"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "collectCoral"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Right Side Station",
+  "folder": null,
   "choreoAuto": false
 }

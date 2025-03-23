@@ -7,16 +7,20 @@
     "Left(R)",
     "Middle(L)",
     "Middle(R)",
-    "Simple RIT Right Start",
+    "dummy paths",
     "Right(L)",
     "Right(R)",
     "Simple RIT Center Start",
-    "Simple RIT Left Start"
+    "Simple RIT Left Start",
+    "Simple RIT Right Start",
+    "flashy 2 peice paths"
   ],
   "autoFolders": [
     "Left Side Station",
+    "left start 2 peice",
+    "Right Side Station",
     "Simple RIT",
-    "Right Side Station"
+    "centered start 2 peice"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,

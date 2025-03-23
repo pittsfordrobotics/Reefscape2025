@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start-TroughDrop(M)(L)"
+            "pathName": "Start-TroughDrop(M)(M)"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "TroughDrop-Station(L)(L)"
+            "pathName": "TroughDrop-Station(M)(L)"
           }
         },
         {

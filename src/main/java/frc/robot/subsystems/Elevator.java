@@ -24,6 +24,7 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.Constants.ElevatorConstants;
 
@@ -167,19 +168,20 @@ public class Elevator extends SubsystemBase {
     }
     switch (level.get()) {
       case INTAKE -> {
-        System.out.println(ElevatorConstants.INTAKE_POSITION + encoderOffset - elevatorPos);
         return Math.abs(ElevatorConstants.INTAKE_POSITION + encoderOffset - elevatorPos) < 2;
       } case L2 -> {
-        System.out.println(ElevatorConstants.L2_POSITION + encoderOffset - elevatorPos);
         return Math.abs(ElevatorConstants.L2_POSITION + encoderOffset - elevatorPos) < 2;
       } case L3 -> {
-        System.out.println(ElevatorConstants.L3_POSITION + encoderOffset - elevatorPos);
         return Math.abs(ElevatorConstants.L3_POSITION + encoderOffset - elevatorPos) < 2;
       } case L4 -> {
-        System.out.println(ElevatorConstants.L4_POSITION + encoderOffset - elevatorPos);
         return Math.abs(ElevatorConstants.L4_POSITION + encoderOffset - elevatorPos) < 2;
       } default -> throw new IllegalArgumentException();
     }
+  }
+
+  public Trigger forceSlowDrive(){
+    Trigger slowDrive = new Trigger(() -> elevatorPos > ElevatorConstants.L2_POSITION + encoderOffset);
+    return slowDrive;
   }
 
   public Command dynamicElevatorSetSpeed(DoubleSupplier speed) {

@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start-TroughDrop(L)(L)"
+            "pathName": "2 peice left start"
           }
         },
         {
@@ -37,7 +37,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "TroughDrop-Station(L)(L)"
+            "pathName": "2 peice step 2"
           }
         },
         {
@@ -55,7 +55,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Station-TroughDrop(L)(L)"
+            "pathName": "2 peice step 3"
           }
         },
         {
@@ -85,13 +85,61 @@
         {
           "type": "path",
           "data": {
-            "pathName": "TroughDrop-Station(L)(L)"
+            "pathName": "2 piece step 4 alt coral end"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopSwerve"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "collectCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3 piece final step"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopSwerve"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "coralDrop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopSwerve"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Left Side Station",
+  "folder": null,
   "choreoAuto": false
 }

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.364,
-        "y": 4.95
+        "x": 7.556,
+        "y": 6.141
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.0553510273972595,
-        "y": 5.895697773972603
+        "x": 7.307008987101632,
+        "y": 6.059874859327331
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.2,
-        "y": 7.1
+        "x": 5.099159432870369,
+        "y": 5.144977213541666
       },
       "prevControl": {
-        "x": 1.8185032894736841,
-        "y": 6.699835526315789
+        "x": 5.3163904312410315,
+        "y": 5.268713600053013
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,24 +32,11 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.88,
+      "minWaypointRelativePos": 0.8615800135043914,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.6,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    },
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.65,
-      "maxWaypointRelativePos": 0.88,
-      "constraints": {
-        "maxVelocity": 2.0,
-        "maxAcceleration": 3.0,
+        "maxVelocity": 1.0,
+        "maxAcceleration": 1.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -58,7 +45,14 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -69,13 +63,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -54.0
+    "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": "Left(L)",
+  "folder": "flashy 2 peice paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

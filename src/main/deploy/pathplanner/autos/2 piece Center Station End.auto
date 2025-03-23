@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RIT right to reef"
+            "pathName": "2 peice center start"
           }
         },
         {
@@ -29,27 +29,51 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "2 peice step 2"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "stopSwerve"
+            "name": "collectCoral"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RIT reef to right"
+            "pathName": "2 peice step 3"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "holdHeading"
+            "name": "ElevatorL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "coralDrop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2 piece step 4 alt coral end"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Simple RIT",
+  "folder": null,
   "choreoAuto": false
 }
