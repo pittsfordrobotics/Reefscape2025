@@ -1,0 +1,115 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2 peice left start"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopSwerve"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "coralDrop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2 peice step 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopSwerve"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "collectCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2 peice step 3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopSwerve"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "coralDrop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevatorIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2 piece step 4 alt coral end"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopSwerve"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "collectCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopSwerve"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
