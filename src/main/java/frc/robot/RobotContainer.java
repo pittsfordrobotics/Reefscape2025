@@ -61,8 +61,8 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
   private final ObjectiveTracker objectiveTracker;
 
-  @Logged(name = "Climber Subsystem")
-  private final Climber climber;
+  //@Logged(name = "Climber Subsystem")
+  //private final Climber climber;
 
   @Logged(name = "Elevator Subsystem")
   private final Elevator elevator;
@@ -91,7 +91,7 @@ public class RobotContainer {
     //swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve/maxSwerve"));
     intake = new Intake();
     algae = new Algae();
-    climber = new Climber();
+    //climber = new Climber();
     elevator = new Elevator();
 
     swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve"));
@@ -207,7 +207,7 @@ public class RobotContainer {
       (() -> elevator.increaseEncoderOffset((int)SmartDashboard.getNumber("Elevator Encoder Offset", 2)))));
     operatorController.leftBumper().onTrue(Commands.runOnce((() -> elevator.zeroElevatorOffset())));
 
-    operatorController.leftTrigger().whileTrue(climber.dynamicDriveClimb(() -> -0.33));// TODO: fix
+    //operatorController.leftTrigger().whileTrue(climber.dynamicDriveClimb(() -> -0.33));// TODO: fix
 
     //Climber Inputs:
     // operatorController.leftTrigger().whileTrue(climber.dynamicDriveClimb(
@@ -260,9 +260,9 @@ public class RobotContainer {
       () -> SmartDashboard.getNumber("Coral Outtake Speed", -0.25)));
     Shuffleboard.getTab("testing").add("Elevator Motor", elevator.dynamicElevatorSetSpeed(
       () -> SmartDashboard.getNumber("Elevator Motor Speed", 0.25)));
-    Shuffleboard.getTab("testing").add("Climber Motor", climber.dynamicDriveClimb(
-      () -> SmartDashboard.getNumber("Climber Speed", 0.25)));
-    SmartDashboard.putNumber("Climber Speed", 0.25);
+    //Shuffleboard.getTab("testing").add("Climber Motor", climber.dynamicDriveClimb(
+    //  () -> SmartDashboard.getNumber("Climber Speed", 0.25)));
+    // SmartDashboard.putNumber("Climber Speed", 0.25);
     Shuffleboard.getTab("testing").add("Intake Motor", intake.dynamicDriveIntake(
       () -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)));
 

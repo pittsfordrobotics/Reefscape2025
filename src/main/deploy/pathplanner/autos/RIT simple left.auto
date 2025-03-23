@@ -13,7 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ElevatorL2"
+            "name": "ElevatorL4"
           }
         },
         {
@@ -26,6 +26,12 @@
           "type": "named",
           "data": {
             "name": "ElevatorIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopSwerve"
           }
         },
         {

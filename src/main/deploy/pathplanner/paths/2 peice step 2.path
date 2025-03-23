@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.364,
-        "y": 4.95
+        "x": 5.04535,
+        "y": 5.192
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.0553510273972595,
-        "y": 5.895697773972603
+        "x": 3.6082991803278697,
+        "y": 7.243698770491804
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.2,
-        "y": 7.1
+        "x": 1.119889,
+        "y": 7.0266
       },
       "prevControl": {
-        "x": 1.8185032894736841,
-        "y": 6.699835526315789
+        "x": 1.3554664408465626,
+        "y": 6.942914461439361
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,24 +32,11 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.88,
+      "minWaypointRelativePos": 0.799459824442942,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.6,
-        "maxAcceleration": 3.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    },
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.65,
-      "maxWaypointRelativePos": 0.88,
-      "constraints": {
-        "maxVelocity": 2.0,
-        "maxAcceleration": 3.0,
+        "maxVelocity": 0.75,
+        "maxAcceleration": 1.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -58,7 +45,14 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -72,7 +66,7 @@
     "rotation": -54.0
   },
   "reversed": false,
-  "folder": "Left(L)",
+  "folder": "flashy 2 peice paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -119.99999999999999
