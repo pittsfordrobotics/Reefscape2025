@@ -479,15 +479,8 @@ public class Swerve extends SubsystemBase {
         }), Set.of(this));
     }
 
-    public Command driveToNearestCoralStation() {
-        PathConstraints constraints = new PathConstraints(
-                SwerveConstants.AUTOBUILDER_MAX_VELOCITY * 0.25,
-                SwerveConstants.AUTOBUILDER_MAX_ANGULAR_VELOCITY * 0.25,
-                SwerveConstants.AUTOBUILDER_MAX_ACCELERATION * 0.5,
-                SwerveConstants.AUTOBUILDER_MAX_ANGULAR_ACCELERATION * 0.5,
-                SwerveConstants.NOMINAL_VOLTAGE,
-                false);
-        return driveToPoseFlipped(() -> FieldHelpers.getNearestCoralStation(getPose(), isRedAlliance()), constraints);
+    public Command alignToNearestCoralStation() {
+        return setTargetAngleCommand(() -> FieldHelpers.getNearestCoralStation(getPose(), isRedAlliance()).getRotation());
     }
 
     public Command driveToAlgaeCollector() {
@@ -502,7 +495,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Command driveToReef(BooleanSupplier isRightSideSupplier) {
-        PathConstraints constraints = new PathConstraints(// TODO: set back to normal for comp
+        PathConstraints constraints = new PathConstraints(
                 SwerveConstants.AUTOBUILDER_MAX_VELOCITY * 0.25,
                 SwerveConstants.AUTOBUILDER_MAX_ANGULAR_VELOCITY * 0.25,
                 SwerveConstants.AUTOBUILDER_MAX_ACCELERATION * 0.5,
