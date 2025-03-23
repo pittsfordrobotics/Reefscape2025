@@ -171,6 +171,7 @@ public class Swerve extends SubsystemBase {
      */
     public void stopSwerve() {
         swerveDrive.drive(new ChassisSpeeds());
+        currentTargetAngle = null;
     }
 
     /**
