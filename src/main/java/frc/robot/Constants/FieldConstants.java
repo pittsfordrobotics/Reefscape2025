@@ -6,12 +6,7 @@ import static edu.wpi.first.apriltag.AprilTagFields.k2025ReefscapeWelded;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.lib.util.LimelightHelpers;
-
 import java.io.IOException;
-import java.util.HashMap;
 
 /**
  * Contains various field dimensions and useful reference points. Dimensions are
