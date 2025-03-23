@@ -16,7 +16,6 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
@@ -68,7 +67,7 @@ public class Elevator extends SubsystemBase {
     elevatorConfig.smartCurrentLimit(ElevatorConstants.STALL_LIMIT, ElevatorConstants.FREE_LIMIT);
     elevatorConfig.idleMode(IdleMode.kBrake)
     .closedLoopRampRate(ElevatorConstants.CLOSED_LOOP_RAMP_RATE);
-    
+
     elevatorConfig.inverted(true);
    Trigger sensor1trigger = new Trigger(this::sensor1DetectedCoral);
    Trigger sensor2trigger = new Trigger(this::sensor2DetectedCoral);
