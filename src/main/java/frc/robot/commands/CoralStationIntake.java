@@ -7,7 +7,6 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Coral;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -15,12 +14,12 @@ import frc.robot.subsystems.Swerve;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class CoralStationIntake extends SequentialCommandGroup {
   /** Creates a new CoralStationIntake. */
-  public CoralStationIntake(Swerve swerve, Intake intake, Coral coral, Elevator elevator) {
+  public CoralStationIntake(Swerve swerve, Coral coral, Elevator elevator) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       swerve.driveToNearestCoralStation(),
-      new IntakeCoral(intake, coral, elevator)
+      new IntakeCoral(coral, elevator)
     );
   }
 }
