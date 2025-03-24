@@ -31,16 +31,7 @@ public class Algae extends SubsystemBase {
     @Logged(name = "Algae Pivot Motor")
     private SparkMax algaePivotMotor = new SparkMax(AlgaeConstants.CAN_ALGAE_PIVOT_MOTOR, MotorType.kBrushless);
 
-    // @Logged(name = "Algae Sensor")
-    // DigitalInput algaeSensor = new
-    // DigitalInput(AlgaeConstants.ALGAE_SENSOR_CHANNEL);
-
     private SparkClosedLoopController algaePivotController;
-
-    // private ArmFeedforward algaePivotFeedforward = new ArmFeedforward(
-    // AlgaeConstants.ARM_FEEDFORWARD_KS,
-    // AlgaeConstants.ARM_FEEDFORWARD_KG,
-    // AlgaeConstants.ARM_FEEDFORWARD_KV);
 
     /** Creates a new Algae. */
     public Algae() {
