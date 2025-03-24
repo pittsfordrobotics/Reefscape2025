@@ -184,7 +184,8 @@ public class RobotContainer {
     operatorController.rightTrigger().whileTrue(coral.dynamicDriveCoral(() -> CoralConstants.CORAL_SPEED));
 
     //Algae Arm Inputs:
-    operatorController.x().onTrue(algae.dynamicAlgaeSetPivot(() -> AlgaeConstants.PIVOT_DOWN_DEGREES));
+    algae.setDefaultCommand(algae.dynamicAlgaeSetPivot(() -> AlgaeConstants.PIVOT_STORE_DEGREES));
+    operatorController.x().whileTrue(algae.dynamicAlgaeSetPivot(() -> AlgaeConstants.PIVOT_DOWN_DEGREES));
     operatorController.y().whileTrue(algae.yeetAlgae());
 
     // operatorController.a().whileTrue(algae.dualAlgaeIntake(
