@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Coral;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Elevator.ElevatorLevels;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -16,7 +15,7 @@ import frc.robot.subsystems.Elevator.ElevatorLevels;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class IntakeCoral extends SequentialCommandGroup {
   /** Intake coral, sets elevator to intake level and stops when staged */
-  public IntakeCoral(Intake intake, Coral coral, Elevator elevator) {
+  public IntakeCoral(Coral coral, Elevator elevator) {
     addCommands(
         Commands.runOnce(() -> coral.setIntaken(false)),
         elevator.setElevatorLevel(ElevatorLevels.INTAKE).andThen(Commands.waitUntil(() -> elevator.isAtLevel(() -> ElevatorLevels.INTAKE))),
