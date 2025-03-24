@@ -26,111 +26,112 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AlgaeConstants;
 
 public class Algae extends SubsystemBase {
-  @Logged(name = "Algae Pickup Motor")
-  private SparkMax algaePickupMotor = new SparkMax(AlgaeConstants.CAN_ALGAE_PICKUP_MOTOR, MotorType.kBrushless);
-  @Logged(name = "Algae Pivot Motor")
-  private SparkMax algaePivotMotor = new SparkMax(AlgaeConstants.CAN_ALGAE_PIVOT_MOTOR, MotorType.kBrushless);
+    @Logged(name = "Algae Pickup Motor")
+    private SparkMax algaePickupMotor = new SparkMax(AlgaeConstants.CAN_ALGAE_PICKUP_MOTOR, MotorType.kBrushless);
+    @Logged(name = "Algae Pivot Motor")
+    private SparkMax algaePivotMotor = new SparkMax(AlgaeConstants.CAN_ALGAE_PIVOT_MOTOR, MotorType.kBrushless);
 
-  // @Logged(name = "Algae Sensor")
-  // DigitalInput algaeSensor = new DigitalInput(AlgaeConstants.ALGAE_SENSOR_CHANNEL);
+    // @Logged(name = "Algae Sensor")
+    // DigitalInput algaeSensor = new
+    // DigitalInput(AlgaeConstants.ALGAE_SENSOR_CHANNEL);
 
-  private SparkAbsoluteEncoder pivotEncoder;
-  private SparkClosedLoopController algaePivotController;
+    private SparkClosedLoopController algaePivotController;
 
-  // private ArmFeedforward algaePivotFeedforward = new ArmFeedforward(
-  //   AlgaeConstants.ARM_FEEDFORWARD_KS, 
-  //   AlgaeConstants.ARM_FEEDFORWARD_KG, 
-  //   AlgaeConstants.ARM_FEEDFORWARD_KV);
-  
-  /** Creates a new Algae. */
-  public Algae() {
-    SparkMaxConfig algaeConfig = new SparkMaxConfig();
-    SparkMaxConfig pivotConfig = new SparkMaxConfig();
+    // private ArmFeedforward algaePivotFeedforward = new ArmFeedforward(
+    // AlgaeConstants.ARM_FEEDFORWARD_KS,
+    // AlgaeConstants.ARM_FEEDFORWARD_KG,
+    // AlgaeConstants.ARM_FEEDFORWARD_KV);
 
-    algaeConfig.smartCurrentLimit(40, 40);
-    pivotConfig.smartCurrentLimit(20);
+    /** Creates a new Algae. */
+    public Algae() {
+        SparkMaxConfig algaeConfig = new SparkMaxConfig();
+        SparkMaxConfig pivotConfig = new SparkMaxConfig();
 
-    algaeConfig.idleMode(IdleMode.kBrake);
-    pivotConfig.idleMode(IdleMode.kBrake);
+        algaeConfig.smartCurrentLimit(20);
+        pivotConfig.smartCurrentLimit(40);
 
-    algaePickupMotor.configure(algaeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    
-    pivotConfig.absoluteEncoder.positionConversionFactor(360);
+        algaeConfig.idleMode(IdleMode.kBrake)
+                .closedLoopRampRate(0.25);
+        pivotConfig.idleMode(IdleMode.kBrake);
 
-    pivotConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-    .pid(AlgaeConstants.PIVOT_KP, AlgaeConstants.PIVOT_KI, AlgaeConstants.PIVOT_KD)
-    .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-    .positionWrappingInputRange(0, 360);
+        algaePickupMotor.configure(algaeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    algaePivotMotor.configure(pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        pivotConfig.absoluteEncoder.positionConversionFactor(360);
 
-    pivotEncoder = algaePivotMotor.getAbsoluteEncoder();
-    algaePivotController = algaePivotMotor.getClosedLoopController();
-  }
+        pivotConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+                .pid(AlgaeConstants.PIVOT_KP, AlgaeConstants.PIVOT_KI, AlgaeConstants.PIVOT_KD)
+                .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+                .positionWrappingInputRange(0, 360);
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+        algaePivotMotor.configure(pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        algaePivotController = algaePivotMotor.getClosedLoopController();
+    }
 
-  // @Logged(name = "IsAlgaeDetected")
-  // public boolean isAlgaeDetected() {
-  //   return algaeSensor.get();
-  // }
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+    }
 
-  public Command intakeAlgae() {
-    return run(() -> {
-      algaePickupMotor.set(AlgaeConstants.PICKUP_INTAKE_SPEED);
-      algaePivotController.setReference(AlgaeConstants.PIVOT_DOWN_DEGREES, ControlType.kPosition);
-    }).andThen(() -> {
-      algaePickupMotor.set(0);
-      algaePivotController.setReference(AlgaeConstants.PIVOT_STORE_DEGREES, ControlType.kPosition);
-    });
-  }
+    // @Logged(name = "IsAlgaeDetected")
+    // public boolean isAlgaeDetected() {
+    // return algaeSensor.get();
+    // }
 
-  public Command outtakeAlgae() {
-    return run(() -> {
-      algaePickupMotor.set(AlgaeConstants.PICKUP_OUTTAKE_SPEED);
-      algaePivotController.setReference(AlgaeConstants.PIVOT_STORE_DEGREES, ControlType.kPosition);
-    }).andThen(() -> {
-      algaePickupMotor.set(0);
-      algaePivotController.setReference(AlgaeConstants.PIVOT_STORE_DEGREES, ControlType.kPosition);
-    });
-  }
+    public Command intakeAlgae() {
+        return run(() -> {
+            algaePickupMotor.set(AlgaeConstants.PICKUP_INTAKE_SPEED);
+            algaePivotController.setReference(AlgaeConstants.PIVOT_DOWN_DEGREES, ControlType.kPosition);
+        }).andThen(() -> {
+            algaePickupMotor.set(0);
+            algaePivotController.setReference(AlgaeConstants.PIVOT_STORE_DEGREES, ControlType.kPosition);
+        });
+    }
 
-  private void setAlgaePivotPosition(double degrees) {
-    // algaePivotMotor.set(
-    //   algaePivotProfiledPIDController.calculate(pivotEncoder.getPosition(), degrees) 
-    // + algaePivotFeedforward.calculate(pivotEncoder.getPosition(), pivotEncoder.getVelocity()));
-    algaePivotMotor.getClosedLoopController().setReference(degrees, ControlType.kPosition);
-  }
+    public Command outtakeAlgae() {
+        return run(() -> {
+            algaePickupMotor.set(AlgaeConstants.PICKUP_OUTTAKE_SPEED);
+            algaePivotController.setReference(AlgaeConstants.PIVOT_STORE_DEGREES, ControlType.kPosition);
+        }).andThen(() -> {
+            algaePickupMotor.set(0);
+            algaePivotController.setReference(AlgaeConstants.PIVOT_STORE_DEGREES, ControlType.kPosition);
+        });
+    }
 
-  public Command dynamicAlgaePickup(DoubleSupplier speed){
-    return run(() -> algaePickupMotor.set(speed.getAsDouble())).finallyDo(() -> algaePickupMotor.set(0));
-  }
+    private void setAlgaePivotPosition(double degrees) {
+        // algaePivotMotor.set(
+        // algaePivotProfiledPIDController.calculate(pivotEncoder.getPosition(),
+        // degrees)
+        // + algaePivotFeedforward.calculate(pivotEncoder.getPosition(),
+        // pivotEncoder.getVelocity()));
+        algaePivotMotor.getClosedLoopController().setReference(degrees, ControlType.kPosition);
+    }
 
-  public Command dynamicAlgaeSetPivot(DoubleSupplier degrees){
-    return run(() -> setAlgaePivotPosition(degrees.getAsDouble()));
-  }
+    public Command dynamicAlgaePickup(DoubleSupplier speed) {
+        return run(() -> algaePickupMotor.set(speed.getAsDouble())).finallyDo(() -> algaePickupMotor.set(0));
+    }
 
-  public Command dynamicAlgaeSpeedPivot(DoubleSupplier speed){
-    return run(() -> algaePivotMotor.set(speed.getAsDouble())).finallyDo(() -> algaePivotMotor.set(0));
-  }
+    public Command dynamicAlgaeSetPivot(DoubleSupplier degrees) {
+        return run(() -> setAlgaePivotPosition(degrees.getAsDouble()));
+    }
 
-  // public Command startStopDriveAlgae(DoubleSupplier speed) {
-  //   return startEnd(
-  //     () -> algaePickupMotor.set(speed.getAsDouble()),
-  //      () -> algaePickupMotor.set(0));
-  // }
+    public Command dynamicAlgaeSpeedPivot(DoubleSupplier speed) {
+        return run(() -> algaePivotMotor.set(speed.getAsDouble())).finallyDo(() -> algaePivotMotor.set(0));
+    }
 
-  public Command startStopAlgaePivot(DoubleSupplier degrees) {
-    return startEnd(
-      () -> setAlgaePivotPosition(degrees.getAsDouble()),
-       () -> algaePivotMotor.set(0));
-  }
+    // public Command startStopDriveAlgae(DoubleSupplier speed) {
+    // return startEnd(
+    // () -> algaePickupMotor.set(speed.getAsDouble()),
+    // () -> algaePickupMotor.set(0));
+    // }
 
-  // public Command dualAlgaeIntake(DoubleSupplier degrees, DoubleSupplier speed){
-  //   return dynamicAlgaeSetPivot(degrees).andThen(startStopDriveAlgae(speed));
-  // }
-  
+    public Command startStopAlgaePivot(DoubleSupplier degrees) {
+        return startEnd(
+                () -> setAlgaePivotPosition(degrees.getAsDouble()),
+                () -> algaePivotMotor.set(0));
+    }
+
+    // public Command dualAlgaeIntake(DoubleSupplier degrees, DoubleSupplier speed){
+    // return dynamicAlgaeSetPivot(degrees).andThen(startStopDriveAlgae(speed));
+    // }
+
 }
