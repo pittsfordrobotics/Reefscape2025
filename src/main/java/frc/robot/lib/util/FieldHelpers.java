@@ -4,8 +4,6 @@
 
 package frc.robot.lib.util;
 
-import static edu.wpi.first.units.Units.Rotation;
-
 import java.util.HashMap;
 import java.util.function.BooleanSupplier;
 

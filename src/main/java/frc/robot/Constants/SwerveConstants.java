@@ -2,7 +2,6 @@ package frc.robot.Constants;
 
 import com.pathplanner.lib.config.PIDConstants;
 
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import frc.robot.lib.SwerveModuleConstants;
 
 public class SwerveConstants {

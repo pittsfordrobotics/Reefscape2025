@@ -11,7 +11,6 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
@@ -20,17 +19,13 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -55,7 +50,6 @@ public class Swerve extends SubsystemBase {
     private final SwerveDrive swerveDrive;
     private final PIDController poseXController;
     private final PIDController poseYController;
-    private Pose2d targetPose = new Pose2d();
     public double maximumSpeed = SwerveConstants.SWERVE_MAXIMUM_VELOCITY;
     public double maximumAngularSpeed = SwerveConstants.SWERVE_MAXIMUM_ANGULAR_VELOCITY;
     private Rotation2d currentTargetAngle = new Rotation2d();
@@ -171,6 +165,7 @@ public class Swerve extends SubsystemBase {
      */
     public void stopSwerve() {
         swerveDrive.drive(new ChassisSpeeds());
+        currentTargetAngle = null;
     }
 
     /**
@@ -221,11 +216,6 @@ public class Swerve extends SubsystemBase {
 
     public void setTargetAngle(Rotation2d angle) {
         currentTargetAngle = angle;
-    }
-
-    public void setTargetPose(Pose2d pose) {
-        targetPose = pose;
-        currentTargetAngle = pose.getRotation();
     }
 
     public Command setTargetAngleCommand(Supplier<Rotation2d> angleSupplier) {
@@ -528,6 +518,7 @@ public class Swerve extends SubsystemBase {
         maximumSpeed = SwerveConstants.SWERVE_MAXIMUM_VELOCITY;
         maximumAngularSpeed = SwerveConstants.SWERVE_MAXIMUM_ANGULAR_VELOCITY;
     }
+
 
     // *******************
     // Logging methods

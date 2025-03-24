@@ -7,12 +7,13 @@
     "Left(R)",
     "Middle(L)",
     "Middle(R)",
-    "flashy 2 peice paths",
+    "dummy paths",
     "Right(L)",
     "Right(R)",
     "Simple RIT Center Start",
     "Simple RIT Left Start",
-    "Simple RIT Right Start"
+    "Simple RIT Right Start",
+    "flashy 2 peice paths"
   ],
   "autoFolders": [
     "Left Side Station",
