@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.712702642600249,
-        "y": 5.712430930434769
+        "x": 4.8519061053240735,
+        "y": 5.836308232060185
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.653061597271626,
-        "y": 5.525708402670043
+        "x": 1.12,
+        "y": 7.027
       },
       "prevControl": {
-        "x": 5.259085134325997,
-        "y": 4.758975710322946
+        "x": 1.3440880491332334,
+        "y": 7.137835672216402
       },
       "nextControl": null,
       "isLocked": false,
@@ -35,7 +35,7 @@
       "minWaypointRelativePos": 0.6725185685347664,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.75,
+        "maxVelocity": 1.0,
         "maxAcceleration": 1.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -63,7 +63,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": -54.0
   },
   "reversed": false,
   "folder": "flashy 2 peice paths",

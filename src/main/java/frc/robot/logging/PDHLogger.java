@@ -1,9 +1,7 @@
 package frc.robot.logging;
 
-import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.logging.ClassSpecificLogger;
 import edu.wpi.first.epilogue.logging.EpilogueBackend;
-import edu.wpi.first.epilogue.Epilogue;
 import edu.wpi.first.epilogue.CustomLoggerFor;
 
 import edu.wpi.first.wpilibj.PowerDistribution;

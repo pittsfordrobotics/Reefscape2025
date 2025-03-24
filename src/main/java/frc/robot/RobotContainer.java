@@ -12,7 +12,6 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Elevator.ElevatorLevels;
 import frc.robot.subsystems.Vision.Vision;
 import frc.robot.subsystems.Algae;
-import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Coral;
 
@@ -21,7 +20,6 @@ import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 import frc.robot.subsystems.objectiveTracker.ObjectiveSelectorIO.MoveDirection;
 
 import java.io.File;
-import java.util.Set;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -69,6 +67,8 @@ public class RobotContainer {
   
   @Logged(name = "Swerve Subsystem")
   private final Swerve swerve;
+
+  @SuppressWarnings("unused") //it is used, vs code is just crashing out
   private final Vision vision;
 
   @Logged(name = "PDH")
@@ -228,6 +228,7 @@ public class RobotContainer {
 
     // Slow driving
     driverController.a().onTrue(Commands.runOnce((() -> swerve.enableSlowDriving()))).onFalse(Commands.runOnce((() -> swerve.disableSlowDriving())));
+    elevator.forceSlowDrive().onTrue(Commands.runOnce(() -> swerve.enableSlowDriving())).onFalse(Commands.runOnce((() -> swerve.disableSlowDriving())));
   }
 
   /**

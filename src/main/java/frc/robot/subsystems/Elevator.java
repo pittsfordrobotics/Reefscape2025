@@ -24,6 +24,7 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.Constants.ElevatorConstants;
 
@@ -175,6 +176,11 @@ public class Elevator extends SubsystemBase {
         return Math.abs(ElevatorConstants.L4_POSITION + encoderOffset - elevatorPos) < 2;
       } default -> throw new IllegalArgumentException();
     }
+  }
+
+  public Trigger forceSlowDrive(){
+    Trigger slowDrive = new Trigger(() -> elevatorPos > ElevatorConstants.L2_POSITION + encoderOffset);
+    return slowDrive;
   }
 
   public Command dynamicElevatorSetSpeed(DoubleSupplier speed){
