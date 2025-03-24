@@ -37,6 +37,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.AlgaeCommands;
 import frc.robot.commands.IntakeCoral;
 
 /**
@@ -185,8 +186,8 @@ public class RobotContainer {
 
     //Algae Arm Inputs:
     algae.setDefaultCommand(algae.dynamicAlgaeSetPivot(() -> AlgaeConstants.PIVOT_STORE_DEGREES));
-    operatorController.x().whileTrue(algae.dynamicAlgaeSetPivot(() -> AlgaeConstants.PIVOT_DOWN_DEGREES));
-    operatorController.y().whileTrue(algae.yeetAlgae());
+    operatorController.x().whileTrue(AlgaeCommands.algaeIntake(algae, elevator, objectiveTracker));
+    operatorController.y().whileTrue(AlgaeCommands.algaeOuttake(algae, elevator, objectiveTracker));
 
     // operatorController.a().whileTrue(algae.dualAlgaeIntake(
     //   () -> SmartDashboard.getNumber("Algae Up Angle", 0),

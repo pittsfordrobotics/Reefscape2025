@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkAbsoluteEncoder;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 
 import java.util.function.DoubleSupplier;
@@ -34,13 +35,12 @@ public class Algae extends SubsystemBase {
   // DigitalInput algaeSensor = new DigitalInput(AlgaeConstants.ALGAE_SENSOR_CHANNEL);
 
   private SparkAbsoluteEncoder pivotEncoder;
+  private SparkClosedLoopController algaePivotController;
 
   // private ArmFeedforward algaePivotFeedforward = new ArmFeedforward(
   //   AlgaeConstants.ARM_FEEDFORWARD_KS, 
   //   AlgaeConstants.ARM_FEEDFORWARD_KG, 
   //   AlgaeConstants.ARM_FEEDFORWARD_KV);
-
-  private boolean canYeet = true;
   
   /** Creates a new Algae. */
   public Algae() {
@@ -65,6 +65,7 @@ public class Algae extends SubsystemBase {
     algaePivotMotor.configure(pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     pivotEncoder = algaePivotMotor.getAbsoluteEncoder();
+    algaePivotController = algaePivotMotor.getClosedLoopController();
   }
 
   @Override
@@ -76,6 +77,26 @@ public class Algae extends SubsystemBase {
   // public boolean isAlgaeDetected() {
   //   return algaeSensor.get();
   // }
+
+  public Command intakeAlgae() {
+    return run(() -> {
+      algaePickupMotor.set(AlgaeConstants.PICKUP_INTAKE_SPEED);
+      algaePivotController.setReference(AlgaeConstants.PIVOT_DOWN_DEGREES, ControlType.kPosition);
+    }).andThen(() -> {
+      algaePickupMotor.set(0);
+      algaePivotController.setReference(AlgaeConstants.PIVOT_STORE_DEGREES, ControlType.kPosition);
+    });
+  }
+
+  public Command outtakeAlgae() {
+    return run(() -> {
+      algaePickupMotor.set(AlgaeConstants.PICKUP_OUTTAKE_SPEED);
+      algaePivotController.setReference(AlgaeConstants.PIVOT_STORE_DEGREES, ControlType.kPosition);
+    }).andThen(() -> {
+      algaePickupMotor.set(0);
+      algaePivotController.setReference(AlgaeConstants.PIVOT_STORE_DEGREES, ControlType.kPosition);
+    });
+  }
 
   private void setAlgaePivotPosition(double degrees) {
     // algaePivotMotor.set(
@@ -94,18 +115,6 @@ public class Algae extends SubsystemBase {
 
   public Command dynamicAlgaeSpeedPivot(DoubleSupplier speed){
     return run(() -> algaePivotMotor.set(speed.getAsDouble())).finallyDo(() -> algaePivotMotor.set(0));
-  }
-
-  public Command yeetAlgae() {
-    return startRun(() -> {
-      if(MathUtil.inputModulus(pivotEncoder.getPosition(), -180, 180) > AlgaeConstants.PIVOT_DOWN_DEGREES + 20) {
-        canYeet = false;
-      }
-    }, () -> {
-      if(canYeet) {
-        dynamicAlgaeSpeedPivot(() -> AlgaeConstants.PIVOT_YEET_SPEED);
-      }
-    });
   }
 
   // public Command startStopDriveAlgae(DoubleSupplier speed) {

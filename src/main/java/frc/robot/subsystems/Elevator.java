@@ -155,10 +155,16 @@ public class Elevator extends SubsystemBase {
         case L2 -> ElevatorConstants.L2_POSITION + encoderOffset;
         case L3 -> ElevatorConstants.L3_POSITION + encoderOffset;
         case L4 -> ElevatorConstants.L4_POSITION + encoderOffset;
+        case PROCESSOR -> ElevatorConstants.PROCESSOR_POSITION + encoderOffset;
+        case BARGE -> ElevatorConstants.BARGE_POSITION + encoderOffset;
         default -> throw new IllegalArgumentException();
       };
       setElevatorPosition(elevatorHeight);
     });
+  }
+
+  public Command elevatorLevelUntilReached(Supplier<ElevatorLevels> levelSupplier) {
+    return dynamicElevatorLevel(levelSupplier).until(() -> isAtLevel(levelSupplier));
   }
   
   public boolean isAtLevel(Supplier<ElevatorLevels> level) {
@@ -174,7 +180,11 @@ public class Elevator extends SubsystemBase {
         return Math.abs(ElevatorConstants.L3_POSITION + encoderOffset - elevatorPos) < 2;
       } case L4 -> {
         return Math.abs(ElevatorConstants.L4_POSITION + encoderOffset - elevatorPos) < 2;
-      } default -> throw new IllegalArgumentException();
+      } case PROCESSOR -> {
+        return Math.abs(ElevatorConstants.PROCESSOR_POSITION + encoderOffset - elevatorPos) < 2;
+      } case BARGE -> {
+        return Math.abs(ElevatorConstants.BARGE_POSITION + encoderOffset - elevatorPos) < 2;
+      }default -> throw new IllegalArgumentException();
     }
   }
 
@@ -192,7 +202,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public enum ElevatorLevels {
-    ZERO, INTAKE, L1, L2, L3, L4;
+    ZERO, INTAKE, L1, L2, L3, L4, PROCESSOR, BARGE;
   }
 
   public void increaseEncoderOffset(int offset){
