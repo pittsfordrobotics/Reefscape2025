@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -70,16 +71,16 @@ public class Algae extends SubsystemBase {
     // return algaeSensor.get();
     // }
 
-    public Command intakeAlgae() {
+    public Command intakeAlgae(BooleanSupplier ground) {
         return run(() -> {
             algaePickupMotor.set(AlgaeConstants.PICKUP_INTAKE_SPEED);
-            algaePivotController.setReference(AlgaeConstants.PIVOT_DOWN_DEGREES, ControlType.kPosition);
+            algaePivotController.setReference(ground.getAsBoolean() ? AlgaeConstants.PIVOT_GROUND_DEGREES : AlgaeConstants.PIVOT_DOWN_DEGREES, ControlType.kPosition);
         });
     }
 
-    public Command outtakeAlgae() {
+    public Command outtakeAlgae(BooleanSupplier barge) {
         return run(() -> {
-            algaePivotController.setReference(AlgaeConstants.PIVOT_STORE_DEGREES, ControlType.kPosition);
+            algaePivotController.setReference(barge.getAsBoolean() ? AlgaeConstants.PIVOT_UP_DEGREES : AlgaeConstants.PIVOT_STORE_DEGREES, ControlType.kPosition);
         }).finallyDo(() -> algaePickupMotor.set(AlgaeConstants.PICKUP_OUTTAKE_SPEED));
     }
 

@@ -13,7 +13,11 @@ import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
 /** Add your docs here. */
 public class AlgaeCommands {
     public static Command algaeIntake(Algae algae, Elevator elevator, ObjectiveTracker objectiveTracker) {
-        return elevator.dynamicElevatorLevel(objectiveTracker::getElevatorLevel).alongWith(algae.intakeAlgae());
+        return elevator
+                .dynamicElevatorLevel(
+                        () -> objectiveTracker.getElevatorLevel() == ElevatorLevels.L1 ? ElevatorLevels.ZERO
+                                : objectiveTracker.getElevatorLevel())
+                .alongWith(algae.intakeAlgae(() -> objectiveTracker.getElevatorLevel() == ElevatorLevels.L1));
     }
 
     public static Command algaeOuttake(Algae algae, Elevator elevator, ObjectiveTracker objectiveTracker) {
@@ -21,6 +25,6 @@ public class AlgaeCommands {
                 .elevatorLevelUntilReached(
                         () -> objectiveTracker.getElevatorLevel() == ElevatorLevels.L4 ? ElevatorLevels.BARGE
                                 : ElevatorLevels.PROCESSOR)
-                .andThen(algae.outtakeAlgae());
+                .andThen(algae.outtakeAlgae(() -> objectiveTracker.getElevatorLevel() == ElevatorLevels.L4));
     }
 }
