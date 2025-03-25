@@ -22,6 +22,7 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.MathUtil;
 // import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AlgaeConstants;
 
@@ -42,7 +43,8 @@ public class Algae extends SubsystemBase {
         pivotConfig.smartCurrentLimit(40);
 
         algaeConfig.idleMode(IdleMode.kBrake)
-                .closedLoopRampRate(0.25);
+                .closedLoopRampRate(0.25)
+                .inverted(true);
         pivotConfig.idleMode(IdleMode.kBrake);
 
         algaePickupMotor.configure(algaeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -51,8 +53,8 @@ public class Algae extends SubsystemBase {
 
         pivotConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                 .pid(AlgaeConstants.PIVOT_KP, AlgaeConstants.PIVOT_KI, AlgaeConstants.PIVOT_KD)
-                .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-                .positionWrappingInputRange(0, 360);
+                .positionWrappingInputRange(0, 360)
+                .positionWrappingEnabled(true);
 
         algaePivotMotor.configure(pivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         algaePivotController = algaePivotMotor.getClosedLoopController();
@@ -72,20 +74,20 @@ public class Algae extends SubsystemBase {
         return run(() -> {
             algaePickupMotor.set(AlgaeConstants.PICKUP_INTAKE_SPEED);
             algaePivotController.setReference(AlgaeConstants.PIVOT_DOWN_DEGREES, ControlType.kPosition);
-        }).andThen(() -> {
-            algaePickupMotor.set(0);
-            algaePivotController.setReference(AlgaeConstants.PIVOT_STORE_DEGREES, ControlType.kPosition);
         });
     }
 
     public Command outtakeAlgae() {
         return run(() -> {
-            algaePickupMotor.set(AlgaeConstants.PICKUP_OUTTAKE_SPEED);
             algaePivotController.setReference(AlgaeConstants.PIVOT_STORE_DEGREES, ControlType.kPosition);
-        }).andThen(() -> {
+        }).finallyDo(() -> algaePickupMotor.set(AlgaeConstants.PICKUP_OUTTAKE_SPEED));
+    }
+
+    public Command idleAlgae() {
+        return Commands.waitSeconds(0.5).andThen(runOnce(() -> {
+            algaePivotController.setReference(AlgaeConstants.PIVOT_STORE_DEGREES, ControlType.kPosition);
             algaePickupMotor.set(0);
-            algaePivotController.setReference(AlgaeConstants.PIVOT_STORE_DEGREES, ControlType.kPosition);
-        });
+        }));
     }
 
     private void setAlgaePivotPosition(double degrees) {

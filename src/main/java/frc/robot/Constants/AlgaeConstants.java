@@ -14,13 +14,13 @@ public class AlgaeConstants {
     public static final int ARM_FEEDFORWARD_KG = 1;
     public static final int ARM_FEEDFORWARD_KV = 1;
 
-    public static final double PIVOT_KP = 0.01;
+    public static final double PIVOT_KP = 0.008;
     public static final double PIVOT_KI = 0;
-    public static final double PIVOT_KD = 0;
+    public static final double PIVOT_KD = 0.0001;
 
     public static final double PIVOT_STORE_DEGREES = 0; // Set up zero on encoder with algae arm up
     public static final double PIVOT_DOWN_DEGREES = -20;
 
-    public static final double PICKUP_INTAKE_SPEED = -0.2;
-    public static final double PICKUP_OUTTAKE_SPEED = 0.2;
+    public static final double PICKUP_INTAKE_SPEED = -0.5;
+    public static final double PICKUP_OUTTAKE_SPEED = 0.5;
 }
