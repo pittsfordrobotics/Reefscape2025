@@ -12,10 +12,8 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Elevator.ElevatorLevels;
 import frc.robot.subsystems.Vision.Vision;
 import frc.robot.subsystems.Algae;
-import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Coral;
-import frc.robot.subsystems.Intake;
 
 import frc.robot.subsystems.objectiveTracker.ObjectiveSelecterIONetworkTables;
 import frc.robot.subsystems.objectiveTracker.ObjectiveTracker;
@@ -52,8 +50,6 @@ import frc.robot.commands.IntakeCoral;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //private final Swerve swerve;
-  @Logged(name = "Coral Intake Subsystem")
-  private final Intake intake;
 
   @Logged(name = "Algae Subsystem")
   private final Algae algae;
@@ -71,6 +67,8 @@ public class RobotContainer {
   
   @Logged(name = "Swerve Subsystem")
   private final Swerve swerve;
+
+  @SuppressWarnings("unused") //it is used, vs code is just crashing out
   private final Vision vision;
 
   @Logged(name = "PDH")
@@ -87,8 +85,6 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    //swerve = new Swerve(new File(Filesystem.getDeployDirectory(), "swerve/maxSwerve"));
-    intake = new Intake();
     algae = new Algae();
     //climber = new Climber();
     elevator = new Elevator();
@@ -130,7 +126,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("holdHeading", swerve.setTargetAngleCommand(swerve::getGyroAngle));
     NamedCommands.registerCommand("dropCoralTrough", coral.placeCoral());
     NamedCommands.registerCommand("coralDrop", coral.placeCoral());
-    NamedCommands.registerCommand("collectCoral", new IntakeCoral(intake, coral, elevator));
+    NamedCommands.registerCommand("collectCoral", new IntakeCoral(coral, elevator));
     NamedCommands.registerCommand("ElevatorL4", elevator.setElevatorLevel(ElevatorLevels.L4).andThen(Commands.waitUntil(() -> elevator.isAtLevel(() -> ElevatorLevels.L4))));
     NamedCommands.registerCommand("ElevatorL3", elevator.setElevatorLevel(ElevatorLevels.L3).andThen(Commands.waitUntil(() -> elevator.isAtLevel(() -> ElevatorLevels.L3))));
     NamedCommands.registerCommand("ElevatorL2", elevator.setElevatorLevel(ElevatorLevels.L2).andThen(Commands.waitUntil(() -> elevator.isAtLevel(() -> ElevatorLevels.L2))));
@@ -178,7 +174,7 @@ public class RobotContainer {
     
     //Operator Controls --------------------------------------------------------
     //Coral Inputs
-    operatorController.b().whileTrue(new IntakeCoral(intake, coral, elevator)).onFalse(intake.stopIntake().alongWith(coral.stopCoral()));
+    operatorController.b().whileTrue(new IntakeCoral(coral, elevator)).onFalse(coral.stopCoral());
 
     operatorController.rightTrigger().whileTrue(coral.dynamicDriveCoral(() -> CoralConstants.CORAL_SPEED));
 
@@ -262,8 +258,6 @@ public class RobotContainer {
     //Shuffleboard.getTab("testing").add("Climber Motor", climber.dynamicDriveClimb(
     //  () -> SmartDashboard.getNumber("Climber Speed", 0.25)));
     // SmartDashboard.putNumber("Climber Speed", 0.25);
-    Shuffleboard.getTab("testing").add("Intake Motor", intake.dynamicDriveIntake(
-      () -> SmartDashboard.getNumber("Intake Motor Speed", 0.25)));
 
     Shuffleboard.getTab("testing").add("Elevator Encoder Offset", 2);
     Shuffleboard.getTab("Debug").addString("Selected Node", objectiveTracker::getObjectiveString);

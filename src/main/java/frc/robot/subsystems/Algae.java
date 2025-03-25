@@ -14,7 +14,6 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SoftLimitConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
@@ -23,6 +22,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AlgaeConstants;
@@ -38,14 +38,10 @@ public class Algae extends SubsystemBase {
 
   private SparkAbsoluteEncoder pivotEncoder;
 
-  private ProfiledPIDController algaePivotProfiledPIDController = new ProfiledPIDController(
-    AlgaeConstants.PROFILED_PID_KP, AlgaeConstants.PROFILED_PID_KI, AlgaeConstants.PROFILED_PID_KD, new TrapezoidProfile.Constraints(
-      AlgaeConstants.MAX_VELOCITY, AlgaeConstants.MAX_ACCELERATION));
-  
-  private ArmFeedforward algaePivotFeedforward = new ArmFeedforward(
-    AlgaeConstants.ARM_FEEDFORWARD_KS, 
-    AlgaeConstants.ARM_FEEDFORWARD_KG, 
-    AlgaeConstants.ARM_FEEDFORWARD_KV);
+  // private ArmFeedforward algaePivotFeedforward = new ArmFeedforward(
+  //   AlgaeConstants.ARM_FEEDFORWARD_KS, 
+  //   AlgaeConstants.ARM_FEEDFORWARD_KG, 
+  //   AlgaeConstants.ARM_FEEDFORWARD_KV);
 
   private boolean canYeet = true;
   
@@ -53,7 +49,6 @@ public class Algae extends SubsystemBase {
   public Algae() {
     // SparkMaxConfig algaeConfig = new SparkMaxConfig();
     SparkMaxConfig pivotConfig = new SparkMaxConfig();
-    SoftLimitConfig pivotSoftLimit = new SoftLimitConfig();
 
     // algaeConfig.smartCurrentLimit(40, 40);
     pivotConfig.smartCurrentLimit(20);
@@ -66,7 +61,7 @@ public class Algae extends SubsystemBase {
     pivotConfig.absoluteEncoder.positionConversionFactor(360);
 
     pivotConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-    .pid(0.01, 0, 0.01)
+    .pid(AlgaeConstants.PIVOT_KP, AlgaeConstants.PIVOT_KI, AlgaeConstants.PIVOT_KD)
     .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
     .positionWrappingInputRange(0, 360);
 
