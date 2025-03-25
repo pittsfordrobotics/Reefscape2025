@@ -39,5 +39,7 @@ public class ElevatorConstants {
     public static final int L2_POSITION = 46;
     public static final int L3_POSITION = 79;
     public static final int L4_POSITION = 130;
+    public static final int PROCESSOR_POSITION = 0;
+    public static final int BARGE_POSITION = 150;
 //yippeeeeeeeee
 }
