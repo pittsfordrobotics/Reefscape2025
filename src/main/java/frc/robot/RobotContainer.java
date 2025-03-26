@@ -180,7 +180,6 @@ public class RobotContainer {
     operatorController.rightTrigger().whileTrue(coral.dynamicDriveCoral(() -> CoralConstants.CORAL_SPEED));
 
     //Algae Arm Inputs:
-    algae.setDefaultCommand(algae.dynamicAlgaeSetPivot(() -> AlgaeConstants.PIVOT_STORE_DEGREES));
     operatorController.x().whileTrue(AlgaeCommands.algaeIntake(algae, elevator, objectiveTracker));
     operatorController.y().whileTrue(AlgaeCommands.algaeOuttake(algae, elevator, objectiveTracker)).onFalse(algae.idleAlgae());
 
