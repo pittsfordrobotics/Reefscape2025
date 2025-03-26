@@ -218,10 +218,12 @@ public class RobotContainer {
     //Driver Controls ----------------------------------------------------------
     // Drive to reef:
     driverController.x().whileTrue(swerve.driveToReef(objectiveTracker::isRightSide));
-    // Drive Intake:
+    // Drive to Prossesor:
     driverController.b().whileTrue(swerve.driveToAlgaeCollector());
     // Drive to nearest coral station:
     driverController.y().whileTrue(swerve.driveToNearestCoralStation());
+    // Drive to Barge:
+    driverController.rightBumper().whileTrue(swerve.driveToBarge(null));
 
     // Zero gyro:
     driverController.povUp().onTrue(swerve.runOnce(() -> swerve.zeroGyro()).ignoringDisable(true));

@@ -469,6 +469,28 @@ public class Swerve extends SubsystemBase {
         }), Set.of(this));
     }
 
+    public Command shortDriveToPoseWithInput(Supplier<Pose2d> poseSupplier, DoubleSupplier yInput) {
+        return Commands.defer(() -> startRun(() -> {
+            poseXController.reset();
+            //poseYController.reset();
+        }, () -> {
+            Pose2d pose = poseSupplier.get();
+            poseXController.setSetpoint(pose.getX());
+            //poseYController.setSetpoint(pose.getY());
+            setTargetAngle(pose.getRotation());
+            double xOutput = poseXController.calculate(swerveDrive.getPose().getX());
+            //double yOutput = poseYController.calculate(swerveDrive.getPose().getY());
+            double yOutput = yInput.getAsDouble() * maximumSpeed;
+            double speed = Math.hypot(xOutput, yOutput);
+            if(speed > SwerveConstants.AUTOBUILDER_MAX_VELOCITY * 0.25) {
+                xOutput = xOutput / speed * SwerveConstants.AUTOBUILDER_MAX_VELOCITY * 0.25;
+                yOutput = yOutput / speed * SwerveConstants.AUTOBUILDER_MAX_VELOCITY * 0.25;
+            }
+            
+            drive(xOutput, yOutput, 0, true);
+        }), Set.of(this));
+    }
+
     public Command driveToNearestCoralStation() {
         PathConstraints constraints = new PathConstraints(
                 SwerveConstants.AUTOBUILDER_MAX_VELOCITY * 0.25,
@@ -503,7 +525,9 @@ public class Swerve extends SubsystemBase {
         return driveToPose(() -> FieldHelpers.reefLocation(getPose(), isRightSideSupplier), constraints).andThen(shortDriveToPose(() -> FieldHelpers.reefLocation(getPose(), isRightSideSupplier)));
     }
 
-    
+    public Command driveToBarge(DoubleSupplier yInput) {
+        return shortDriveToPoseWithInput(() -> isRedAlliance() ? FieldConstants.bargePosRed : FieldConstants.bargePosBlue, yInput);
+    }
 
     public void enableSlowDriving() {
         swerveDrive.setMaximumAttainableSpeeds(SwerveConstants.SWERVE_MAXIMUM_VELOCITY / 6,

@@ -44,6 +44,11 @@ public class FieldConstants {
   public static Rotation2d algaeProcessorRot = Rotation2d.fromDegrees(-90);
   public static Pose2d algaeProcessorPos = new Pose2d(5.988, 0.41, algaeProcessorRot);
 
+  public static Rotation2d bargeRotBlue = Rotation2d.fromDegrees(0);
+  public static Pose2d bargePosBlue = new Pose2d(7.7135, 0, bargeRotBlue);
+  public static Rotation2d bargeRotRed = Rotation2d.fromDegrees(180);
+  public static Pose2d bargePosRed = new Pose2d(8.831, 0, bargeRotRed);
+
   static {
     try {
       aprilTags = AprilTagFieldLayout.loadFromResource(k2025ReefscapeWelded.m_resourceFile);
