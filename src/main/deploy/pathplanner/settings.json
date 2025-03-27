@@ -7,6 +7,7 @@
     "Left(R)",
     "Middle(L)",
     "Middle(R)",
+    "move forward",
     "Right side autos",
     "Right(L)",
     "Right(R)",
@@ -17,10 +18,11 @@
   ],
   "autoFolders": [
     "Left Side Station",
-    "left start 2 peice",
+    "Move forward",
     "Right Side Station",
     "Simple RIT",
-    "centered start 2 peice"
+    "centered start 2 peice",
+    "left start 2 peice"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,

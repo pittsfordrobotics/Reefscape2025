@@ -88,7 +88,7 @@ public class Algae extends SubsystemBase {
     }
 
     public Command idleAlgae() {
-        return Commands.waitSeconds(0.5).andThen(runOnce(() -> {
+        return Commands.waitSeconds(1).andThen(runOnce(() -> {
             algaePivotController.setReference(AlgaeConstants.PIVOT_STORE_DEGREES, ControlType.kPosition);
             algaePickupMotor.set(0);
         }));

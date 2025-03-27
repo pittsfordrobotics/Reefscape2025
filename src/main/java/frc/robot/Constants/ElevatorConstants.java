@@ -23,7 +23,7 @@ public class ElevatorConstants {
 
     public static final double ELEVATOR_FEEDFORWARD = 0.02;
 
-    public static final double CLOSED_LOOP_RAMP_RATE = 0.15;
+    public static final double CLOSED_LOOP_RAMP_RATE = 0.3;
 
     public static final double ELEVATOR_Kp = 0.15;
     public static final double ELEVATOR_Ki = 0;
