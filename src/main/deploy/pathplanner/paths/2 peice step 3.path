@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.12,
-        "y": 7.027
+        "x": 1.119889,
+        "y": 7.0266
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7102088167053364,
-        "y": 7.140023201856149
+        "x": 1.549095394736842,
+        "y": 6.9018914473684205
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Coral Station"
     },
     {
       "anchor": {
-        "x": 5.37531,
-        "y": 5.00173
+        "x": 4.08018,
+        "y": 5.27703
       },
       "prevControl": {
-        "x": 6.128248259860788,
-        "y": 6.14240139211137
+        "x": 3.9064144736842104,
+        "y": 5.939720394736842
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Side 2 Left"
     }
   ],
   "rotationTargets": [],
@@ -63,7 +63,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": -59.99999999999999
   },
   "reversed": false,
   "folder": "flashy 2 peice paths",

@@ -33,18 +33,6 @@
           "data": {
             "name": "ElevatorIntake"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RIT reef to right"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "holdHeading"
-          }
         }
       ]
     }

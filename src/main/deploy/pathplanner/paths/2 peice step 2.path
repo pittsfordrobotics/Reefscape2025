@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.04535,
-        "y": 5.192
+        "x": 5.36821,
+        "y": 5.00582
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.721055684454756,
-        "y": 6.692111368909512
+        "x": 6.186759868421052,
+        "y": 6.680592105263157
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Side 3 Left"
     },
     {
       "anchor": {
-        "x": 1.12,
-        "y": 7.027
+        "x": 1.119889,
+        "y": 7.0266
       },
       "prevControl": {
-        "x": 1.7916473317865427,
-        "y": 7.119663573085847
+        "x": 1.5298519736842104,
+        "y": 7.267516447368421
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Coral Station"
     }
   ],
   "rotationTargets": [],
