@@ -24,8 +24,8 @@ public class FieldConstants {
   public static double fieldWidth = Units.inchesToMeters(317);
 
   public static double reefLocationBackupDistance = Units.inchesToMeters(18);
-  public static double reefLocationLeftDistance = Units.inchesToMeters(10.6775); //calculated from half of distance between the two reef locations + offset of coral mech
-  public static double reefLocationRightDistance = Units.inchesToMeters(-2.3225);
+  public static double reefLocationLeftDistance = Units.inchesToMeters(8.6775); //calculated from half of distance between the two reef locations + offset of coral mech
+  public static double reefLocationRightDistance = Units.inchesToMeters(-4.3225);
   public static double startingLineX = Units.inchesToMeters(311.5);
   public static double aprilTagWidth = Units.inchesToMeters(6.50);
   public static AprilTagFieldLayout aprilTags;

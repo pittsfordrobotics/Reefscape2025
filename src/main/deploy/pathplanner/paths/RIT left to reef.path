@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 5.36821,
-        "y": 5.00582
+        "x": 5.32422,
+        "y": 5.03122
       },
       "prevControl": {
-        "x": 5.7056743421052625,
-        "y": 5.5259868421052625
+        "x": 6.29576198630137,
+        "y": 6.556827910958904
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,7 +32,7 @@
   "constraintZones": [
     {
       "name": "Coral1",
-      "minWaypointRelativePos": 0.7034883720930233,
+      "minWaypointRelativePos": 0.6406779661016955,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.75,

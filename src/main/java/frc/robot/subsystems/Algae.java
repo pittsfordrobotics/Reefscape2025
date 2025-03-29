@@ -43,7 +43,7 @@ public class Algae extends SubsystemBase {
         SparkMaxConfig algaeConfig = new SparkMaxConfig();
         SparkMaxConfig pivotConfig = new SparkMaxConfig();
 
-        algaeConfig.smartCurrentLimit(20);
+        algaeConfig.smartCurrentLimit(25);
         pivotConfig.smartCurrentLimit(40);
 
         algaeConfig.idleMode(IdleMode.kBrake)

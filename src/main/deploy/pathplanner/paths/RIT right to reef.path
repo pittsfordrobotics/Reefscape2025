@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.306593700117864,
-        "y": 1.9080619310918385
+        "x": 7.182277397260274,
+        "y": 1.8537885273972596
       },
       "isLocked": false,
       "linkedName": "Right Start"
     },
     {
       "anchor": {
-        "x": 4.898,
-        "y": 2.774767
+        "x": 4.94246,
+        "y": 2.80017
       },
       "prevControl": {
-        "x": 5.5132401315789465,
-        "y": 1.7157894736842103
+        "x": 5.76986301369863,
+        "y": 1.2828125
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,7 +32,7 @@
   "constraintZones": [
     {
       "name": "Coral1",
-      "minWaypointRelativePos": 0.7151162790697677,
+      "minWaypointRelativePos": 0.6610169491525435,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.75,
